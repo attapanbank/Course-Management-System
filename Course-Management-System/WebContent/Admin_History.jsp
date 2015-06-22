@@ -18,7 +18,7 @@
         ===
     -->
 <meta charset="utf-8">
-<title>Admin</title>
+<title>History</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description"
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
@@ -26,7 +26,6 @@
 
 <!-- The styles -->
 <link id="bs-css" href="css/bootstrap-cerulean.min.css" rel="stylesheet">
-
 <link href="css/charisma-app.css" rel="stylesheet">
 <link href="bower_components/fullcalendar/dist/fullcalendar.css"
 	rel="stylesheet">
@@ -58,21 +57,17 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
-
 </head>
 
 <body>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
-
 		<div class="navbar-inner">
 			<button type="button" class="navbar-toggle pull-left animated flip">
 				<span class="sr-only">Toggle navigation</span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-
-
 			<a class="navbar-brand" href="Admin_News.jsp"> <span>IT:CMS</span></a>
 			<!-- user dropdown starts -->
 			<div class="btn-group pull-right">
@@ -93,8 +88,6 @@
 
 			<!-- theme selector ends -->
 
-
-
 		</div>
 	</div>
 	<!-- topbar ends -->
@@ -108,14 +101,8 @@
 						<div class="nav-sm nav nav-stacked"></div>
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
-							<li class="active"><a class="ajax-link"
-								href="Admin_News.jsp"><i class="glyphicon glyphicon-home"></i><span>
-										News</span></a></li>
-
-
-
-
-
+							<li><a class="ajax-link" href="Admin_News.jsp"><i
+									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
 							<li class="nav-header hidden-md">Management</li>
 							<li><a class="ajax-link" href="Admin_Candidate.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
@@ -129,71 +116,120 @@
 							<li><a class="ajax-link" href="Admin_User.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										User</span></a></li>
-							<li><a class="ajax-link" href="Admin_History.jsp"><i
+							<li class="active"><a class="ajax-link"
+								href="Admin_History.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										History</span></a></li>
 							<li><a class="ajax-link" href="Admin_Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
-
-
-
-
-
-
 						</ul>
-
 					</div>
 				</div>
 			</div>
 			<!--/span-->
 			<!-- left menu ends -->
 
-			<noscript>&amp;lt;div class="alert alert-block
-				col-md-12"&amp;gt; &amp;lt;h4
-				class="alert-heading"&amp;gt;Warning!&amp;lt;/h4&amp;gt;
-
-				&amp;lt;p&amp;gt;You need to have &amp;lt;a
-				href="http://en.wikipedia.org/wiki/JavaScript"
-				target="_blank"&amp;gt;JavaScript&amp;lt;/a&amp;gt; enabled to use
-				this site.&amp;lt;/p&amp;gt; &amp;lt;/div&amp;gt;</noscript>
-
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Admin_News.jsp">Home</a></li>
-						<li><a href="Admin_News.jsp">News</a></li>
+						<li><a href="Admin_History.jsp">History</a></li>
 					</ul>
 				</div>
-
 
 				<div class="row">
 					<div class="box col-md-12">
 						<div class="box-inner">
-
-							<div class="box-header well">
+							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-info-sign"></i> News
+									<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;View
+									History of Teacher
 								</h2>
-
 								<div class="box-icon">
 									<a href="#" class="btn btn-setting btn-round btn-default"><i
 										class="glyphicon glyphicon-cog"></i></a> <a href="#"
 										class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-										class="btn btn-close btn-round btn-default"><i
+										class="btn btn-close btn-round btn-default"> <i
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							<div class="box-content row" align="center">
-								<img style="width: 650px; height: 350px" src="img/schoolIt.jpg"
-									align="middle">
-
+							<div class="box-content">
+								<table
+									class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>Teacher Name</th>
+											<th>History of Teacher</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>Mr.Mahalo Bankupu</td>
+											<td><a class="btn btn btn-success btn-setting"
+												href="#ViewHistoryTeacher" data-toggle="modal"> <i
+													class="glyphicon glyphicon-zoom-in icon-white"></i> View
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
+					<!--/span-->
+
 				</div>
+				<!--/row-->
+
+				<div class="row">
+					<div class="box col-md-12">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;View
+									History of Course
+								</h2>
+								<div class="box-icon">
+									<a href="#" class="btn btn-setting btn-round btn-default"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
+										class="btn btn-close btn-round btn-default"> <i
+										class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
+							<div class="box-content">
+								<table
+									class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>Course Name</th>
+											<th>History of Course</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>Basic IT</td>
+											<td><a class="btn btn btn-success btn-setting"
+												href="#ViewHistoryCourse" data-toggle="modal"> <i
+													class="glyphicon glyphicon-zoom-in icon-white"></i> View
+											</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!--/span-->
+
+				</div>
+				<!--/row-->
 
 				<!-- content ends -->
 			</div>
@@ -202,23 +238,82 @@
 		<!--/fluid-row-->
 
 		<hr>
-
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-
+		<div class="modal fade" id="ViewHistoryTeacher" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">�</button>
-						<h3>Settings</h3>
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h3>ประวัติการสอน</h3>
 					</div>
 					<div class="modal-body">
-						<p>Here settings can be configured...</p>
+						<table
+							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+							<thead>
+								<tr>
+									<th>ปีการศึกษา</th>
+									<th>เทอม</th>
+									<th>รหัสวิชา</th>
+									<th>รายวิชา</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>2557</td>
+									<td>2</td>
+									<td>1305080</td>
+									<td>Basic Information Technology</td>
+								</tr>
+								<tr>
+									<td>2558</td>
+									<td>1</td>
+									<td>1305076</td>
+									<td>Introduction Information Technology</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 					<div class="modal-footer">
 						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="ViewHistoryCourse" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h3>ประวัติการสอน</h3>
+					</div>
+					<div class="modal-body">
+						<table
+							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+							<thead>
+								<tr>
+									<th>ปีการศึกษา</th>
+									<th>เทอม</th>
+									<th>รายชื่ออาจารย์</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>2557</td>
+									<td>1</td>
+									<td>ดร.สมศักดิิ์</td>
+								</tr>
+								<tr>
+									<td>2558</td>
+									<td>1</td>
+									<td>นาย ณรง</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
 					</div>
 				</div>
 			</div>
@@ -226,15 +321,13 @@
 
 		<footer class="row">
 		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			� <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
+			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
 			2014
 		</p>
-
 		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
 			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
 		</p>
 		</footer>
-
 	</div>
 	<!--/.fluid-container-->
 
@@ -273,10 +366,6 @@
 	<script src="js/jquery.history.js"></script>
 	<!-- application script for Charisma demo -->
 	<script src="js/charisma.js"></script>
-
-
-
-
 	<div style="display: none;" id="cboxOverlay"></div>
 	<div style="display: none;" tabindex="-1" role="dialog" class=""
 		id="colorbox">
