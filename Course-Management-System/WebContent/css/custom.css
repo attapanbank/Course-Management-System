@@ -1,0 +1,17 @@
+@charset "utf-8";
+/* CSS Document */
+
+#inputforstudentnumber input[type='text'] {
+		width:50px;
+		text-align: center;
+}
+
+#inputforlect input[type='text'] {
+		width:40px;
+		text-align: center;
+}
+
+#inputforlab input[type='text']{
+	width:40px;
+	text-align: center;
+}
