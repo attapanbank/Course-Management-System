@@ -188,8 +188,8 @@
 												<div id="DataTables_Table_0_wrapper"
 													class="dataTables_wrapper" role="grid">
 													<p>
-														<button class="btn btn-warning btn-sm">Add Study
-															Plan</button>
+														<button onclick="showUploadFile()"
+															class="btn btn-warning btn-sm">Add Study Plan</button>
 													</p>
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
@@ -574,26 +574,19 @@
 		</div>
 		<!--/fluid-row-->
 
-		<!-- Ad, you can remove it -->
-		<div class="row">
-			<div class="col-md-9 col-lg-9 col-xs-9  hidden-xs">
-				<script async=""
-					src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- Charisma Demo 2 -->
-				<ins class="adsbygoogle"
-					style="display: inline-block; width: 728px; height: 90px"
-					data-ad-client="ca-pub-5108790028230107" data-ad-slot="3193373905"></ins>
-				<script>
-					(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
-			</div>
-
-
-		</div>
-		<!-- Ad ends -->
-
 		<hr>
+		<!-- Aniroot's javascript -->
+		<script type="text/javascript">
+			function showUploadFile() {
+				$(document).ready(function() {
+					$("#myModal").modal('show');
+				});
+			}
 
+			function uploadFile() {
+				document.getElementById("formUpload").submit();
+			}
+		</script>
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
 
@@ -601,15 +594,23 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>Settings</h3>
+						<h3>Please select the file</h3>
 					</div>
 					<div class="modal-body">
-						<p>Here settings can be configured...</p>
+						<form name="formUpload" id="formUpload" method="post"
+							action="uploadStudyPlan.jsp" enctype="multipart/form-data">
+							<div class="form-group">
+								<label for="exampleInputFile">File input</label> <input
+									type="file" id="planFile" accept=".xls,.xlsx" name="filUpload" >
+
+								<p class="help-block">Example excel.xls or excel.xlsx.</p>
+							</div>
+						</form>
 					</div>
 					<div class="modal-footer">
 						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
+						<a onclick="uploadFile()" href="#" class="btn btn-primary"
+							data-dismiss="modal">Upload File</a>
 					</div>
 				</div>
 			</div>
