@@ -1,3 +1,9 @@
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.sql.SQLException"%>
+<%@ page import="java.sql.Statement"%>
+<%@ page import="java.sql.Connection"%>
+<%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.util.Calendar"%>
 <html lang="en">
 <head>
 <!--
@@ -106,7 +112,7 @@
 						<div class="nav-sm nav nav-stacked"></div>
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
-							<li><a class="ajax-link" href="Coordinator.html"><i
+							<li><a class="ajax-link" href="Coordinator.jsp"><i
 									class="glyphicon glyphicon-home"></i><span> Dashboard</span></a></li>
 
 
@@ -115,7 +121,7 @@
 
 							<li class="nav-header hidden-md">Management</li>
 							<li class="active"><a class="ajax-link"
-								href="Candidate.html"><i
+								href="#"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -152,11 +158,45 @@
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
-						<li><a href="#">Home</a></li>
+						<li><a href="Coordinator.jsp">Home</a></li>
 						<li><a href="#">Study Plan Management</a></li>
 					</ul>
 				</div>
+				<%
+					// start get data  from SQL server
+					int year = Calendar.getInstance().get(Calendar.YEAR);
+					// 1 st year
+					int yearOnBE1 = (year % 100) + 43;
+					String yearOnBEStr1 = Integer.toString(yearOnBE1);
+					//System.out.println(yearOnBEStr1);
+					//2 nd year
+					int yearOnBE2 = (year % 100) + 43 - 1;
+					String yearOnBEStr2 = Integer.toString(yearOnBE2);
+					//System.out.println(yearOnBEStr2);
+					//3 rd year
+					int yearOnBE3 = (year % 100) + 43 - 2;
+					String yearOnBEStr3 = Integer.toString(yearOnBE3);
+					//System.out.println(yearOnBEStr3);
+					//4 th year
+					int yearOnBE4 = (year % 100) + 43 - 3;
+					String yearOnBEStr4 = Integer.toString(yearOnBE4);
+					//System.out.println(yearOnBEStr4);
 
+					Connection connect = null;
+					Statement s = null;
+
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+
+						connect = DriverManager
+								.getConnection("jdbc:mysql://localhost:3306/CMS"
+										+ "?user=root&password=toor");
+
+						s = connect.createStatement();
+
+						String sql = "SELECT test.studyplan.year FROM test.studyplan group by test.studyplan.year order by test.studyplan.year desc";
+						ResultSet rec = s.executeQuery(sql);
+				%>
 
 				<div class="row">
 					<div class="box col-md-12">
@@ -197,33 +237,26 @@
 															class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
 															id="DataTables_Table_0"
 															aria-describedby="DataTables_Table_0_info">
-															<thead>
-																<tr role="row">
-																	<th class="sorting_asc" role="columnheader"
-																		tabindex="0" aria-controls="DataTables_Table_0"
-																		rowspan="1" colspan="1" style="width: 266px;"
-																		aria-sort="ascending"
-																		aria-label="Year: activate to sort column descending">Year</th>
-																	<th class="sorting" role="columnheader" tabindex="0"
-																		aria-controls="DataTables_Table_0" rowspan="1"
-																		colspan="1" style="width: 213px;"
-																		aria-label="Date modify: activate to sort column ascending">Date
-																		modify</th>
-																	<th class="sorting" role="columnheader" tabindex="0"
-																		aria-controls="DataTables_Table_0" rowspan="1"
-																		colspan="1" style="width: 529px;"
-																		aria-label="Actions: activate to sort column ascending">Actions</th>
-																</tr>
-															</thead>
+															<tr role="row">
+																<th class="sorting_desc" role="columnheader"
+																	tabindex="0" aria-controls="DataTables_Table_0"
+																	rowspan="1" colspan="1" style="width: 330px;"
+																	aria-sort="descending"
+																	aria-label="Year: activate to sort column ascending">Year</th>
+																<th class="sorting" role="columnheader" tabindex="0"
+																	aria-controls="DataTables_Table_0" rowspan="1"
+																	colspan="1" style="width: 696px;"
+																	aria-label="Actions: activate to sort column ascending">Actions</th>
+															</tr>
 
 															<tbody role="alert" aria-live="polite"
 																aria-relevant="all">
-																<tr class="odd">
-																	<td class=" sorting_1">56</td>
-																	<td class="center    ">2012/03/01</td>
-
-
-																	<td class="center    "><a
+																<%
+																	while ((rec != null) && (rec.next())) {
+																%>
+																<tr>
+																	<td class=" sorting_1"><%=rec.getInt("year")%></td>
+																	<td class="center"><a
 																		class="btn btn-success btn-sm" href="#"> <i
 																			class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			View
@@ -234,38 +267,9 @@
 																			Delete
 																	</a></td>
 																</tr>
-																<tr class="even">
-																	<td class=" sorting_1">57</td>
-																	<td class="center    ">2012/03/01</td>
-
-
-																	<td class="center    "><a
-																		class="btn btn-success btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			View
-																	</a> <a class="btn btn-info btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-edit icon-white"></i> Edit
-																	</a> <a class="btn btn-danger btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-trash icon-white"></i>
-																			Delete
-																	</a></td>
-																</tr>
-																<tr class="odd">
-																	<td class=" sorting_1">58</td>
-																	<td class="center    ">2012/03/01</td>
-
-
-																	<td class="center    "><a
-																		class="btn btn-success btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			View
-																	</a> <a class="btn btn-info btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-edit icon-white"></i> Edit
-																	</a> <a class="btn btn-danger btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-trash icon-white"></i>
-																			Delete
-																	</a></td>
-																</tr>
+																<%
+																	}
+																%>
 															</tbody>
 														</table>
 													</div>
@@ -325,15 +329,21 @@
 
 																	<tbody role="alert" aria-live="polite"
 																		aria-relevant="all">
-																		<tr class="odd">
-																			<td class=" sorting_1">1011</td>
-																			<td class="center    ">Course A</td>
-
-
+																		<%
+																			// Year 1
+																				sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																						+ yearOnBEStr1 + "'";
+																				rec = s.executeQuery(sql);
+																				while ((rec != null) && (rec.next())) {
+																		%>
+																		<tr>
+																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																			<td class="center"><%=rec.getString("courseName")%></td>
 																		</tr>
-																		<tr class="even">
-																			<td class=" sorting_1">11110</td>
-																			<td class="center    ">Course B</td>
+																		<%
+																			}
+																		%>
+								
 
 
 																		</tr>
@@ -395,17 +405,21 @@
 
 																<tbody role="alert" aria-live="polite"
 																	aria-relevant="all">
-																	<tr class="odd">
-																		<td class=" sorting_1">10111</td>
-																		<td class="center     ">Course A</td>
-
-
+																	<%
+																		// Year 2
+																			sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																					+ yearOnBEStr2 + "'";
+																			rec = s.executeQuery(sql);
+																			while ((rec != null) && (rec.next())) {
+																	%>
+																	<tr>
+																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																		<td class="center"><%=rec.getString("courseName")%></td>
 																	</tr>
-																	<tr class="even">
-																		<td class=" sorting_1">101111</td>
-																		<td class="center     ">Course B</td>
-
-
+																	<%
+																		}
+																	%>
+																	
 																	</tr>
 																</tbody>
 															</table>
@@ -466,17 +480,21 @@
 
 																	<tbody role="alert" aria-live="polite"
 																		aria-relevant="all">
-																		<tr class="odd">
-																			<td class=" sorting_1">1011</td>
-																			<td class="center    ">Course A</td>
-
-
+																		<%
+																			// Year 3
+																				sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																						+ yearOnBEStr3 + "'";
+																				rec = s.executeQuery(sql);
+																				while ((rec != null) && (rec.next())) {
+																		%>
+																		<tr>
+																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																			<td class="center"><%=rec.getString("courseName")%></td>
 																		</tr>
-																		<tr class="even">
-																			<td class=" sorting_1">11110</td>
-																			<td class="center    ">Course B</td>
-
-
+																		<%
+																			}
+																		%>
+																		
 																		</tr>
 																	</tbody>
 																</table>
@@ -536,17 +554,21 @@
 
 																<tbody role="alert" aria-live="polite"
 																	aria-relevant="all">
-																	<tr class="odd">
-																		<td class=" sorting_1">10111</td>
-																		<td class="center     ">Course A</td>
-
-
+																	<%
+																		// Year 4
+																			sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																					+ yearOnBEStr4 + "'";
+																			rec = s.executeQuery(sql);
+																			while ((rec != null) && (rec.next())) {
+																	%>
+																	<tr>
+																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																		<td class="center"><%=rec.getString("courseName")%></td>
 																	</tr>
-																	<tr class="even">
-																		<td class=" sorting_1">101111</td>
-																		<td class="center     ">Course B</td>
-
-
+																	<%
+																		}
+																	%>
+																	
 																	</tr>
 																</tbody>
 															</table>
@@ -559,6 +581,24 @@
 									</div>
 								</div>
 							</div>
+							<%
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									out.println(e.getMessage());
+									e.printStackTrace();
+								}
+
+								try {
+									if (s != null) {
+										s.close();
+										connect.close();
+									}
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									out.println(e.getMessage());
+									e.printStackTrace();
+								}
+							%>
 							<!--/span-->
 						</div>
 					</div>
@@ -601,7 +641,7 @@
 							action="uploadStudyPlan.jsp" enctype="multipart/form-data">
 							<div class="form-group">
 								<label for="exampleInputFile">File input</label> <input
-									type="file" id="planFile" accept=".xls,.xlsx" name="filUpload" >
+									type="file" id="planFile" accept=".xls,.xlsx" name="filUpload">
 
 								<p class="help-block">Example excel.xls or excel.xlsx.</p>
 							</div>

@@ -112,7 +112,7 @@
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
 							<li class="active"><a class="ajax-link"
-								href="Coordinator.html"><i class="glyphicon glyphicon-home"></i><span>
+								href="Coordinator.jsp"><i class="glyphicon glyphicon-home"></i><span>
 										Dashboard</span></a></li>
 
 
@@ -120,7 +120,7 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li><a class="ajax-link" href="Coordinator_StudyPlan.html"><i
+							<li><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -157,7 +157,7 @@
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
-						<li><a href="#">Home</a></li>
+						<li><a href="Coordinator.jsp">Home</a></li>
 						<li><a href="#">Dashboard</a></li>
 					</ul>
 				</div>
@@ -235,15 +235,7 @@
 																<%
 																	}
 																%>
-																<tr class="odd">
-																	<td class=" sorting_1">11110</td>
-																	<td class="center  ">Basic IT</td>
 
-
-																</tr>
-																<tr class="even">
-																	<td class=" sorting_1">13011</td>
-																	<td class="center  ">Computer Programming</td>
 
 
 																</tr>
@@ -346,10 +338,10 @@
 													</tr>
 													<%
 														}
-													
-													//not match
-													sqlp = "select * from test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode)where test.studyplan.courseCode not in (select test.courseplan.courseCode from test.courseplan)union all select * from test.courseplan inner join test.course on (test.courseplan.courseCode=test.course.courseCode)where test.coursePlan.courseCode not in (select test.studyplan.courseCode from test.studyplan)";
-													recp = sp.executeQuery(sqlp);
+
+															//not match
+															sqlp = "select * from test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode)where test.studyplan.courseCode not in (select test.courseplan.courseCode from test.courseplan)union all select * from test.courseplan inner join test.course on (test.courseplan.courseCode=test.course.courseCode)where test.coursePlan.courseCode not in (select test.studyplan.courseCode from test.studyplan)";
+															recp = sp.executeQuery(sqlp);
 													%>
 													<%
 														while ((recp != null) && (recp.next())) {
@@ -363,21 +355,7 @@
 													<%
 														}
 													%>
-													<tr class="odd">
-														<td class=" sorting_1">10113</td>
-														<td class="center  ">Basic IT</td>
-														<td class=" "><span
-															class="label-success label label-default">Match</span></td>
-
-
-													</tr>
-													<tr class="even">
-														<td class=" sorting_1">11110</td>
-														<td class="center  ">English 2</td>
-														<td class=" "><span
-															class="label-default label label-danger">Mismatch</span></td>
-
-
+												
 													</tr>
 												</tbody>
 											</table>
