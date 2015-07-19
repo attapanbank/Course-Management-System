@@ -46,7 +46,7 @@
 						formDataLength);
 				totalBytesRead += byteRead;
 			}
-			String file = new String(dataBytes);
+			String file = new String(dataBytes, "CP1256");
 
 			//for saving the file name
 			String saveFile = file
@@ -65,9 +65,10 @@
 			pos = file.indexOf("\n", pos) + 1;
 			pos = file.indexOf("\n", pos) + 1;
 			int boundaryLocation = file.indexOf(boundary, pos) - 4;
-			int startPos = ((file.substring(0, pos)).getBytes()).length;
-			int endPos = ((file.substring(0, boundaryLocation)).getBytes()).length;
-
+			int startPos = ((file.substring(0, pos)).getBytes("CP1256")).length;
+			int endPos = ((file.substring(0, boundaryLocation))
+					.getBytes("CP1256")).length;
+//"CP1256"
 			// creating a new file with the same name and writing the content in new file
 
 			savePath = application.getRealPath("\\fileUpload\\" + saveFile);
@@ -88,7 +89,7 @@
 		Class.forName("com.mysql.jdbc.Driver");
 		String url = "jdbc:mysql://localhost:3306/CMS";
 		String username = "root";
-		String password = "toor";
+		String password = "root";
 
 		try {
 			Connection con = (Connection) DriverManager.getConnection(url,
@@ -110,11 +111,10 @@
 			Row row;
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				row = sheet.getRow(i);
-				double year = row.getCell(0).getNumericCellValue();
-				double semester = row.getCell(1).getNumericCellValue();
-				double currentCourseCode = row.getCell(2)
-						.getNumericCellValue();
-				String sql = " INSERT INTO `test`.`studyplan` (`year`, `semester`, `currentCourseCode`) VALUES ('"
+				int year = (int) row.getCell(0).getNumericCellValue();
+				String semester = row.getCell(1).toString();
+				int currentCourseCode = (int) row.getCell(2).getNumericCellValue();
+				String sql = " INSERT INTO `cms`.`studyplan` (year, semester, courseCode) VALUES ('"
 						+ year
 						+ "', '"
 						+ semester
