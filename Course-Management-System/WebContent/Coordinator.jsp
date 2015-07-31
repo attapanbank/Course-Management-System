@@ -275,7 +275,7 @@
 										<h2>Study Plan</h2>
 
 										<div class="box-icon">
-											<a href="#" class="btn btn-setting btn-round btn-default"><i
+											<a href="Coordinator_AddNews.jsp" class="btn btn-round btn-default"><i
 												class="glyphicon glyphicon-repeat"></i></a> <a href="#"
 												class="btn btn-minimize btn-round btn-default"><i
 												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
