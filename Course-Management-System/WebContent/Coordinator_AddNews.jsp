@@ -12,6 +12,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
+
 <body>
 	<%
 		Connection connect = null;
@@ -42,7 +43,9 @@
 			sql = "INSERT INTO `test`.`news` (`user`, `group`, `news`) VALUES ('admin', 'admin', '"
 					+ newsDetail + "');";
 			s.execute(sql);
-			out.println(newsDetail);
+			String redirectURL = "Coordinator.jsp";
+			response.sendRedirect(redirectURL);
+			//out.println(newsDetail);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			out.println(e.getMessage());

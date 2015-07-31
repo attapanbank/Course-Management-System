@@ -121,7 +121,7 @@
 
 							<li class="nav-header hidden-md">Management</li>
 							<li class="active"><a class="ajax-link"
-								href="#"><i
+								href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -153,7 +153,41 @@
 				site.&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 			</noscript>
+			<%
+				// start get data  from SQL server
+				int year = Calendar.getInstance().get(Calendar.YEAR);
+				// 1 st year
+				int yearOnBE1 = (year % 100) + 43;
+				String yearOnBEStr1 = Integer.toString(yearOnBE1);
+				//System.out.println(yearOnBEStr1);
+				//2 nd year
+				int yearOnBE2 = (year % 100) + 43 - 1;
+				String yearOnBEStr2 = Integer.toString(yearOnBE2);
+				//System.out.println(yearOnBEStr2);
+				//3 rd year
+				int yearOnBE3 = (year % 100) + 43 - 2;
+				String yearOnBEStr3 = Integer.toString(yearOnBE3);
+				//System.out.println(yearOnBEStr3);
+				//4 th year
+				int yearOnBE4 = (year % 100) + 43 - 3;
+				String yearOnBEStr4 = Integer.toString(yearOnBE4);
+				//System.out.println(yearOnBEStr4);
 
+				Connection connect = null;
+				Statement s = null;
+
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+
+					connect = DriverManager
+							.getConnection("jdbc:mysql://localhost:3306/CMS"
+									+ "?user=root&password=toor");
+
+					s = connect.createStatement();
+
+					String sql = "SELECT test.studyplan.year FROM test.studyplan group by test.studyplan.year order by test.studyplan.year desc";
+					ResultSet rec = s.executeQuery(sql);
+			%>
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
 				<div>
@@ -162,41 +196,7 @@
 						<li><a href="#">Study Plan Management</a></li>
 					</ul>
 				</div>
-				<%
-					// start get data  from SQL server
-					int year = Calendar.getInstance().get(Calendar.YEAR);
-					// 1 st year
-					int yearOnBE1 = (year % 100) + 43;
-					String yearOnBEStr1 = Integer.toString(yearOnBE1);
-					//System.out.println(yearOnBEStr1);
-					//2 nd year
-					int yearOnBE2 = (year % 100) + 43 - 1;
-					String yearOnBEStr2 = Integer.toString(yearOnBE2);
-					//System.out.println(yearOnBEStr2);
-					//3 rd year
-					int yearOnBE3 = (year % 100) + 43 - 2;
-					String yearOnBEStr3 = Integer.toString(yearOnBE3);
-					//System.out.println(yearOnBEStr3);
-					//4 th year
-					int yearOnBE4 = (year % 100) + 43 - 3;
-					String yearOnBEStr4 = Integer.toString(yearOnBE4);
-					//System.out.println(yearOnBEStr4);
 
-					Connection connect = null;
-					Statement s = null;
-
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-
-						connect = DriverManager
-								.getConnection("jdbc:mysql://localhost:3306/CMS"
-										+ "?user=root&password=toor");
-
-						s = connect.createStatement();
-
-						String sql = "SELECT test.studyplan.year FROM test.studyplan group by test.studyplan.year order by test.studyplan.year desc";
-						ResultSet rec = s.executeQuery(sql);
-				%>
 
 				<div class="row">
 					<div class="box col-md-12">
@@ -237,17 +237,21 @@
 															class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
 															id="DataTables_Table_0"
 															aria-describedby="DataTables_Table_0_info">
-															<tr role="row">
-																<th class="sorting_desc" role="columnheader"
-																	tabindex="0" aria-controls="DataTables_Table_0"
-																	rowspan="1" colspan="1" style="width: 330px;"
-																	aria-sort="descending"
-																	aria-label="Year: activate to sort column ascending">Year</th>
-																<th class="sorting" role="columnheader" tabindex="0"
-																	aria-controls="DataTables_Table_0" rowspan="1"
-																	colspan="1" style="width: 696px;"
-																	aria-label="Actions: activate to sort column ascending">Actions</th>
-															</tr>
+															<thead>
+
+																<tr role="row">
+																	<th class="sorting_desc" role="columnheader"
+																		tabindex="0" aria-controls="DataTables_Table_0"
+																		rowspan="1" colspan="1" style="width: 330px;"
+																		aria-sort="descending"
+																		aria-label="Year: activate to sort column ascending">Year</th>
+																	<th class="sorting" role="columnheader" tabindex="0"
+																		aria-controls="DataTables_Table_0" rowspan="1"
+																		colspan="1" style="width: 696px;"
+																		aria-label="Actions: activate to sort column ascending">Actions</th>
+																</tr>
+
+															</thead>
 
 															<tbody role="alert" aria-live="polite"
 																aria-relevant="all">
@@ -257,15 +261,10 @@
 																<tr>
 																	<td class=" sorting_1"><%=rec.getInt("year")%></td>
 																	<td class="center"><a
-																		class="btn btn-success btn-sm" href="#"> <i
+																		class="btn btn-success btn-sm" href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>"> <i
 																			class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			View
-																	</a> <a class="btn btn-info btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-edit icon-white"></i> Edit
-																	</a> <a class="btn btn-danger btn-sm" href="#"> <i
-																			class="glyphicon glyphicon-trash icon-white"></i>
-																			Delete
-																	</a></td>
+																			More Detail
+																	</a> </td>
 																</tr>
 																<%
 																	}
@@ -343,11 +342,8 @@
 																		<%
 																			}
 																		%>
-								
-
-
-																		</tr>
 																	</tbody>
+
 																</table>
 															</div>
 														</div>
@@ -419,8 +415,8 @@
 																	<%
 																		}
 																	%>
-																	
-																	</tr>
+
+
 																</tbody>
 															</table>
 														</div>
@@ -494,8 +490,8 @@
 																		<%
 																			}
 																		%>
-																		
-																		</tr>
+
+
 																	</tbody>
 																</table>
 															</div>
@@ -568,8 +564,8 @@
 																	<%
 																		}
 																	%>
-																	
-																	</tr>
+
+
 																</tbody>
 															</table>
 														</div>
@@ -581,31 +577,30 @@
 									</div>
 								</div>
 							</div>
-							<%
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									out.println(e.getMessage());
-									e.printStackTrace();
-								}
-
-								try {
-									if (s != null) {
-										s.close();
-										connect.close();
-									}
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									out.println(e.getMessage());
-									e.printStackTrace();
-								}
-							%>
 							<!--/span-->
 						</div>
 					</div>
 				</div>
 
 
+				<%
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						out.println(e.getMessage());
+						e.printStackTrace();
+					}
 
+					try {
+						if (s != null) {
+							s.close();
+							connect.close();
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						out.println(e.getMessage());
+						e.printStackTrace();
+					}
+				%>
 
 
 				<!-- content ends -->
@@ -641,7 +636,7 @@
 							action="uploadStudyPlan.jsp" enctype="multipart/form-data">
 							<div class="form-group">
 								<label for="exampleInputFile">File input</label> <input
-									type="file" id="planFile" accept=".xls,.xlsx" name="filUpload">
+									type="file" id="planFile" accept=".xls,.xlsx">
 
 								<p class="help-block">Example excel.xls or excel.xlsx.</p>
 							</div>

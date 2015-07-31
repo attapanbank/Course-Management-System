@@ -126,7 +126,7 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link" href="#"><i
+							<li class="active"><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -158,13 +158,31 @@
 				site.&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 			</noscript>
+			<%
+				Connection connect = null;
+				Statement s = null;
 
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+
+					connect = DriverManager
+							.getConnection("jdbc:mysql://localhost:3306/CMS"
+									+ "?user=root&password=toor");
+
+					s = connect.createStatement();
+
+					String sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where studyPlanId ='"
+							+ studyplanId + "';";
+					//SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode) where test.studyplan.year like
+					ResultSet rec = s.executeQuery(sql);
+					rec.first();
+			%>
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="#">Study Plan Management</a></li>
+						<li><a href="Coordinator_StudyPlan.jsp">Study Plan Management</a></li>
 					</ul>
 				</div>
 
@@ -206,14 +224,19 @@
 														class="dataTables_wrapper" role="grid">
 														<form method="get" action="Coordinator_EditStudyPlan.jsp">
 															<p>
-																Year : <input type="text" name="year">
+																Year : <input type="text" name="year"
+																	value="<%=rec.getString("year")%>">
 															</p>
 															<p>
-																Semester : <input type="text" name="semester">
+																Semester : <input type="text" name="semester"
+																	value="<%=rec.getString("semester")%>">
 															</p>
 															<p>
-																Course code : <input type="text" name="courseCode">
+																Course code : <input type="text" name="courseCode"
+																	value="<%=rec.getString("courseCode")%>">
 															</p>
+
+
 															<p>
 																<input type="hidden" name="studyplanId"
 																	value="<%=studyplanId%>"> <input type="submit">
@@ -238,7 +261,24 @@
 				</div>
 
 
+				<%
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						out.println(e.getMessage());
+						e.printStackTrace();
+					}
 
+					try {
+						if (s != null) {
+							s.close();
+							connect.close();
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						out.println(e.getMessage());
+						e.printStackTrace();
+					}
+				%>
 
 
 				<!-- content ends -->

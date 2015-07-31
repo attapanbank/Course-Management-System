@@ -8,6 +8,7 @@
 <%@ page import="java.util.Calendar"%>
 <%
 	String studyplanId = request.getParameter("studyplanId");
+	String year = request.getParameter("year");
 %>
 <%
 	Connection connect = null;
@@ -22,12 +23,12 @@
 
 		s = connect.createStatement();
 
-		String sql = "DELETE FROM `test`.`studyplan` WHERE `studyPlanID`='"+studyplanId+"';";
+		String sql = "DELETE FROM `test`.`studyplan` WHERE `studyPlanID`='"
+				+ studyplanId + "';";
 		s.execute(sql);
-		
-		out.println("OK");
-%>
-<%
+
+		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="+year;
+		response.sendRedirect(redirectURL);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		out.println(e.getMessage());

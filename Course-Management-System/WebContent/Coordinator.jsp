@@ -173,7 +173,6 @@
 										<h2>Current Course Plan</h2>
 
 										<div class="box-icon">
-
 											<a href="#" class="btn btn-minimize btn-round btn-default"><i
 												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 												class="btn btn-close btn-round btn-default"><i
@@ -276,7 +275,7 @@
 
 										<div class="box-icon">
 											<a href="Coordinator_AddNews.jsp" class="btn btn-round btn-default"><i
-												class="glyphicon glyphicon-repeat"></i></a> <a href="#"
+												class="glyphicon glyphicon-share"></i></a> <a href="#"
 												class="btn btn-minimize btn-round btn-default"><i
 												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 												class="btn btn-close btn-round btn-default"><i

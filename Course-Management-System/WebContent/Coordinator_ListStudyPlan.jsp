@@ -67,7 +67,8 @@
 
 
 </head>
-<% String year = request.getParameter("year");
+<%
+	String year = request.getParameter("year");
 %>
 <body>
 	<!-- topbar starts -->
@@ -125,7 +126,7 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link" href="#"><i
+							<li class="active"><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -163,7 +164,9 @@
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="#">Study Plan Management</a></li>
+						<li><a href="Coordinator_StudyPlan.jsp">Study Plan
+								Management</a></li>
+						<li><a href="#"><%=year%></a></li>
 					</ul>
 				</div>
 
@@ -177,8 +180,7 @@
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
 										<h2>
-											<i class="glyphicon glyphicon-user"></i> Study Plan
-											Management
+											<i class="glyphicon glyphicon-user"></i>Study Plan (<%=year%>)
 										</h2>
 
 										<div class="box-icon">
@@ -197,10 +199,7 @@
 												class="dataTables_wrapper" role="grid">
 												<div id="DataTables_Table_0_wrapper"
 													class="dataTables_wrapper" role="grid">
-													<p>
-														<button onclick="showUploadFile()"
-															class="btn btn-warning btn-sm">Add Study Plan</button>
-													</p>
+
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
 														<%
@@ -216,7 +215,9 @@
 
 																s = connect.createStatement();
 
-																String sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode) where test.studyplan.year like '"+year+"';";
+																String sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																		+ year + "';";
+																//SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode) where test.studyplan.year like
 																ResultSet rec = s.executeQuery(sql);
 														%>
 														<table
@@ -228,15 +229,31 @@
 																	tabindex="0" aria-controls="DataTables_Table_0"
 																	rowspan="1" colspan="1" style="width: 330px;"
 																	aria-sort="descending"
-																	aria-label="Year: activate to sort column ascending">Course Code</th>
+																	aria-label="Year: activate to sort column ascending">Year</th>
+																<th class="sorting_desc" role="columnheader"
+																	tabindex="0" aria-controls="DataTables_Table_0"
+																	rowspan="1" colspan="1" style="width: 330px;"
+																	aria-sort="descending"
+																	aria-label="Year: activate to sort column ascending">Semester</th>
+																<th class="sorting_desc" role="columnheader"
+																	tabindex="0" aria-controls="DataTables_Table_0"
+																	rowspan="1" colspan="1" style="width: 330px;"
+																	aria-sort="descending"
+																	aria-label="Year: activate to sort column ascending">Course
+																	Code</th>
 																<th class="sorting" role="columnheader" tabindex="0"
 																	aria-controls="DataTables_Table_0" rowspan="1"
 																	colspan="1" style="width: 696px;"
-																	aria-label="Actions: activate to sort column ascending">Course Name</th>
-																	<th class="sorting" role="columnheader" tabindex="0"
+																	aria-label="Actions: activate to sort column ascending">Course
+																	Name</th>
+																<th class="sorting" role="columnheader" tabindex="0"
 																	aria-controls="DataTables_Table_0" rowspan="1"
 																	colspan="1" style="width: 696px;"
 																	aria-label="Actions: activate to sort column ascending">Credit</th>
+																<th class="sorting" role="columnheader" tabindex="0"
+																	aria-controls="DataTables_Table_0" rowspan="1"
+																	colspan="1" style="width: 540px;"
+																	aria-label="Actions: activate to sort column ascending">Actions</th>
 															</tr>
 
 															<tbody role="alert" aria-live="polite"
@@ -245,9 +262,18 @@
 																	while ((rec != null) && (rec.next())) {
 																%>
 																<tr>
+																	<td class=" sorting_1"><%=rec.getString("year")%></td>
+																	<td class=" sorting_1"><%=rec.getString("semester")%></td>
 																	<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																	<td class="center"><%=rec.getString("courseName")%></td>
 																	<td class="center"><%=rec.getString("credit")%></td>
+																	<td class="center     "><a
+																		class="btn btn-info btn-sm" href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>"> <i
+																			class="glyphicon glyphicon-edit icon-white"></i> Edit
+																	</a> <a class="btn btn-danger btn-sm" href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&year=<%=rec.getString("year")%>"> <i
+																			class="glyphicon glyphicon-trash icon-white"></i>
+																			Delete
+																	</a></td>
 																</tr>
 																<%
 																	}

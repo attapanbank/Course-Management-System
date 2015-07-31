@@ -28,9 +28,8 @@
 		String sql = "UPDATE test.studyplan SET year='"+year+"',semester='"+semester+"',courseCode='"+courseCode+"' WHERE studyPlanID='"+studyplanId+"';";
 		s.execute(sql);
 		
-		out.println("OK");
-%>
-<%
+		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="+year;
+		response.sendRedirect(redirectURL);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		out.println(e.getMessage());
