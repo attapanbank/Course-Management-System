@@ -1,5 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	import="java.sql.*" pageEncoding="utf-8"%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt;
+	Connection con;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -46,6 +69,9 @@
 <link href="css/jquery.iphone.toggle.css" rel="stylesheet">
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
+
+<script src="dist/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="dist/sweetalert.css">
 
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
@@ -102,7 +128,7 @@
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
 							<li><a class="ajax-link" href="Admin_News.jsp"><i
-									class="glyphicon glyphicon-home"></i><span> Dashboard</span></a></li>
+									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
 							<li class="nav-header hidden-md">Management</li>
 							<li><a class="ajax-link" href="Admin_Candidate.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
@@ -123,6 +149,9 @@
 							<li><a class="ajax-link" href="Admin_Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
+							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Setting</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -143,26 +172,104 @@
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Setting
-									Select Examination
+									<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;Set Select
+									Examination Type
 								</h2>
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#settingforexamsurvey"
+										class="btn btn-setting btn-round btn-default"
+										data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"><i
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
 							<div class="box-content" align="center">
-								<form role="form">
-									<label for="exampleToggleSwitch">Switch</label> <input
-										data-no-uniform="true" type="checkbox" class="iphone-toggle">
-									<br> <a class="btn btn-success" href="#"> <i
-										class="glyphicon glyphicon glyphicon-check"></i> Select
-									</a>
+								<form method="post" action="Admin_Examination_SubmitSurvey.jsp"
+									role="form" id="examsurveyform">
+									<div class="box-content" align="center">
+										<%
+											if (null == (String) session.getAttribute("ExamSurveyYear")) {
+										%>
+
+										<p>
+											<b><i>Year : Term : </i></b>
+										</p>
+
+										<%
+											} else {
+										%>
+
+										<p>
+											<b><i>Year : <%=(String) session.getAttribute("ExamSurveyYear")%>
+													Term : <%=(String) session.getAttribute("ExamSurveyTerm")%></i></b>
+										</p>
+
+										<%
+											}
+										%>
+										<label for="exampleToggleSwitch">Switch</label> <input
+											data-no-uniform="true" name="checkboxsurvey" type="checkbox"
+											class="iphone-toggle"> <br> <input type="hidden"
+											name="surveyyear" id="surveyyear"
+											value="<%=(String) session.getAttribute("ExamSurveyYear")%>">
+										<input type="hidden" name="surveyterm" id="surveyterm"
+											value="<%=(String) session.getAttribute("ExamSurveyTerm")%>">
+										<p>
+											Status :
+											<%
+											if (null == (String) session.getAttribute("ExamSurveyYear")) {
+										%>
+
+											<%
+												} else {
+													stmt = con.createStatement();
+													String QueryString = "SELECT * FROM examination_checksurvey where year = "
+															+ (String) session.getAttribute("ExamSurveyYear")
+															+ " and semester = "
+															+ (String) session.getAttribute("ExamSurveyTerm");
+													ResultSet rs = stmt.executeQuery(QueryString);
+													if (rs.next()) {
+											%>
+											<input type="hidden" name="checksurveyID" id="checksurveyID"
+												value="<%=rs
+							.getString("examination_checksurvey.examination_checksurveyID")%>">
+											<%=rs
+							.getString("examination_checksurvey.checksurvey")%>
+											<%
+												} else {
+											%>
+											OFF
+											<%
+												}
+
+												}
+											%>
+										</p>
+									</div>
+									<button type="button" onclick="submitsurveyform()"
+										class="btn btn-default">Submit</button>
 								</form>
+
+								<script type="text/javascript">
+									function submitsurveyform() {
+										var surveyyear =
+								<%=session.getAttribute("ExamSurveyYear")%>
+									;
+										var surveyterm =
+								<%=session.getAttribute("ExamSurveyTerm")%>
+									;
+
+										if (!surveyyear || !surveyterm) {
+											swal("Select Year and Semester First.");
+										} else {
+											document.getElementById(
+													"examsurveyform").submit();
+										}
+									}
+								</script>
+
 							</div>
 						</div>
 					</div>
@@ -179,9 +286,9 @@
 									<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;Examination
 								</h2>
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#" class="btn btn-setting btn-round btn-default"
+										data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"> <i
 										class="glyphicon glyphicon-remove"></i></a>
@@ -229,9 +336,10 @@
 												disabled></td>
 
 											<td><input type="checkbox" value="" disabled></td>
-											<td><a class="btn btn btn-success btn-setting" href="#">
+											<td><button onclick="showdetailexam()"
+													class="btn btn btn-success btn-setting">
 													<i class="glyphicon glyphicon-zoom-in icon-white"></i> View
-											</a></td>
+												</button> </a></td>
 										</tr>
 
 									</tbody>
@@ -251,7 +359,99 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+
+		<script type="text/javascript">
+			function sendexamsurveysetting() {
+				document.getElementById("setyeartermformexamsurvey").submit();
+			}
+			function showdetailexam() {
+				$(document).ready(function() {
+					$("#detailforexam").modal('show');
+				});
+			}
+		</script>
+
+		<div class="modal fade" id="settingforexamsurvey" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h3>Setting Course Plan Survey</h3>
+					</div>
+					<div class="modal-body">
+						<form method="post"
+							action="Admin_Examination_SetSurveyYearSemester.jsp"
+							role="setyeartermformsurvey" id="setyeartermformexamsurvey">
+							<p>Select year and semester</p>
+							<label for="Year">Year</label> <select id="examsurveyyear"
+								name="examsurveyyear">
+								<script>
+									var myDate = new Date();
+									var year = myDate.getFullYear() + 543;
+									for (var i = year + 1; i > 2540; i--) {
+										document.write('<option value="'+i+'">'
+												+ i + '</option>');
+									}
+								</script>
+							</select> <label for="Term">Term</label> <select id="examsurveyterm"
+								name="examsurveyterm">
+								<option value="1">1</option>
+								<option value="2">2</option>
+							</select> <br> <br>
+							<p>Table for all year and semester</p>
+							<table
+								class="table table-striped table-bordered bootstrap-datatable responsive">
+								<thead>
+									<tr>
+										<th>Year</th>
+										<th>Semester</th>
+										<th>Status</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%
+										stmt = con.createStatement();
+										String QuerySurveyString = "SELECT * FROM examination_checksurvey";
+										ResultSet result = stmt.executeQuery(QuerySurveyString);
+										while (result.next()) {
+									%>
+									<tr>
+										<td>
+											<%
+												out.print(result.getString("examination_checksurvey.year"));
+											%>
+										</td>
+										<td class="center">
+											<%
+												out.print(result.getString("examination_checksurvey.semester"));
+											%>
+										</td>
+										<td class="center">
+											<%
+												out.print(result
+															.getString("examination_checksurvey.checksurvey"));
+											%>
+										</td>
+									</tr>
+									<%
+										}
+									%>
+
+								</tbody>
+							</table>
+
+							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+							<input type="button" class="btn btn-primary"
+								onClick="sendexamsurveysetting()" value="Submit" />
+						</form>
+					</div>
+					<div class="modal-footer"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="detailforexam" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -295,16 +495,16 @@
 				</div>
 			</div>
 		</div>
-		<footer class="row">
-		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
-		</p>
-		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-		</p>
-		</footer>
 	</div>
+	<footer class="row">
+	<p class="col-md-9 col-sm-9 col-xs-12 copyright">
+		© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
+		2014
+	</p>
+	<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
+		Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
+	</p>
+	</footer>
 	<!--/.fluid-container-->
 
 	<!-- external javascript -->
