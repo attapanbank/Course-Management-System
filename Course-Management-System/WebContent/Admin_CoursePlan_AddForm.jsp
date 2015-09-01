@@ -1,5 +1,28 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+<%@ page contentType="text/html; charset=utf-8" language="java"
+	import="java.sql.*" errorPage=""%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt;
+	Connection con;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -47,6 +70,9 @@
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
 
+<script src="dist/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="dist/sweetalert.css">
+
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
 
@@ -57,6 +83,41 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
+
+<script type="text/javascript">
+	//check null or blank
+	function checkaddcourseplanform() {
+		var major = document.getElementById("major").value;
+		var numberofstudent = document.getElementById("numberofstudent").value;
+		var selectcourse = document.getElementById("selectcourse").value;
+		if (!major) {
+			swal("Please Input Major.");
+		} else if (!numberofstudent) {
+			swal("Please Input Number of student.");
+		} else if (!selectcourse) {
+			swal("Please select course.");
+		} else {
+			document.getElementById("AddcourseplanForm").submit();
+		}
+	}
+
+	//check press enter
+	$(function() {
+
+		$('#major').keypress(function(event) {
+			if (event.which == 13) {
+				checkaddcourseplanform()
+			}
+		});
+
+		$('#numberofstudent').keypress(function(event) {
+			if (event.which == 13) {
+				checkaddcourseplanform()
+			}
+		});
+	});
+</script>
+
 </head>
 
 <body>
@@ -123,6 +184,9 @@
 							<li><a class="ajax-link" href="Admin_Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
+							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Setting</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -136,8 +200,7 @@
 					<ul class="breadcrumb">
 						<li><a href="Admin_News.jsp">Home</a></li>
 						<li><a href="Admin_CoursePlan.jsp">Course Plan</a></li>
-						<li><a href="Admin_CoursePlan_Form.jsp">Course Plan Form</a>
-						</li>
+						<li>Course Plan Add Form</li>
 					</ul>
 				</div>
 
@@ -148,8 +211,8 @@
 							<div class="box-inner">
 								<div class="box-header well" data-original-title="">
 									<h2>
-										<i class="glyphicon glyphicon-edit"></i> Add Course From
-										Course Ref
+										<i class="glyphicon glyphicon-edit"></i> Add Course to
+										CoursePlan
 									</h2>
 
 									<div class="box-icon">
@@ -162,18 +225,164 @@
 									</div>
 								</div>
 								<div class="box-content" align="center">
-									<select data-placeholder="Select Course" id="selectError2"
-										data-rel="chosen">
-										<option value=""></option>
-										<option>1302333 Database</option>
-										<option>1305201 Software Architecture</option>
-										<option>1305210 Team Software Programming and System
-											Testing Workshop</option>
-									</select> <br> <br> <a class="btn btn-success" href="#"> <i
-										class="glyphicon glyphicon glyphicon-check"></i> Save
-									</a>
-									</form>
+									<form method="post"
+										action="Admin_CoursePlan_AddInformation.jsp"
+										role="selectcourseform" id="AddcourseplanForm"
+										autocomplete="off">
+										<table>
+											<tr>
+												<td style="text-align: right"><label for="Year">Year</label>
+													<select id="year" name="year">
+														<script>
+															var myDate = new Date();
+															var year = myDate
+																	.getFullYear() + 543;
+															for (var i = year + 1; i > 2540; i--) {
+																document
+																		.write('<option value="'+i+'">'
+																				+ i
+																				+ '</option>');
+															}
+														</script>
+												</select></td>
+												<td><label for="Term">Term</label> <select id="term"
+													name="term">
+														<option value="1">1</option>
+														<option value="2">2</option>
+												</select></td>
+											</tr>
+											<tr>
+												<td style="text-align: right">Major :</td>
+												<td><input type="text" id="major" name="major" /></td>
+											</tr>
+											<tr>
+												<td style="text-align: right">Number of Students :</td>
+												<td><input type="text" id="numberofstudent"
+													name="numberofstudent" value="0" /></td>
+											</tr>
+											<tr>
+												<td colspan="2"></td>
+											</tr>
+										</table>
+										<%
+											stmt = con.createStatement();
+											String QueryString1301 = "SELECT * from course where courseCode like '1301%' order by courseCode";
+											String QueryString1302 = "SELECT * from course where courseCode like '1302%' order by courseCode";
+											String QueryString1305 = "SELECT * from course where courseCode like '1305%' order by courseCode";
+											String QueryString1306 = "SELECT * from course where courseCode like '1306%' order by courseCode";
+											String QueryString1501 = "SELECT * from course where courseCode like '1501%' order by courseCode";
+											String QueryString1502 = "SELECT * from course where courseCode like '1502%' order by courseCode";
+										%>
 
+										<select data-placeholder="Select Course" id="selectcourse"
+											name="selectcourse" data-rel="chosen">
+											<option value=""></option>
+											<optgroup label="Information Technology">
+												<%
+													ResultSet rs1301 = stmt.executeQuery(QueryString1301);
+													while (rs1301.next()) {
+												%>
+												<option style="text-align: left;">
+													<%
+														out.print(rs1301.getString("courseCode"));
+													%>
+													<%
+														out.print(rs1301.getString("courseName"));
+													%>
+												</option>
+												<%
+													}
+												%>
+											</optgroup>
+											<optgroup label="Computer Science">
+												<%
+													ResultSet rs1302 = stmt.executeQuery(QueryString1302);
+													while (rs1302.next()) {
+												%>
+												<option style="text-align: left;">
+													<%
+														out.print(rs1302.getString("courseCode"));
+													%>
+													<%
+														out.print(rs1302.getString("courseName"));
+													%>
+												</option>
+												<%
+													}
+												%>
+											</optgroup>
+											<optgroup label="Software Engineering">
+												<%
+													ResultSet rs1305 = stmt.executeQuery(QueryString1305);
+													while (rs1305.next()) {
+												%>
+												<option style="text-align: left;">
+													<%
+														out.print(rs1305.getString("courseCode"));
+													%>
+													<%
+														out.print(rs1305.getString("courseName"));
+													%>
+												</option>
+												<%
+													}
+												%>
+											</optgroup>
+											<optgroup label="Multimedia Technology and Animation">
+												<%
+													ResultSet rs1306 = stmt.executeQuery(QueryString1306);
+													while (rs1306.next()) {
+												%>
+												<option style="text-align: left;">
+													<%
+														out.print(rs1306.getString("courseCode"));
+													%>
+													<%
+														out.print(rs1306.getString("courseName"));
+													%>
+												</option>
+												<%
+													}
+												%>
+											</optgroup>
+											<optgroup label="Computer Engineering">
+												<%
+													ResultSet rs1501 = stmt.executeQuery(QueryString1501);
+													while (rs1501.next()) {
+												%>
+												<option style="text-align: left;">
+													<%
+														out.print(rs1501.getString("courseCode"));
+													%>
+													<%
+														out.print(rs1501.getString("courseName"));
+													%>
+												</option>
+												<%
+													}
+												%>
+											</optgroup>
+											<optgroup label="Information and Communication Engineering">
+												<%
+													ResultSet rs1502 = stmt.executeQuery(QueryString1502);
+													while (rs1502.next()) {
+												%>
+												<option style="text-align: left;">
+													<%
+														out.print(rs1502.getString("courseCode"));
+													%>
+													<%
+														out.print(rs1502.getString("courseName"));
+													%>
+												</option>
+												<%
+													}
+												%>
+											</optgroup>
+										</select><br> <br> <input type="button"
+											id="submitaddcourplanbtn" onclick="checkaddcourseplanform()"
+											class="btn btn-success" value="Submit" />
+									</form>
 								</div>
 							</div>
 						</div>
