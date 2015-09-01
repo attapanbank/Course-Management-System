@@ -1,28 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	import="java.sql.*" pageEncoding="utf-8"%>
 
-<%@page import="java.io.InputStream"%>
-<%@page import="java.util.Properties"%>
-
-<%
-	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
-	Properties props = new Properties();
-	props.load(stream);
-
-	String readurl = props.getProperty("url");
-	String readdriver = props.getProperty("driver");
-	String readuser = props.getProperty("user");
-	String readpass = props.getProperty("password");
-
-	Statement stmt;
-	Connection con;
-	String url = readurl;
-
-	Class.forName(readdriver);
-	con = DriverManager.getConnection(url, readuser, readpass);
-%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -41,7 +19,7 @@
         ===
     -->
 <meta charset="utf-8">
-<title>User Management</title>
+<title>User Form</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description"
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
@@ -69,10 +47,8 @@
 <link href="css/jquery.iphone.toggle.css" rel="stylesheet">
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
-
 <script src="dist/sweetalert-dev.js"></script>
 <link rel="stylesheet" href="dist/sweetalert.css">
-
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
 
@@ -83,6 +59,39 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
+
+<script type="text/javascript">
+
+	function checkadduserform() {
+		var username = document.getElementById("username").value;
+		var password = document.getElementById("password").value;
+		var confirmpassword = document.getElementById("confirmpassword").value;
+		var firstname = document.getElementById("firstname").value;
+		var lastname = document.getElementById("lastname").value;
+		
+		var checkusernamelength = username.length;
+		var checkpasswordlength = password.length;
+
+		if (!username || !password || !confirmpassword || !firstname || !lastname) {
+			swal("Input cannot be empty.");
+		} else if(/[^a-zA-Z0-9]/.test(username)){
+			swal("Username is not allow special characters.");
+		} else if(/[^a-zA-Z0-9]/.test(password)){
+			swal("Password is not allow special characters.");
+		} else if(password!=confirmpassword){
+			swal("Password and Confirm Password must be the same.");
+		} else if(checkusernamelength < 8 || checkusernamelength > 12){
+			alert("Username must between 8-12 Characters");
+		} else if(checkpasswordlength < 8 || checkpasswordlength > 12){
+			swal("Password must between 8-12 Characters");
+		} else if (/\s/.test(username) || /\s/.test(password)) {
+			swal("Input cannot use white spaces");
+		} else {
+			document.getElementById("AdduserForm").submit();
+		}
+	}
+</script>
+
 </head>
 
 <body>
@@ -146,7 +155,7 @@
 							<li><a class="ajax-link" href="Admin_History.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										History</span></a></li>
-							<li><a class="ajax-link" href="Admin_Report.jsp"><i
+							<li><a class="ajax-link" href="Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
 							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
@@ -165,121 +174,111 @@
 					<ul class="breadcrumb">
 						<li><a href="Admin_News.jsp">Home</a></li>
 						<li><a href="Admin_User.jsp">User Management</a></li>
+						<li>Add User Form</li>
 					</ul>
 				</div>
 
 				<div class="row">
-					<div class="box col-md-12">
+					<div class="box col-md-6">
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;User
-									Management
+									<i class="glyphicon glyphicon-edit"></i> User Form
 								</h2>
+
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-										class="btn btn-close btn-round btn-default"> <i
+										class="btn btn-close btn-round btn-default"><i
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							<div class="box-content">
-								<table
-									class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-									<thead>
-										<tr>
-											<th>Username</th>
-											<th>FirstName</th>
-											<th>LastName</th>
-											<th>Role</th>
-											<th>Major</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody>
-										<%
-											stmt = con.createStatement();
-											String QueryString = (String) request.getAttribute("GetQuery");
+							<div class="box-content" align="center">
+								<form method="post" action="Admin_User_AddInformation.jsp"
+									id="AdduserForm" autocomplete="off">
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-user red"></i></span> <input type="text"
+											id="username" name="username" class="form-control"
+											placeholder="Username">
+									</div>
+									<%
+										if ((String) request.getAttribute("Error username") != null) {
+											out.println("<font color=red>"
+													+ request.getAttribute("Error username") + "</font>");
+											request.removeAttribute("Error username");
+										}
+									%>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-lock red"></i></span> <input
+											type="password" id="password" name="password"
+											class="form-control" placeholder="Password">
+									</div>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-lock red"></i></span> <input
+											type="password" id="confirmpassword" name="confirmpassword"
+											class="form-control" placeholder="Confirm Password">
+									</div>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-pencil red"></i></span> <input
+											type="text" id="firstname" name="firstname"
+											class="form-control" placeholder="ชื่อ">
+									</div>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-pencil red"></i></span> <input
+											type="text" id="lastname" name="lastname"
+											class="form-control" placeholder="นามสกุล">
+									</div>
+									<br>
+									<div class="control-group">
+										<label class="control-label" for="selectError">User
+											Type</label>
 
-											if ((String) request.getAttribute("GetQuery") == null) {
-												QueryString = "SELECT * FROM user ORDER BY usertype";
-											} else {
-												QueryString = (String) request.getAttribute("GetQuery");
-											}
-
-											ResultSet rs = stmt.executeQuery(QueryString);
-											while (rs.next()) {
-										%>
-										<tr>
-											<td>
-												<%
-													out.print(rs.getString("username"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("firstname"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("lastname"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("usertype"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("major"));
-												%>
-											</td>
-											<td><a class="btn btn-info"
-												href="Admin_User_EditForm.jsp?username=<%=rs.getString("username")%>">
-													<i class="glyphicon glyphicon-edit icon-white"></i> Edit
-											</a> <a class="btn btn-danger confirmation"
-												href="Admin_User_DeleteForm.jsp?userid=<%=rs.getString("userID")%>">
-													<i class="glyphicon glyphicon-trash icon-white"></i> Delete
-											</a></td>
-										</tr>
-										<%
-											}
-											request.removeAttribute("GetQuery");
-										%>
-
-									</tbody>
-								</table>
-
-								<script type="text/javascript">
-									var elems = document
-											.getElementsByClassName('confirmation');
-									var confirmIt = function(e) {
-										if (!confirm('Are you sure to delete?'))
-											e.preventDefault();
-									};
-									for (var i = 0, l = elems.length; i < l; i++) {
-										elems[i].addEventListener('click',
-												confirmIt, false);
-									}
-								</script>
-
-								<div class="box-content" align="center">
-									<div class="row">
-										<div class="col-md-12">
-											<a class="btn btn-success" href="Admin_User_AddForm.jsp">
-												<i class="glyphicon glyphicon-plus icon-white"></i> Add User
-											</a>
+										<div class="controls">
+											<select id="selectusertype" name="selectusertype"
+												data-rel="chosen">
+												<option style="text-align: left;">Admin</option>
+												<option style="text-align: left;">Teacher</option>
+												<option style="text-align: left;">Teaching
+													Assistance</option>
+												<option style="text-align: left;">Major Coordinator</option>
+											</select>
 										</div>
 									</div>
-								</div>
+									<br>
+									<div class="control-group">
+										<label class="control-label" for="selectError">Major</label>
+
+										<div class="controls">
+											<select id="selectmajor" name="selectmajor" data-rel="chosen">
+												<option style="text-align: left;">Information
+													Technology</option>
+												<option style="text-align: left;">Software
+													Engineering</option>
+												<option style="text-align: left;">Computer Science</option>
+												<option style="text-align: left;">Multimedia
+													Technology and Animation</option>
+												<option style="text-align: left;">Computer
+													Engineering</option>
+												<option style="text-align: left;">Information and
+													Communication Engineering</option>
+											</select>
+										</div>
+									</div>
+									<br> <input type="button" onclick="checkadduserform()"
+										class="btn btn-success" value="&emsp;Save&emsp;" />
+								</form>
 							</div>
 						</div>
 					</div>
-
 					<!--/span-->
 
 				</div>
@@ -292,54 +291,7 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>Query By User</h3>
-					</div>
-					<form method="post" action="Admin_User_ListUser.jsp">
-						<div class="modal-body">
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryall" value="queryall" checked> Query All
-									UserType
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryadmin" value="queryadmin"> Query only Admin
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryteacher" value="queryteacher"> Query only
-									Teacher
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryta" value="queryta"> Query only Teaching
-									Assistance
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="querymajorco" value="querymajorco"> Query only
-									Major Coordinator
-								</label>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-							<input type="submit" class="btn btn-primary" value="Submit" />
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
+
 		<footer class="row">
 		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
 			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -

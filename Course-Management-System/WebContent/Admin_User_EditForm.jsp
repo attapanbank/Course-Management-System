@@ -1,5 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	import="java.sql.*" pageEncoding="utf-8"%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt;
+	Connection con;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -57,6 +80,19 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
+
+<script type="text/javascript">
+	function checkedituserform() {
+		var selectusertype = document.getElementById("selectusertype").value;
+
+		if (!selectusertype) {
+			alert("Usertype cannot be empty.");
+		} else {
+			document.getElementById("EdituserForm").submit();
+		}
+	}
+</script>
+
 </head>
 
 <body>
@@ -123,6 +159,9 @@
 							<li><a class="ajax-link" href="Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
+							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Setting</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -136,7 +175,7 @@
 					<ul class="breadcrumb">
 						<li><a href="Admin_News.jsp">Home</a></li>
 						<li><a href="Admin_User.jsp">User Management</a></li>
-						<li><a href="Admin_Form.jsp">User Form</a></li>
+						<li>Edit User Form</li>
 					</ul>
 				</div>
 
@@ -149,71 +188,79 @@
 								</h2>
 
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"><i
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
 							<div class="box-content" align="center">
-								<div class="input-group col-md-6">
-									<span class="input-group-addon"><i
-										class="glyphicon glyphicon-user red"></i></span> <input type="text"
-										class="form-control" placeholder="Username">
-								</div>
-								<br>
-								<div class="input-group col-md-6">
-									<span class="input-group-addon"><i
-										class="glyphicon glyphicon-lock red"></i></span> <input type="text"
-										class="form-control" placeholder="Password">
-								</div>
-								<br>
-								<div class="input-group col-md-6">
-									<span class="input-group-addon"><i
-										class="glyphicon glyphicon-lock red"></i></span> <input type="text"
-										class="form-control" placeholder="Confirm Password">
-								</div>
-								<br>
-								<div class="input-group col-md-6">
-									<span class="input-group-addon"><i
-										class="glyphicon glyphicon-pencil red"></i></span> <input type="text"
-										class="form-control" placeholder="ชื่อ-นามสกุล">
-								</div>
-								<br>
-								<div class="control-group">
-									<label class="control-label" for="selectError">User
-										Type</label>
+								<form method="post" action="Admin_User_EditInformation.jsp"
+									id="EdituserForm" autocomplete="off">
+									<%
+										String username = request.getParameter("username");
 
-									<div class="controls">
-										<select id="selectError" data-rel="chosen">
-											<option>Admin</option>
-											<option>Teacher</option>
-											<option>Teaching Assistance</option>
-											<option>Major Coordinator</option>
-										</select>
+										stmt = con.createStatement();
+										String QueryString = "SELECT * FROM user where username = '"
+												+ username + "'";
+										ResultSet rs = stmt.executeQuery(QueryString);
+										if (rs.next()) {
+									%>
+									<input type="hidden" name="userID"
+										value="<%=rs.getString("user.userID")%>" />
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-user red"></i></span> <input type="text"
+											id="username" name="username" class="form-control"
+											placeholder="Username"
+											value="<%=rs.getString("user.username")%>" disabled>
 									</div>
-								</div>
-								<br>
-								<div class="control-group">
-									<label class="control-label" for="selectError">Major</label>
-
-									<div class="controls">
-										<select id="selectError" data-rel="chosen">
-											<option>Information Technology</option>
-											<option>Software Engineering</option>
-											<option>Computer Science</option>
-											<option>Multimedia Technology and Animation</option>
-											<option>Computer Engineering</option>
-											<option>Information and Communication Engineering</option>
-										</select>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-pencil red"></i></span> <input
+											type="text" id="firstname" name="firstname"
+											class="form-control" placeholder="Firstname"
+											value="<%=rs.getString("user.firstname")%>" disabled>
 									</div>
-								</div>
-								<br> <a class="btn btn-success" href="#"> <i
-									class="glyphicon glyphicon glyphicon-check"></i> Save
-								</a>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-pencil red"></i></span> <input
+											type="text" id="lastname" name="lastname"
+											class="form-control" placeholder="Lastname"
+											value="<%=rs.getString("user.lastname")%>" disabled>
+									</div>
+									<br>
+									<div class="control-group">
+										<label class="control-label" for="selectError">User
+											Type</label>
 
+										<div class="controls">
+											<select id="selectusertype" name="selectusertype"
+												data-rel="chosen">
+												<option style="text-align: left;">Admin</option>
+												<option style="text-align: left;">Teacher</option>
+												<option style="text-align: left;">Teaching
+													Assistance</option>
+												<option style="text-align: left;">Major Coordinator</option>
+											</select>
+										</div>
+									</div>
+									<br>
+									<div class="input-group col-md-6">
+										<span class="input-group-addon"><i
+											class="glyphicon glyphicon-briefcase red"></i></span> <input
+											type="text" id="major" name="major" class="form-control"
+											placeholder="Major" value="<%=rs.getString("user.major")%>"
+											disabled>
+									</div>
+									<%
+										}
+									%>
+									<br> <input type="button" onclick="checkedituserform()"
+										class="btn btn-success" value="&emsp;Save&emsp;" />
+								</form>
 							</div>
 						</div>
 					</div>
@@ -229,46 +276,6 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>ประวัติการสอน</h3>
-					</div>
-					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>ปีการศึกษา</th>
-									<th>รหัสวิชา</th>
-									<th>รายวิชา</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>2557</td>
-									<td>1305080</td>
-									<td>Basic Information Technology</td>
-								</tr>
-								<tr>
-									<td>2558</td>
-									<td>1305076</td>
-									<td>Introduction Information Technology</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
-					</div>
-				</div>
-			</div>
-		</div>
 		<footer class="row">
 		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
 			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
