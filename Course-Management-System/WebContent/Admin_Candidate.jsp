@@ -1,5 +1,71 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	import="java.sql.*" pageEncoding="utf-8"%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.io.*,java.util.Locale"%>
+
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt;
+	Connection con;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+
+	stmt = con.createStatement();
+	//check length of teacher
+	String Queryteacher = "SELECT * FROM user WHERE usertype = 'Teacher'";
+	ResultSet rsteacher = stmt.executeQuery(Queryteacher);
+	int countteacher = 0;
+	while (rsteacher.next()) {
+		countteacher++;
+	}
+	//end check length of teacher
+	//query name of teacher
+	String[] arrayTeacher = new String[countteacher];
+	String Queryteacher2 = "SELECT * FROM user WHERE usertype = 'Teacher'";
+	ResultSet rsteacher2 = stmt.executeQuery(Queryteacher2);
+	int countteacher2 = 0;
+	while (rsteacher2.next()) {
+		arrayTeacher[countteacher2] = rsteacher2
+				.getString("user.firstname");
+		countteacher2++;
+	}
+	//end query name of teacher
+	//check length of ta
+	String Queryta = "SELECT * FROM user WHERE usertype = 'Teaching Assistance'";
+	ResultSet rsta = stmt.executeQuery(Queryta);
+	int countta = 0;
+	while (rsta.next()) {
+		countta++;
+	}
+	//end check length of ta
+	//query name of ta
+	String[] arrayTa = new String[countta];
+	String Queryta2 = "SELECT * FROM user WHERE usertype = 'Teaching Assistance'";
+	ResultSet rsta2 = stmt.executeQuery(Queryta2);
+	int countta2 = 0;
+	while (rsta2.next()) {
+		arrayTa[countta2] = rsta2.getString("user.firstname");
+		countta2++;
+	}
+	//end query name of ta
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -58,6 +124,7 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
+
 </head>
 
 <body>
@@ -124,6 +191,9 @@
 							<li><a class="ajax-link" href="Admin_Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
+							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Setting</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -136,7 +206,7 @@
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Admin_News.jsp">Home</a></li>
-						<li><a href="Admin_Course.jsp">Course</a></li>
+						<li><a href="Admin_Candidate.jsp">Candidate</a></li>
 					</ul>
 				</div>
 				<div class="row">
@@ -223,9 +293,10 @@
 											Course (Not Candidate)
 										</h2>
 										<div class="box-icon">
-											<a href="#" class="btn btn-setting btn-round btn-default"><i
-												class="glyphicon glyphicon-cog"></i></a> <a href="#"
-												class="btn btn-minimize btn-round btn-default"><i
+											<a href="#settingfornotcandidate"
+												class="btn btn-setting btn-round btn-default"
+												data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
+											<a href="#" class="btn btn-minimize btn-round btn-default"><i
 												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 												class="btn btn-close btn-round btn-default"><i
 												class="glyphicon glyphicon-remove"></i></a>
@@ -233,12 +304,102 @@
 									</div>
 									<div class="box-content">
 										<p>
-											<a class="btn btn-success" href="#"> <i
-												class="glyphicon glyphicon-repeat"></i> Duplicate
-											</a>
+											<button class="btn btn-success sendduplicate">
+												<i class="glyphicon glyphicon-repeat"></i> Duplicate
+											</button>
 										</p>
 										<table
 											class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+											<%
+												String strdateterm1_1 = "";
+												String strdateterm1_2 = "";
+												String strdateterm2_1 = "";
+												String strdateterm2_2 = "";
+
+												String academicyear = null;
+												String academicterm = null;
+
+												if (null == (String) session.getAttribute("NotCandidateYear")) {
+
+													Date td = new Date();
+													String strtd = new String("");
+													SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+													SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+															new Locale("th"));
+													strtd = format.format(td);
+													Date today = format.parse(strtd);
+													//System.out.println(today);
+
+													/* String[] datetd = strtd.split("-", 3);
+													int ydatetd = Integer.parseInt(datetd[0]);
+													int mdatetd = Integer.parseInt(datetd[1]);
+													int ddatetd = Integer.parseInt(datetd[2]); */
+
+													stmt = con.createStatement();
+													String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+													ResultSet rs = stmt.executeQuery(QueryString);
+													if (rs.next()) {
+														strdateterm1_1 = rs.getString("dateterm1_1");
+														strdateterm1_2 = rs.getString("dateterm1_2");
+														strdateterm2_1 = rs.getString("dateterm2_1");
+														strdateterm2_2 = rs.getString("dateterm2_2");
+
+														Date dateterm1_1 = format2.parse(strdateterm1_1);
+														Date dateterm1_2 = format2.parse(strdateterm1_2);
+														Date dateterm2_1 = format2.parse(strdateterm2_1);
+														Date dateterm2_2 = format2.parse(strdateterm2_2);
+
+														String[] term1_1 = strdateterm1_1.split("-", 3);
+														int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+														int mterm1_1 = Integer.parseInt(term1_1[1]);
+														int dterm1_1 = Integer.parseInt(term1_1[2]);
+
+														int intacademicyear = yterm1_1;
+														academicyear = Integer.toString(intacademicyear);
+
+														/* System.out.println(dateterm1_1);
+														System.out.println(dateterm1_2);
+														System.out.println(dateterm2_1);
+														System.out.println(dateterm2_2); */
+
+														if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																&& (today.after(dateterm1_1) || today
+																		.equals(dateterm1_1))) {
+															academicterm = "1";
+														} else if ((today.before(dateterm2_2) || today
+																.equals(dateterm2_2))
+																&& (today.after(dateterm2_1) || today
+																		.equals(dateterm2_1))) {
+															academicterm = "2";
+														} else {
+															academicyear = "";
+															academicterm = "";
+															System.out.println("None");
+														}
+													}
+
+													session.setAttribute("academicyear", academicyear);
+													session.setAttribute("academicterm", academicterm);
+											%>
+
+											<p>
+												<b><i>Year : <%=academicyear%> Term : <%=academicterm%></i></b>
+											</p>
+
+											<%
+												} else {
+											%>
+
+											<p>
+												<b><i>Year : <%=(String) session.getAttribute("NotCandidateYear")%>
+														Term : <%=(String) session.getAttribute("NotCandidateTerm")%></i></b>
+											</p>
+
+											<%
+												}
+											%>
+
 											<thead>
 												<tr>
 													<th>Duplicate</th>
@@ -255,177 +416,398 @@
 												</tr>
 											</thead>
 											<tbody>
+												<%
+													String year = "";
+													String term = "";
+													if (null == (String) session.getAttribute("NotCandidateYear")) {
+														year = (String) session.getAttribute("academicyear");
+														term = (String) session.getAttribute("academicterm");
+													} else if (null != (String) session
+															.getAttribute("NotCandidateYear")) {
+														year = (String) session.getAttribute("NotCandidateYear");
+														term = (String) session.getAttribute("NotCandidateTerm");
+													} else {
+														year = null;
+														term = null;
+													}
+
+													stmt = con.createStatement();
+													String QueryString = "SELECT * FROM courseplan LEFT JOIN course ON course.courseCode = courseplan.courseCode LEFT JOIN course_survey ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.year = '"
+															+ year
+															+ "' AND courseplan.semester = '"
+															+ term
+															+ "' GROUP BY courseplan.courseCode;";
+													ResultSet rs = stmt.executeQuery(QueryString);
+													while (rs.next()) {
+														// count length
+														stmt = con.createStatement();
+														String QueryString2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
+																+ rs.getString("courseplan.courseCode") + "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+														ResultSet rs2 = stmt.executeQuery(QueryString2);
+														int length = 0;
+														while (rs2.next()) {
+															length++;
+														}
+
+														// get user firstname
+														stmt = con.createStatement();
+														String[] arrayusername = new String[length];
+														String QueryString3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
+																+ rs.getString("courseplan.courseCode") + "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+														ResultSet rs3 = stmt.executeQuery(QueryString3);
+														int length2 = 0;
+														while (rs3.next()) {
+															arrayusername[length2] = rs3.getString("user.firstname");
+															length2++;
+														}
+												%>
 												<tr>
-													<td><input type="checkbox" value=""></td>
-													<td>1302333</td>
-													<td>Database</td>
-													<td>3 (2-2-5)</td>
-													<td>IT56</td>
+													<td><input type="checkbox" class="checkbox"
+														name="surveyid"
+														value="<%=rs.getString("courseplan.courseplanID")%>"
+														form="copyForm"></td>
+													<td>
+														<%
+															out.print(rs.getString("course.courseCode"));
+														%> <input type="hidden" name="coursecode"
+														value="<%=rs.getString("course.courseCode")%>"
+														form="savecandidate" /> <input type="hidden"
+														name="checkyear" id="checkyear" value="<%=year%>"
+														form="savecandidate" /> <input type="hidden"
+														name="checkterm" id="checkterm" value="<%=term%>"
+														form="savecandidate" />
+													</td>
+													<td>
+														<%
+															out.print(rs.getString("course.courseName"));
+														%>
+													</td>
+													<td>
+														<%
+															out.print(rs.getString("course.credit"));
+														%>
+													</td>
+													<td>
+														<p id="inputformajor">
+															<input type="text" id="" name=""
+																value="<%=rs.getString("courseplan.major")%>" />
+														</p>
+													</td>
 													<td><p id="inputforstudentnumber">
-															<input type="text" id="" name="" />
+															<input type="text" id="" name=""
+																value="<%=rs.getString("courseplan.numberofstudent")%>" />
 														</p></td>
 													<td><p id="inputforlect">
 															<input type="text" id="" name="" />
 														</p></td>
 													<td><select id="selectError1" multiple
 														class="form-control" data-rel="chosen">
-															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
+															<optgroup label="From Survey">
+																<%
+																	for (int i = 0; i < arrayusername.length; i++) {
+																%>
+																<option><%=arrayusername[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
+															<optgroup label="From Teacher">
+																<%
+																	for (int i = 0; i < arrayTeacher.length; i++) {
+																%>
+																<option><%=arrayTeacher[i]%></option>
+																<%
+																	}
+																%>
+															</optgroup>
+															<optgroup label="From TA">
+																<%
+																	for (int i = 0; i < arrayTa.length; i++) {
+																%>
+																<option><%=arrayTa[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
 													</select></td>
 													<td><p id="inputforlab">
-															<input type="text" id="" name="" />
-														</p></td>
-													<td><select id="selectError1" multiple
-														class="form-control" data-rel="chosen">
-															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-													</select></td>
-													<td><a class="btn btn-success" href="#"> <i
-															class="glyphicon glyphicon glyphicon-check"></i> Save
-													</a></td>
-												</tr>
-												<tr>
-													<td><input type="checkbox" value=""></td>
-													<td>1302333</td>
-													<td>Database</td>
-													<td>3 (2-2-5)</td>
-													<td>SE56</td>
-													<td><p id="inputforstudentnumber">
-															<input type="text" id="" name="" />
-														</p></td>
-													<td><p id="inputforlect">
-															<input type="text" id="" name="" />
-														</p></td>
-													<td><select id="selectError1" multiple
-														class="form-control" data-rel="chosen">
-															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-													</select></td>
-													<td><p id="inputforlab">
-															<input type="text" id="" name="" />
-														</p></td>
-													<td><select id="selectError1" multiple
-														class="form-control" data-rel="chosen">
-															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-													</select></td>
-													<td><a class="btn btn-success" href="#"> <i
-															class="glyphicon glyphicon glyphicon-check"></i> Save
-													</a></td>
-												</tr>
-												<tr>
-													<td><input type="checkbox" value=""></td>
-													<td>1305201</td>
-													<td>Software Architecture</td>
-													<td>3 (3-0-6)</td>
-													<td>SE56</td>
-													<td><p id="inputforstudentnumber">
-															<input type="text" id="" name="" />
-														</p></td>
-													<td><p id="inputforlect">
 															<input type="text" id="" name="" />
 														</p></td>
 													<td><select id="selectError2" multiple
 														class="form-control" data-rel="chosen">
 															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
+																<%
+																	for (int i = 0; i < arrayusername.length; i++) {
+																%>
+																<option><%=arrayusername[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
+															<optgroup label="From Teacher">
+																<%
+																	for (int i = 0; i < arrayTeacher.length; i++) {
+																%>
+																<option><%=arrayTeacher[i]%></option>
+																<%
+																	}
+																%>
+															</optgroup>
+															<optgroup label="From TA">
+																<%
+																	for (int i = 0; i < arrayTa.length; i++) {
+																%>
+																<option><%=arrayTa[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
 													</select></td>
-													<td><p id="inputforlab">
-															<input type="text" id="" name="" />
-														</p></td>
-													<td><select id="selectError1" multiple
-														class="form-control" data-rel="chosen">
-															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
-															</optgroup>
-													</select></td>
-													<td><a class="btn btn-success" href="#"> <i
-															class="glyphicon glyphicon glyphicon-check"></i> Save
-													</a></td>
+													<td></td>
 												</tr>
+												<%
+													}
+
+													stmt = con.createStatement();
+													String Queryfake = "SELECT * FROM notcandidate LEFT JOIN course ON course.courseCode = notcandidate.courseCode WHERE notcandidate.year = '"
+															+ year + "' AND notcandidate.semester = '" + term + "' ";
+													ResultSet rsfake = stmt.executeQuery(Queryfake);
+													while (rsfake.next()) {
+														stmt = con.createStatement();
+														String Queryfake2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
+																+ rsfake.getString("notcandidate.courseCode")
+																+ "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+														ResultSet rsfake2 = stmt.executeQuery(Queryfake2);
+														int lengthfake = 0;
+														while (rsfake2.next()) {
+															lengthfake++;
+														}
+
+														stmt = con.createStatement();
+														String[] arrayusername = new String[lengthfake];
+														String Queryfake3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
+																+ rsfake.getString("notcandidate.courseCode")
+																+ "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+														ResultSet rsfake3 = stmt.executeQuery(Queryfake3);
+														int lengthfake2 = 0;
+														while (rsfake3.next()) {
+															arrayusername[lengthfake2] = rsfake3
+																	.getString("user.firstname");
+															lengthfake2++;
+														}
+												%>
 												<tr>
-													<td><input type="checkbox" value=""></td>
-													<td>1305210</td>
-													<td>Team Software Programming and System Testing
-														Workshop</td>
-													<td>1 (0-3-1)</td>
-													<td>SE56</td>
+													<td><input type="hidden" name="surveyid"
+														value="<%=rsfake.getString("notcandidate.notcandidate_ID")%>"></td>
+													<td>
+														<%
+															out.print(rsfake.getString("course.courseCode"));
+														%> <input type="hidden" name="coursecode2"
+														value="<%=rsfake.getString("course.courseCode")%>"
+														form="savecandidate" />
+													</td>
+													<td>
+														<%
+															out.print(rsfake.getString("course.courseName"));
+														%>
+													</td>
+													<td>
+														<%
+															out.print(rsfake.getString("course.credit"));
+														%>
+													</td>
+													<td>
+														<p id="inputformajor">
+															<input type="text" id="" name=""
+																value="<%=rsfake.getString("notcandidate.major")%>" />
+														</p>
+													</td>
 													<td><p id="inputforstudentnumber">
-															<input type="text" id="" name="" />
+															<input type="text" id="" name=""
+																value="<%=rsfake.getString("notcandidate.numberofstudent")%>" />
 														</p></td>
 													<td><p id="inputforlect">
 															<input type="text" id="" name="" />
 														</p></td>
 													<td><select id="selectError1" multiple
 														class="form-control" data-rel="chosen">
-															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
+															<optgroup label="From Survey">
+																<%
+																	for (int i = 0; i < arrayusername.length; i++) {
+																%>
+																<option><%=arrayusername[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
+															<optgroup label="From Teacher">
+																<%
+																	for (int i = 0; i < arrayTeacher.length; i++) {
+																%>
+																<option><%=arrayTeacher[i]%></option>
+																<%
+																	}
+																%>
+															</optgroup>
+															<optgroup label="From TA">
+																<%
+																	for (int i = 0; i < arrayTa.length; i++) {
+																%>
+																<option><%=arrayTa[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
 													</select></td>
 													<td><p id="inputforlab">
 															<input type="text" id="" name="" />
 														</p></td>
-													<td><select id="selectError1" multiple
+													<td><select id="selectError2" multiple
 														class="form-control" data-rel="chosen">
 															<optgroup label="From Surey">
-																<option>Option 1</option>
-																<option>Option 2</option>
+																<%
+																	for (int i = 0; i < arrayusername.length; i++) {
+																%>
+																<option><%=arrayusername[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
-															<optgroup label="From All">
-																<option>Option 1</option>
-																<option>Option 2</option>
+															<optgroup label="From Teacher">
+																<%
+																	for (int i = 0; i < arrayTeacher.length; i++) {
+																%>
+																<option><%=arrayTeacher[i]%></option>
+																<%
+																	}
+																%>
+															</optgroup>
+															<optgroup label="From TA">
+																<%
+																	for (int i = 0; i < arrayTa.length; i++) {
+																%>
+																<option><%=arrayTa[i]%></option>
+																<%
+																	}
+																%>
 															</optgroup>
 													</select></td>
-													<td><a class="btn btn-success" href="#"> <i
-															class="glyphicon glyphicon glyphicon-check"></i> Save
-													</a></td>
+													<td><a class="btn btn-danger confirmation"
+														href="Admin_Candidate_Duplicate_Delete.jsp?deleteid=<%=rsfake.getString("notcandidate.notcandidate_ID")%>">
+															<i class="glyphicon glyphicon-trash icon-white"></i>
+															Delete
+													</a><input type="hidden" name="deletetest" value="<%=rsfake.getString("notcandidate.notcandidate_ID")%>" form="savecandidate" /></td>
 												</tr>
+												<%
+													}
+												%>
 											</tbody>
 										</table>
+										<div align="center">
+											<button class="btn btn-success savecandidatebtn"
+												id="savecandidatebtn" onclick="savecourse()">
+												<i class="glyphicon glyphicon-check"></i> Save
+											</button>
+										</div>
+										<br> <br>
 									</div>
 								</div>
 							</div>
+							<form id="savecandidate" class="savecandidate" method="post"
+								action="Admin_Candidate_SaveCandidate.jsp"></form>
+
+							<script type="text/javascript">
+								var elems = document
+										.getElementsByClassName('confirmation');
+								var confirmIt = function(e) {
+									if (!confirm('Are you sure to delete?'))
+										e.preventDefault();
+								};
+								for (var i = 0, l = elems.length; i < l; i++) {
+									elems[i].addEventListener('click',
+											confirmIt, false);
+								}
+							</script>
+							
+							<!-- <script>
+								$(function() {
+									//twitter bootstrap script
+									$("button#savecandidatebtn")
+											.click(
+													function() {
+														$
+																.ajax({
+																	type : "POST",
+																	url : "Admin_Candidate_SaveCandidate.jsp",
+																	data : $(
+																			'form.savecandidate')
+																			.serialize(),
+																	success : function(
+																			msg) {
+																		alert("Pass");
+																	},
+																	error : function() {
+																		alert("No Course in this year and semester.");
+																	}
+																});
+													});
+								});
+							</script> -->
+
+							<script type="text/javascript">
+								function savecourse() {
+									var checkyear = document
+											.getElementById("checkyear");
+									var checkterm = document
+											.getElementById("checkterm");
+									if (!checkyear || !checkterm) {
+										alert("You shall not pass");
+									} else {
+										document.forms['savecandidate']
+												.submit()
+									}
+
+								}
+							</script>
+
 							<!--/span-->
+							<form id="copyForm" method="post"
+								action="Admin_Candidate_Duplicate.jsp"></form>
+							<script>
+								// Code below come from this.
+								/* http://jsfiddle.net/webwarrior/NJwv4/9/ */
+								var allunchecked = true;
+
+								$(".sendduplicate")
+										.click(
+												function() {
+													allunchecked = true;
+													$(".checkbox")
+															.each(
+																	function(
+																			index) {
+																		if ($(
+																				this)
+																				.prop(
+																						"checked")) {
+																			allunchecked = false;
+																		}
+																	});
+													if (allunchecked == true) {
+														alert("Please select course to duplicate.");
+													} else {
+														var check = confirm("Are you sure to duplicate?");
+														if (check) {
+															document.forms['copyForm']
+																	.submit()
+															return true;
+														} else {
+															return false;
+														}
+													}
+												});
+								//End code below
+							</script>
 
 						</div>
 						<!--/row-->
@@ -550,6 +932,13 @@
 						</div>
 						<!--/fluid-row-->
 
+						<script type="text/javascript">
+							function sendnotcandidatesetting() {
+								document.getElementById("setnotcandidateform")
+										.submit();
+							}
+						</script>
+
 						<hr>
 						<div class="modal fade" id="settingforworkload" tabindex="-1"
 							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -570,6 +959,47 @@
 								</div>
 							</div>
 						</div>
+
+						<div class="modal fade" id="settingfornotcandidate" tabindex="-1"
+							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal">×</button>
+										<h3>Setting List Course (Not Candidate)</h3>
+									</div>
+									<div class="modal-body">
+										<form method="post"
+											action="Admin_Candidate_SetYearSemester.jsp"
+											role="setnotcandidateform" id="setnotcandidateform">
+											<label for="Year">Year</label> <select id="notcandidateyear"
+												name="notcandidateyear">
+												<script>
+													var myDate = new Date();
+													var year = myDate
+															.getFullYear() + 543;
+													for (var i = year + 1; i > 2540; i--) {
+														document
+																.write('<option value="'+i+'">'
+																		+ i
+																		+ '</option>');
+													}
+												</script>
+											</select> <label for="Term">Term</label> <select id="notcandidateterm"
+												name="notcandidateterm">
+												<option value="1">1</option>
+												<option value="2">2</option>
+											</select> <br> <a href="#" class="btn btn-default"
+												data-dismiss="modal">Close</a> <input type="button"
+												class="btn btn-primary" onClick="sendnotcandidatesetting()"
+												value="Submit" />
+										</form>
+									</div>
+									<div class="modal-footer"></div>
+								</div>
+							</div>
+						</div>
+
 						<div class="modal fade" id="AfterCandidate" tabindex="-1"
 							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
@@ -585,7 +1015,6 @@
 													<th>Teacher Name</th>
 													<th>Role</th>
 													<th>Teach in</th>
-													<th>Actions</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -593,25 +1022,16 @@
 													<td>Muhammad Usman</td>
 													<td>Teacher</td>
 													<td>Lab</td>
-													<td><a class="btn btn-danger" href="#"> <i
-															class="glyphicon glyphicon-trash icon-white"></i> Delete
-													</a></td>
 												</tr>
 												<tr>
 													<td>White Horse</td>
 													<td>Teacher</td>
 													<td>Lecture</td>
-													<td><a class="btn btn-danger" href="#"> <i
-															class="glyphicon glyphicon-trash icon-white"></i> Delete
-													</a></td>
 												</tr>
 												<tr>
 													<td>Sheikh Heera</td>
 													<td>TA</td>
 													<td>Lab</td>
-													<td><a class="btn btn-danger" href="#"> <i
-															class="glyphicon glyphicon-trash icon-white"></i> Delete
-													</a></td>
 												</tr>
 											</tbody>
 										</table>
@@ -621,17 +1041,16 @@
 									</div>
 								</div>
 							</div>
-							<footer class="row">
-							<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-								© <a href="http://usman.it" target="_blank">Muhammad Usman</a>
-								2012 - 2014
-							</p>
-							<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-								Theme by:<a
-									href="http://usman.it/free-responsive-admin-template">Charisma</a>
-							</p>
-							</footer>
 						</div>
+						<footer class="row">
+						<p class="col-md-9 col-sm-9 col-xs-12 copyright">
+							© <a href="http://usman.it" target="_blank">Muhammad Usman</a>
+							2012 - 2014
+						</p>
+						<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
+							Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
+						</p>
+						</footer>
 						<!--/.fluid-container-->
 
 						<!-- external javascript -->
