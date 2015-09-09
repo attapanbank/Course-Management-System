@@ -11,23 +11,42 @@
 	String year = request.getParameter("year");
 %>
 <%
-	Connection connect = null;
-	Statement s = null;
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
 
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
+<%
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
-
-		connect = DriverManager
-				.getConnection("jdbc:mysql://localhost:3306/CMS"
-						+ "?user=root&password=toor");
-
-		s = connect.createStatement();
+		stmt = con.createStatement();
 
 		String sql = "DELETE FROM `test`.`studyplan` WHERE `studyPlanID`='"
 				+ studyplanId + "';";
-		s.execute(sql);
+		stmt.execute(sql);
 
-		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="+year;
+		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="
+				+ year;
 		response.sendRedirect(redirectURL);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
@@ -36,9 +55,9 @@
 	}
 
 	try {
-		if (s != null) {
-			s.close();
-			connect.close();
+		if (stmt != null) {
+			stmt.close();
+			con.close();
 		}
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block

@@ -65,7 +65,32 @@
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
 
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
 
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 </head>
 <%
 	String studyplanId = request.getParameter("studyplanId");
@@ -126,7 +151,8 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
+							<li class="active"><a class="ajax-link"
+								href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -159,22 +185,13 @@
 				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 			</noscript>
 			<%
-				Connection connect = null;
-				Statement s = null;
-
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
-
-					connect = DriverManager
-							.getConnection("jdbc:mysql://localhost:3306/CMS"
-									+ "?user=root&password=toor");
-
-					s = connect.createStatement();
-
+					stmt = con.createStatement();
 					String sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where studyPlanId ='"
 							+ studyplanId + "';";
 					//SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode) where test.studyplan.year like
-					ResultSet rec = s.executeQuery(sql);
+					ResultSet rec = stmt.executeQuery(sql);
 					rec.first();
 			%>
 			<div id="content" class="col-lg-10 col-sm-10">
@@ -182,7 +199,8 @@
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="Coordinator_StudyPlan.jsp">Study Plan Management</a></li>
+						<li><a href="Coordinator_StudyPlan.jsp">Study Plan
+								Management</a></li>
 					</ul>
 				</div>
 
@@ -269,9 +287,9 @@
 					}
 
 					try {
-						if (s != null) {
-							s.close();
-							connect.close();
+						if (stmt != null) {
+							stmt.close();
+							con.close();
 						}
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block

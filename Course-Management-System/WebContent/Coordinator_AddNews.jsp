@@ -13,22 +13,39 @@
 <title>Insert title here</title>
 </head>
 
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <body>
 	<%
-		Connection connect = null;
-		Statement s = null;
-
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-
-			connect = DriverManager
-					.getConnection("jdbc:mysql://localhost:3306/CMS"
-							+ "?user=root&password=toor");
-
-			s = connect.createStatement();
-
+			stmt = con.createStatement();
 			String sql = "select * from test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode)where test.studyplan.courseCode not in (select test.courseplan.courseCode from test.courseplan)union all select * from test.courseplan inner join test.course on (test.courseplan.courseCode=test.course.courseCode)where test.coursePlan.courseCode not in (select test.studyplan.courseCode from test.studyplan)";
-			ResultSet rec = s.executeQuery(sql);
+			ResultSet rec = stmt.executeQuery(sql);
 
 			String newsDetail = "The follow Courses is Missmatch:  ";
 			if (rec != null) {
@@ -42,7 +59,7 @@
 
 			sql = "INSERT INTO `test`.`news` (`user`, `group`, `news`) VALUES ('admin', 'admin', '"
 					+ newsDetail + "');";
-			s.execute(sql);
+			stmt.execute(sql);
 			String redirectURL = "Coordinator.jsp";
 			response.sendRedirect(redirectURL);
 			//out.println(newsDetail);
@@ -53,9 +70,9 @@
 		}
 
 		try {
-			if (s != null) {
-				s.close();
-				connect.close();
+			if (stmt != null) {
+				stmt.close();
+				con.close();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

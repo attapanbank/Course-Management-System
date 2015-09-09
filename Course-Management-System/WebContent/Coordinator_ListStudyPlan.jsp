@@ -6,6 +6,32 @@
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.util.Calendar"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -126,7 +152,8 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
+							<li class="active"><a class="ajax-link"
+								href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -203,22 +230,14 @@
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
 														<%
-															Connection connect = null;
-															Statement s = null;
-
 															try {
 																Class.forName("com.mysql.jdbc.Driver");
-
-																connect = DriverManager
-																		.getConnection("jdbc:mysql://localhost:3306/CMS"
-																				+ "?user=root&password=toor");
-
-																s = connect.createStatement();
+																stmt = con.createStatement();
 
 																String sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
 																		+ year + "';";
 																//SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode) where test.studyplan.year like
-																ResultSet rec = s.executeQuery(sql);
+																ResultSet rec = stmt.executeQuery(sql);
 														%>
 														<table
 															class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
@@ -268,10 +287,13 @@
 																	<td class="center"><%=rec.getString("courseName")%></td>
 																	<td class="center"><%=rec.getString("credit")%></td>
 																	<td class="center     "><a
-																		class="btn btn-info btn-sm" href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>"> <i
-																			class="glyphicon glyphicon-edit icon-white"></i> Edit
-																	</a> <a class="btn btn-danger btn-sm" href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&year=<%=rec.getString("year")%>"> <i
-																			class="glyphicon glyphicon-trash icon-white"></i>
+																		class="btn btn-info btn-sm"
+																		href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>">
+																			<i class="glyphicon glyphicon-edit icon-white"></i>
+																			Edit
+																	</a> <a class="btn btn-danger btn-sm"
+																		href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&year=<%=rec.getString("year")%>">
+																			<i class="glyphicon glyphicon-trash icon-white"></i>
 																			Delete
 																	</a></td>
 																</tr>
@@ -289,9 +311,9 @@
 															}
 
 															try {
-																if (s != null) {
-																	s.close();
-																	connect.close();
+																if (stmt != null) {
+																	stmt.close();
+																	con.close();
 																}
 															} catch (SQLException e) {
 																// TODO Auto-generated catch block

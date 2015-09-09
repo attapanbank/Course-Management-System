@@ -4,6 +4,32 @@
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.util.Calendar"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <html lang="en">
 <head>
 <!--
@@ -173,20 +199,12 @@
 				String yearOnBEStr4 = Integer.toString(yearOnBE4);
 				//System.out.println(yearOnBEStr4);
 
-				Connection connect = null;
-				Statement s = null;
-
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
-
-					connect = DriverManager
-							.getConnection("jdbc:mysql://localhost:3306/CMS"
-									+ "?user=root&password=toor");
-
-					s = connect.createStatement();
+					stmt = con.createStatement();
 
 					String sql = "SELECT test.studyplan.year FROM test.studyplan group by test.studyplan.year order by test.studyplan.year desc";
-					ResultSet rec = s.executeQuery(sql);
+					ResultSet rec = stmt.executeQuery(sql);
 			%>
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
@@ -261,10 +279,11 @@
 																<tr>
 																	<td class=" sorting_1"><%=rec.getInt("year")%></td>
 																	<td class="center"><a
-																		class="btn btn-success btn-sm" href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>"> <i
-																			class="glyphicon glyphicon-zoom-in icon-white"></i>
+																		class="btn btn-success btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			More Detail
-																	</a> </td>
+																	</a></td>
 																</tr>
 																<%
 																	}
@@ -332,7 +351,7 @@
 																			// Year 1
 																				sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
 																						+ yearOnBEStr1 + "'";
-																				rec = s.executeQuery(sql);
+																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
 																		%>
 																		<tr>
@@ -405,7 +424,7 @@
 																		// Year 2
 																			sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
 																					+ yearOnBEStr2 + "'";
-																			rec = s.executeQuery(sql);
+																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
 																	%>
 																	<tr>
@@ -480,7 +499,7 @@
 																			// Year 3
 																				sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
 																						+ yearOnBEStr3 + "'";
-																				rec = s.executeQuery(sql);
+																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
 																		%>
 																		<tr>
@@ -554,7 +573,7 @@
 																		// Year 4
 																			sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
 																					+ yearOnBEStr4 + "'";
-																			rec = s.executeQuery(sql);
+																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
 																	%>
 																	<tr>
@@ -591,9 +610,9 @@
 					}
 
 					try {
-						if (s != null) {
-							s.close();
-							connect.close();
+						if (stmt != null) {
+							stmt.close();
+							con.close();
 						}
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block

@@ -3,6 +3,32 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <html lang="en">
 <head>
 <!--
@@ -182,21 +208,14 @@
 									<div class="box-content" style="display: block;">
 										<%
 											// part of coursePlan
-											Connection connect = null;
-											Statement s = null;
 
 											try {
 												Class.forName("com.mysql.jdbc.Driver");
-
-												connect = DriverManager
-														.getConnection("jdbc:mysql://localhost:3306/CMS"
-																+ "?user=root&password=toor");
-
-												s = connect.createStatement();
+												stmt = con.createStatement();
 
 												String sql = "SELECT * FROM test.courseplan join test.course where test.courseplan.CourseCode=test.course.courseCode";
 
-												ResultSet rec = s.executeQuery(sql);
+												ResultSet rec = stmt.executeQuery(sql);
 										%>
 										<div id="Table_1" class="dataTables_wrapper" role="grid">
 											<div id="Table_1" class="dataTables_wrapper" role="grid">
@@ -256,9 +275,9 @@
 								}
 
 								try {
-									if (s != null) {
-										s.close();
-										connect.close();
+									if (stmt != null) {
+										stmt.close();
+										con.close();
 									}
 								} catch (SQLException e) {
 									// TODO Auto-generated catch block
@@ -285,21 +304,14 @@
 									<div class="box-content" style="display: block;">
 										<%
 											// part of studyplan
-											Connection connectp = null;
-											Statement sp = null;
 
 											try {
 												Class.forName("com.mysql.jdbc.Driver");
-
-												connectp = DriverManager
-														.getConnection("jdbc:mysql://localhost:3306/CMS"
-																+ "?user=root&password=toor");
-
-												sp = connectp.createStatement();
+												stmt = con.createStatement();
 
 												// match
 												String sqlp = "SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode)";
-												ResultSet recp = sp.executeQuery(sqlp);
+												ResultSet recp = stmt.executeQuery(sqlp);
 										%>
 										<div id="DataTables_Table_0_wrapper"
 											class="dataTables_wrapper" role="grid">
@@ -340,7 +352,7 @@
 
 															//not match
 															sqlp = "select * from test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode)where test.studyplan.courseCode not in (select test.courseplan.courseCode from test.courseplan)union all select * from test.courseplan inner join test.course on (test.courseplan.courseCode=test.course.courseCode)where test.coursePlan.courseCode not in (select test.studyplan.courseCode from test.studyplan)";
-															recp = sp.executeQuery(sqlp);
+															recp = stmt.executeQuery(sqlp);
 													%>
 													<%
 														while ((recp != null) && (recp.next())) {
@@ -371,9 +383,9 @@
 								}
 
 								try {
-									if (s != null) {
-										s.close();
-										connect.close();
+									if (stmt != null) {
+										stmt.close();
+										con.close();
 									}
 								} catch (SQLException e) {
 									// TODO Auto-generated catch block
