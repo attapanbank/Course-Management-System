@@ -229,15 +229,18 @@
 																<tr role="row">
 																	<th class="sorting_asc" role="columnheader"
 																		tabindex="0" aria-controls="DataTables_Table_0"
-																		rowspan="1" colspan="1" style="width: 185px;"
+																		rowspan="1" colspan="1" style="width: 120px;"
 																		aria-sort="ascending"
-																		aria-label="Code: activate to sort column descending">Course
-																		Code</th>
+																		aria-label="Code: activate to sort column descending">Code</th>
 																	<th class="sorting" role="columnheader" tabindex="0"
 																		aria-controls="DataTables_Table_0" rowspan="1"
 																		colspan="1" style="width: 283px;"
 																		aria-label="Name: activate to sort column ascending">Course
 																		Name</th>
+																	<th class="sorting" role="columnheader" tabindex="0"
+																		aria-controls="DataTables_Table_0" rowspan="1"
+																		colspan="1" style="width: 283px;"
+																		aria-label="Name: activate to sort column ascending">Major</th>
 																</tr>
 															</thead>
 
@@ -249,6 +252,7 @@
 																<tr>
 																	<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																	<td class="center"><%=rec.getString("courseName")%></td>
+																	<td class="center">Major</td>
 																</tr>
 																<%
 																	}
@@ -269,17 +273,6 @@
 							</div>
 							<%
 								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									out.println(e.getMessage());
-									e.printStackTrace();
-								}
-
-								try {
-									if (stmt != null) {
-										stmt.close();
-										con.close();
-									}
-								} catch (SQLException e) {
 									// TODO Auto-generated catch block
 									out.println(e.getMessage());
 									e.printStackTrace();
@@ -322,16 +315,19 @@
 													<tr role="row">
 														<th class="sorting_asc" role="columnheader" tabindex="0"
 															aria-controls="DataTables_Table_0" rowspan="1"
-															colspan="1" style="width: 113px;" aria-sort="ascending"
-															aria-label="Code: activate to sort column descending">Course
-															Code</th>
+															colspan="1" style="width: 120px;" aria-sort="ascending"
+															aria-label="Code: activate to sort column descending">Code</th>
 														<th class="sorting" role="columnheader" tabindex="0"
 															aria-controls="DataTables_Table_0" rowspan="1"
 															colspan="1" style="width: 167px;"
 															aria-label="Name: activate to sort column ascending">Course
 															Name</th>
-														<th aria-label="Status: activate to sort column ascending"
+															<th aria-label="Status: activate to sort column ascending"
 															style="width: 170px;" colspan="1" rowspan="1"
+															aria-controls="DataTables_Table_0" tabindex="0"
+															role="columnheader" class="sorting">Major</th>
+														<th aria-label="Status: activate to sort column ascending"
+															style="width: 120px;" colspan="1" rowspan="1"
 															aria-controls="DataTables_Table_0" tabindex="0"
 															role="columnheader" class="sorting">Status</th>
 													</tr>
@@ -344,6 +340,7 @@
 													<tr>
 														<td class="sorting_1"><%=recp.getString("courseCode")%></td>
 														<td class="center"><%=recp.getString("courseName")%></td>
+														<td class="center">Major</td>
 														<td class=" "><span
 															class="label-success label label-default">Match</span></td>
 													</tr>
@@ -360,6 +357,7 @@
 													<tr>
 														<td class="sorting_1"><%=recp.getString("courseCode")%></td>
 														<td class="center"><%=recp.getString("courseName")%></td>
+														<td class="center">Major</td>
 														<td class=" "><span
 															class="label-default label label-danger">Mismatch</span></td>
 													</tr>

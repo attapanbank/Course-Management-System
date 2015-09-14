@@ -262,10 +262,10 @@
 																		tabindex="0" aria-controls="DataTables_Table_0"
 																		rowspan="1" colspan="1" style="width: 330px;"
 																		aria-sort="descending"
-																		aria-label="Year: activate to sort column ascending">Year</th>
+																		aria-label="Year: activate to sort column ascending">Academic Year</th>
 																	<th class="sorting" role="columnheader" tabindex="0"
 																		aria-controls="DataTables_Table_0" rowspan="1"
-																		colspan="1" style="width: 696px;"
+																		colspan="7" 
 																		aria-label="Actions: activate to sort column ascending">Actions</th>
 																</tr>
 
@@ -279,10 +279,46 @@
 																<tr>
 																	<td class=" sorting_1"><%=rec.getInt("year")%></td>
 																	<td class="center"><a
+																		class="btn btn-primary btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			All major
+																	</a></td>
+																	<td class="center"><a
+																		class="btn btn-info btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			IT
+																	</a></td>
+																	<td class="center"><a
+																		class="btn btn-info btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			CS
+																	</a></td>
+																	<td class="center"><a
 																		class="btn btn-success btn-sm"
 																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			More Detail
+																			SE
+																	</a></td>
+																	<td class="center"><a
+																		class="btn btn-success btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			MTA
+																	</a></td>
+																	<td class="center"><a
+																		class="btn btn-danger btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			CE
+																	</a></td>
+																	<td class="center"><a
+																		class="btn btn-danger btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			ICE
 																	</a></td>
 																</tr>
 																<%
@@ -305,7 +341,7 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>1 st year current course</h2>
+										<h2>1 st year current course (<%=yearOnBE1 %>)</h2>
 
 										<div class="box-icon">
 
@@ -335,13 +371,17 @@
 																		<tr role="row">
 																			<th class="sorting_asc" role="columnheader"
 																				tabindex="0" aria-controls="DataTables_Table_0"
-																				rowspan="1" colspan="1" style="width: 176px;"
+																				rowspan="1" colspan="1" style="width: 120px;"
 																				aria-sort="ascending"
 																				aria-label="Code: activate to sort column descending">Code</th>
 																			<th class="sorting" role="columnheader" tabindex="0"
 																				aria-controls="DataTables_Table_0" rowspan="1"
 																				colspan="1" style="width: 292px;"
 																				aria-label="Name: activate to sort column ascending">Name</th>
+																			<th class="sorting" role="columnheader" tabindex="0"
+																				aria-controls="DataTables_Table_0" rowspan="1"
+																				colspan="1" style="width: 292px;"
+																				aria-label="Name: activate to sort column ascending">Major</th>
 																		</tr>
 																	</thead>
 
@@ -357,6 +397,7 @@
 																		<tr>
 																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																			<td class="center"><%=rec.getString("courseName")%></td>
+																			<td class="center">Major</td>
 																		</tr>
 																		<%
 																			}
@@ -379,7 +420,7 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>2 nd year current course</h2>
+										<h2>2 nd year current course (<%=yearOnBE2 %>)</h2>
 
 										<div class="box-icon">
 
@@ -408,13 +449,17 @@
 																	<tr role="row">
 																		<th class="sorting_asc" role="columnheader"
 																			tabindex="0" aria-controls="DataTables_Table_0"
-																			rowspan="1" colspan="1" style="width: 201px;"
+																			rowspan="1" colspan="1" style="width: 120px;"
 																			aria-sort="ascending"
 																			aria-label="Code: activate to sort column descending">Code</th>
 																		<th class="sorting" role="columnheader" tabindex="0"
 																			aria-controls="DataTables_Table_0" rowspan="1"
 																			colspan="1" style="width: 267px;"
 																			aria-label="Name: activate to sort column ascending">Name</th>
+																			<th class="sorting" role="columnheader" tabindex="0"
+																				aria-controls="DataTables_Table_0" rowspan="1"
+																				colspan="1" style="width: 292px;"
+																				aria-label="Name: activate to sort column ascending">Major</th>
 																	</tr>
 																</thead>
 
@@ -430,6 +475,7 @@
 																	<tr>
 																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																		<td class="center"><%=rec.getString("courseName")%></td>
+																		<td class="center">Major</td>
 																	</tr>
 																	<%
 																		}
@@ -453,7 +499,7 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>3 rd year current course</h2>
+										<h2>3 rd year current course (<%=yearOnBE3 %>)</h2>
 
 										<div class="box-icon">
 
@@ -483,13 +529,17 @@
 																		<tr role="row">
 																			<th class="sorting_asc" role="columnheader"
 																				tabindex="0" aria-controls="DataTables_Table_0"
-																				rowspan="1" colspan="1" style="width: 176px;"
+																				rowspan="1" colspan="1" style="width: 120px;"
 																				aria-sort="ascending"
 																				aria-label="Code: activate to sort column descending">Code</th>
 																			<th class="sorting" role="columnheader" tabindex="0"
 																				aria-controls="DataTables_Table_0" rowspan="1"
 																				colspan="1" style="width: 292px;"
 																				aria-label="Name: activate to sort column ascending">Name</th>
+																				<th class="sorting" role="columnheader" tabindex="0"
+																				aria-controls="DataTables_Table_0" rowspan="1"
+																				colspan="1" style="width: 292px;"
+																				aria-label="Name: activate to sort column ascending">Major</th>
 																		</tr>
 																	</thead>
 
@@ -505,6 +555,7 @@
 																		<tr>
 																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																			<td class="center"><%=rec.getString("courseName")%></td>
+																			<td class="center">Major</td>
 																		</tr>
 																		<%
 																			}
@@ -528,7 +579,7 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>4 th year current course</h2>
+										<h2>4 th year current course (<%=yearOnBE4 %>)</h2>
 
 										<div class="box-icon">
 
@@ -557,13 +608,17 @@
 																	<tr role="row">
 																		<th class="sorting_asc" role="columnheader"
 																			tabindex="0" aria-controls="DataTables_Table_0"
-																			rowspan="1" colspan="1" style="width: 201px;"
+																			rowspan="1" colspan="1" style="width: 120px;"
 																			aria-sort="ascending"
 																			aria-label="Code: activate to sort column descending">Code</th>
 																		<th class="sorting" role="columnheader" tabindex="0"
 																			aria-controls="DataTables_Table_0" rowspan="1"
 																			colspan="1" style="width: 267px;"
 																			aria-label="Name: activate to sort column ascending">Name</th>
+																			<th class="sorting" role="columnheader" tabindex="0"
+																				aria-controls="DataTables_Table_0" rowspan="1"
+																				colspan="1" style="width: 292px;"
+																				aria-label="Name: activate to sort column ascending">Major</th>
 																	</tr>
 																</thead>
 
@@ -579,6 +634,7 @@
 																	<tr>
 																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																		<td class="center"><%=rec.getString("courseName")%></td>
+																		<td class="center">Major</td>
 																	</tr>
 																	<%
 																		}
@@ -629,6 +685,7 @@
 		<!--/fluid-row-->
 
 		<hr>
+		
 		<!-- Aniroot's javascript -->
 		<script type="text/javascript">
 			function showUploadFile() {
@@ -641,6 +698,7 @@
 				document.getElementById("formUpload").submit();
 			}
 		</script>
+		
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
 
