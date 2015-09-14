@@ -190,7 +190,7 @@
 
 												connect = DriverManager
 														.getConnection("jdbc:mysql://localhost:3306/CMS"
-																+ "?user=root&password=root");
+																+ "?user=root&password=toor");
 
 												s = connect.createStatement();
 
@@ -293,7 +293,7 @@
 
 												connectp = DriverManager
 														.getConnection("jdbc:mysql://localhost:3306/CMS"
-																+ "?user=root&password=root");
+																+ "?user=root&password=toor");
 
 												sp = connectp.createStatement();
 
@@ -422,7 +422,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
+						<button type="button" class="close" data-dismiss="modal">ï¿½</button>
 						<h3>Settings</h3>
 					</div>
 					<div class="modal-body">
@@ -439,7 +439,7 @@
 
 		<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
+				ï¿½ <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
 				- 2014
 			</p>
 
