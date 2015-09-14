@@ -135,12 +135,9 @@
 							<li><a class="ajax-link" href="Admin_Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
-
-
-
-
-
-
+							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Setting</span></a></li>
 						</ul>
 
 					</div>

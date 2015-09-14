@@ -181,7 +181,7 @@
 
 					connect = DriverManager
 							.getConnection("jdbc:mysql://localhost:3306/CMS"
-									+ "?user=root&password=toor");
+									+ "?user=root&password=root");
 
 					s = connect.createStatement();
 
