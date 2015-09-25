@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1" import = "java.sql.*"%>
+    <%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
     <!--
@@ -60,9 +62,18 @@
     <button type="button" class="navbar-toggle pull-left animated flip"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
     <a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a><!-- user dropdown starts -->
     <div class="btn-group pull-right">
-      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> Teacher</span> <span class="caret"></span> </button>
+      <button class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown">
+					<%
+					
+					Object strUserID = session.getAttribute("sUserID");
+					String sFirstname = String.valueOf(session.getAttribute("sFirstname"));
+					String sLastname = String.valueOf(session.getAttribute("sLastname")); %>
+					<i class="glyphicon glyphicon-user"></i><span
+						class="hidden-sm hidden-xs"><% out.print(sFirstname); %></span> <span class="caret"></span>
+				</button>
       <ul class="dropdown-menu">
-        <li><a href="Profile_Form.html">Profile</a></li>
+        <li><a href="Teacher_Profile.jsp">Profile</a></li>
         <li class="divider"></li>
         <li><a href="login.html">Logout</a></li>
       </ul>
@@ -164,30 +175,42 @@
     </tr>
     </thead>
     
-    <tbody aria-relevant="all" aria-live="polite" role="alert">
-    <tr class="odd">
-        <td class="">1302305</td>
-        
-        <td class="center">Network Programing</td>
-        <td class="center">2</td>
-        <td class="center">2</td>
-        <td class="center">4</td>
-        <td class="center">4</td>
-    </tr>
-    <tr class="even">
-        <td class="">1302312</td>
-        
-        <td class="center">Data Storage</td>
-        <td class="center">2</td>
-        <td class="center">2</td>
-        <td class="center">4</td>
-        <td class="center">4</td>
+    <%
+									Statement stmt;
+									Connection con;
+									String url = "jdbc:mysql://localhost:3306/cms";
 
-       
+									Class.forName("com.mysql.jdbc.Driver");
+									con = DriverManager.getConnection(url, "root", "root");
+									stmt = con.createStatement();
+									
+									String QueryString = "SELECT * FROM cms.course_survey where userID ='"+ strUserID +"'; ";
+									ResultSet rs =stmt.executeQuery(QueryString);
+									
+									
+								%>
+    
+     <% if(strUserID != null){
+    	while(rs.next()){
+    	
+     %>
+    <tbody aria-relevant="all" aria-live="polite" role="alert">
+    
+   
+    
+    <tr class="odd">
+        <td class="center"><%out.print(rs.getString("courseCode"));%></td>
+        
+        <td class="center"><%out.print(rs.getString("courseName")); %></td>
+        <td class="center">2</td>
+        <td class="center">2</td>
+        <td class="center">4</td>
+        <td class="center">4</td>
     </tr>
    
+  
 </tbody>
-
+ <% }}%>
 </table>
 
 <div class="center" ><a href="#" class="btn btn-primary" data-dismiss="modal">Confirm</a></div>
@@ -228,22 +251,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h3>รายละเอียด</h3>
+                    <button type="button" class="close" data-dismiss="modal">Ã</button>
+                    <h3>à¸£à¸²à¸¢à¸¥à¸°à¹à¸­à¸µà¸¢à¸</h3>
                 </div>
                 <div class="modal-body">
-                    <!--แก้ไขตรงนี้-->
+                    <!--à¹à¸à¹à¹à¸à¸à¸£à¸à¸à¸µà¹-->
                    <table>
                     <tr>
-                    <td><p>รหัสรายวิขา:</p></td>
+                    <td><p>à¸£à¸«à¸±à¸ªà¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
                     <td><p>1302305</p></td>
                 </tr>
                      <tr>
-                    <td><p>ชื่อรายวิชา:</p></td>
+                    <td><p>à¸à¸·à¹à¸­à¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
                     <td><p>Network Programing</p></td>
                 </tr>
                    <tr>
-                    <td><p>หน่วยกิต:</p></td>
+                    <td><p>à¸«à¸à¹à¸§à¸¢à¸à¸´à¸:</p></td>
                     <td><p>3(2-2-5)</p></td>
                 </tr> 
                 <tr>
@@ -256,7 +279,7 @@
                         </select></td>
                 </tr> 
                 <tr>
-                    <td><p>นักศึกษาสาขาวิชา:</p></td>
+                    <td><p>à¸à¸±à¸à¸¨à¸¶à¸à¸©à¸²à¸ªà¸²à¸à¸²à¸§à¸´à¸à¸²:</p></td>
                     <td><p>CS57</p></td>
                 </tr> 
                 <tr>
@@ -278,7 +301,7 @@
     </div>
 
     <footer class="row">
-        <p class="col-md-9 col-sm-9 col-xs-12 copyright">© <a href="http://usman.it" target="_blank">Muhammad
+        <p class="col-md-9 col-sm-9 col-xs-12 copyright">Â© <a href="http://usman.it" target="_blank">Muhammad
                 Usman</a> 2012 - 2014</p>
 
         <p class="col-md-3 col-sm-3 col-xs-12 powered-by">Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a></p>
