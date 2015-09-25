@@ -21,8 +21,9 @@
 
 	Class.forName(readdriver);
 	con = DriverManager.getConnection(url, readuser, readpass);
-%>
 
+	String coursecode = request.getParameter("coursecode");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -41,7 +42,7 @@
         ===
     -->
 <meta charset="utf-8">
-<title>User Management</title>
+<title>Candidate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description"
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
@@ -69,9 +70,7 @@
 <link href="css/jquery.iphone.toggle.css" rel="stylesheet">
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
-
-<script src="dist/sweetalert-dev.js"></script>
-<link rel="stylesheet" href="dist/sweetalert.css">
+<link href="css/custom.css" rel="stylesheet">
 
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
@@ -83,274 +82,62 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
+
 </head>
-
 <body>
-	<!-- topbar starts -->
-	<div class="navbar navbar-default" role="navigation">
-		<div class="navbar-inner">
-			<button type="button" class="navbar-toggle pull-left animated flip">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="Admin_News.jsp"> <span>IT:CMS</span></a>
-			<!-- user dropdown starts -->
-			<div class="btn-group pull-right">
-				<button class="btn btn-default dropdown-toggle"
-					data-toggle="dropdown">
-					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> admin</span> <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
-					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
-				</ul>
-			</div>
-			<!-- user dropdown ends -->
 
-			<!-- theme selector starts -->
+	<%
+		stmt = con.createStatement();
+		String QueryCourse = "SELECT * FROM course WHERE courseCode = '"
+				+ coursecode + "';";
+		ResultSet rscourse = stmt.executeQuery(QueryCourse);
+		if (rscourse.next()) {
+			out.println("<div align=" + "center" + "><font size=" + 6 + ">"
+					+ rscourse.getString("course.courseCode") + " "
+					+ rscourse.getString("course.courseName")
+					+ "</font></div>");
+		}
+	%>
+	<br>
+	<br>
+	<table
+		class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+		<thead>
+			<tr>
+				<th>ปีการศึกษา</th>
+				<th>เทอม</th>
+				<th>Lect</th>
+				<th>Lab</th>
+				<th>รายชื่ออาจารย์</th>
+				<th>Teach Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%
+				stmt = con.createStatement();
+				String QueryString = "SELECT currentcourse.year, currentcourse.semester, section.sectionlect, section.sectionlab, user.firstname, user.lastname, candidate.teachtype FROM cms.course INNER JOIN currentcourse ON currentcourse.courseCode = course.courseCode INNER JOIN section ON section.currentcourseID = currentcourse.currentcourseID INNER JOIN candidate ON candidate.sectionID = section.sectionID INNER JOIN user ON user.userID = candidate.userID WHERE course.courseCode = '"
+						+ coursecode + "';";
+				ResultSet rs = stmt.executeQuery(QueryString);
+				while (rs.next()) {
+			%>
+			<tr>
+				<td><%=rs.getString("currentcourse.year")%></td>
+				<td><%=rs.getString("currentcourse.semester")%></td>
+				<td><%=rs.getString("section.sectionlect")%></td>
+				<td><%=rs.getString("section.sectionlab")%></td>
+				<td><%=rs.getString("user.firstname") + " "
+						+ rs.getString("user.lastname")%></td>
+				<td><%=rs.getString("candidate.teachtype")%></td>
+			</tr>
+			<%
+				}
+			%>
+		</tbody>
+	</table>
 
-			<!-- theme selector ends -->
-
-		</div>
+	<div align="center">
+		<button class="btn btn-danger" onclick="window.close()">Close</button>
 	</div>
-	<!-- topbar ends -->
-	<div class="ch-container">
-		<div class="row">
-
-			<!-- left menu starts -->
-			<div class="col-sm-2 col-lg-2">
-				<div class="sidebar-nav">
-					<div class="nav-canvas">
-						<div class="nav-sm nav nav-stacked"></div>
-						<ul style="" class="nav nav-pills nav-stacked main-menu">
-							<li class="nav-header">Main</li>
-							<li><a class="ajax-link" href="Admin_News.jsp"><i
-									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
-							<li class="nav-header hidden-md">Management</li>
-							<li><a class="ajax-link" href="Admin_Candidate.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Candidate</span></a></li>
-							<li><a class="ajax-link" href="Admin_CoursePlan.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Course Plan</span></a></li>
-							<li><a class="ajax-link" href="Admin_Examination.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Examination</span></a></li>
-							<li class="active"><a class="ajax-link"
-								href="Admin_User.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										User</span></a></li>
-							<li><a class="ajax-link" href="Admin_History.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										History</span></a></li>
-							<li><a class="ajax-link" href="Admin_Report.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Report</span></a></li>
-							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Setting</span></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!--/span-->
-			<!-- left menu ends -->
-
-			<div id="content" class="col-lg-10 col-sm-10">
-				<!-- content starts -->
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="Admin_News.jsp">Home</a></li>
-						<li><a href="Admin_User.jsp">User Management</a></li>
-					</ul>
-				</div>
-
-				<div class="row">
-					<div class="box col-md-12">
-						<div class="box-inner">
-							<div class="box-header well" data-original-title="">
-								<h2>
-									<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;User
-									Management
-								</h2>
-								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
-										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-										class="btn btn-close btn-round btn-default"> <i
-										class="glyphicon glyphicon-remove"></i></a>
-								</div>
-							</div>
-							<div class="box-content">
-								<table
-									class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-									<thead>
-										<tr>
-											<th>Username</th>
-											<th>FirstName</th>
-											<th>LastName</th>
-											<th>Role</th>
-											<th>Major</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody>
-										<%
-											stmt = con.createStatement();
-											String QueryString = (String) request.getAttribute("GetQuery");
-
-											if ((String) request.getAttribute("GetQuery") == null) {
-												QueryString = "SELECT * FROM user ORDER BY usertype";
-											} else {
-												QueryString = (String) request.getAttribute("GetQuery");
-											}
-
-											ResultSet rs = stmt.executeQuery(QueryString);
-											while (rs.next()) {
-										%>
-										<tr>
-											<td>
-												<%
-													out.print(rs.getString("username"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("firstname"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("lastname"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("usertype"));
-												%>
-											</td>
-											<td>
-												<%
-													out.print(rs.getString("major"));
-												%>
-											</td>
-											<td><a class="btn btn-info"
-												href="Admin_User_EditForm.jsp?username=<%=rs.getString("username")%>">
-													<i class="glyphicon glyphicon-edit icon-white"></i> Edit
-											</a> <a class="btn btn-danger confirmation"
-												href="Admin_User_DeleteForm.jsp?userid=<%=rs.getString("userID")%>">
-													<i class="glyphicon glyphicon-trash icon-white"></i> Delete
-											</a></td>
-										</tr>
-										<%
-											}
-											request.removeAttribute("GetQuery");
-										%>
-
-									</tbody>
-								</table>
-
-								<script type="text/javascript">
-									var elems = document
-											.getElementsByClassName('confirmation');
-									var confirmIt = function(e) {
-										if (!confirm('Are you sure to delete?'))
-											e.preventDefault();
-									};
-									for (var i = 0, l = elems.length; i < l; i++) {
-										elems[i].addEventListener('click',
-												confirmIt, false);
-									}
-								</script>
-
-								<div class="box-content" align="center">
-									<div class="row">
-										<div class="col-md-12">
-											<a class="btn btn-success" href="Admin_User_AddForm.jsp">
-												<i class="glyphicon glyphicon-plus icon-white"></i> Add User
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!--/span-->
-
-				</div>
-				<!--/row-->
-
-				<!-- content ends -->
-			</div>
-			<!--/#content.col-md-0-->
-		</div>
-		<!--/fluid-row-->
-
-		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>Setting User</h3>
-					</div>
-					<form method="post" action="Admin_User_ListUser.jsp">
-						<div class="modal-body">
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryall" value="queryall" checked> Show All
-									UserType
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryadmin" value="queryadmin"> Show only Admin
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryteacher" value="queryteacher"> Show only
-									Teacher
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="queryta" value="queryta"> Show only Teaching
-									Assistance
-								</label>
-							</div>
-							<div class="radio">
-								<label> <input type="radio" name="querytype"
-									id="querymajorco" value="querymajorco"> Show only
-									Major Coordinator
-								</label>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-							<input type="submit" class="btn btn-primary" value="Submit" />
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-		<footer class="row">
-		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
-		</p>
-		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-		</p>
-		</footer>
-	</div>
-	<!--/.fluid-container-->
 
 	<!-- external javascript -->
 

@@ -1,5 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	import="java.sql.*" pageEncoding="utf-8"%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt;
+	Connection con;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -151,9 +174,10 @@
 									History of Teacher
 								</h2>
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#settingviewteacher"
+										class="btn btn-setting btn-round btn-default"
+										data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"> <i
 										class="glyphicon glyphicon-remove"></i></a>
@@ -166,18 +190,53 @@
 										<tr>
 											<th>No.</th>
 											<th>Teacher Name</th>
+											<th>Major</th>
 											<th>History of Teacher</th>
 										</tr>
 									</thead>
 									<tbody>
+										<%
+											stmt = con.createStatement();
+											String QueryTeacher = (String) request
+													.getAttribute("GetTeacherMajor");
+
+											if ((String) request.getAttribute("GetTeacherMajor") == null) {
+												QueryTeacher = "SELECT * FROM user ORDER BY usertype";
+											} else {
+												QueryTeacher = (String) request.getAttribute("GetTeacherMajor");
+											}
+											ResultSet rsteacher = stmt.executeQuery(QueryTeacher);
+											int count = 0;
+											while (rsteacher.next()) {
+												count++;
+										%>
 										<tr>
-											<td>1</td>
-											<td>Mr.Mahalo Bankupu</td>
-											<td><a class="btn btn btn-success btn-setting"
-												href="#ViewHistoryTeacher" data-toggle="modal"> <i
-													class="glyphicon glyphicon-zoom-in icon-white"></i> View
+											<td>
+												<%
+													out.println(count);
+												%>
+											</td>
+											<td>
+												<%
+													out.println(rsteacher.getString("user.firstname") + " "
+																+ rsteacher.getString("user.lastname"));
+												%>
+											</td>
+											<td>
+												<%
+													out.println(rsteacher.getString("user.major"));
+												%>
+											</td>
+											<td><a class="btn btn-success btn-setting"
+												href="Admin_History_ShowTeacherHistory.jsp?userid=<%=rsteacher.getString("user.userID")%>"
+												data-toggle="modal"
+												onClick="NewWindow(this.href,'name','800','600','yes');return false">
+													<i class="glyphicon glyphicon-zoom-in icon-white"></i> View
 											</a></td>
 										</tr>
+										<%
+											}
+										%>
 									</tbody>
 								</table>
 							</div>
@@ -188,6 +247,21 @@
 				</div>
 				<!--/row-->
 
+				<script type="text/javascript">
+					var win = null;
+
+					function NewWindow(mypage, myname, w, h, scroll) {
+						LeftPosition = (screen.width) ? (screen.width - w) / 2
+								: 0;
+						TopPosition = (screen.height) ? (screen.height - h) / 2
+								: 0;
+						settings = 'height=' + h + ',width=' + w + ',top='
+								+ TopPosition + ',left=' + LeftPosition
+								+ ',scrollbars=' + scroll + ',resizable'
+						win = window.open(mypage, myname, settings)
+					}
+				</script>
+
 				<div class="row">
 					<div class="box col-md-12">
 						<div class="box-inner">
@@ -197,9 +271,10 @@
 									History of Course
 								</h2>
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#settingviewcourse"
+										class="btn btn-setting btn-round btn-default"
+										data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"> <i
 										class="glyphicon glyphicon-remove"></i></a>
@@ -211,19 +286,53 @@
 									<thead>
 										<tr>
 											<th>No.</th>
+											<th>Course Code</th>
 											<th>Course Name</th>
 											<th>History of Course</th>
 										</tr>
 									</thead>
 									<tbody>
+										<%
+											stmt = con.createStatement();
+											String QueryCourse = (String) request
+													.getAttribute("GetCourseMajor");
+
+											if ((String) request.getAttribute("GetCourseMajor") == null) {
+												QueryCourse = "SELECT * FROM course ORDER BY courseCode";
+											} else {
+												QueryCourse = (String) request.getAttribute("GetCourseMajor");
+											}
+											ResultSet rscourse = stmt.executeQuery(QueryCourse);
+											int countcourse = 0;
+											while (rscourse.next()) {
+												countcourse++;
+										%>
 										<tr>
-											<td>1</td>
-											<td>Basic IT</td>
+											<td>
+												<%
+													out.println(countcourse);
+												%>
+											</td>
+											<td>
+												<%
+													out.println(rscourse.getString("course.courseCode"));
+												%>
+											</td>
+											<td>
+												<%
+													out.println(rscourse.getString("course.courseName"));
+												%>
+											</td>
 											<td><a class="btn btn btn-success btn-setting"
-												href="#ViewHistoryCourse" data-toggle="modal"> <i
-													class="glyphicon glyphicon-zoom-in icon-white"></i> View
+												href="Admin_History_ShowCourseHistory.jsp?coursecode=<%=rscourse.getString("course.courseCode")%>"
+												data-toggle="modal"
+												onClick="NewWindow2(this.href,'name','800','600','yes');return false">
+													<i class="glyphicon glyphicon-zoom-in icon-white"></i> View
 											</a></td>
 										</tr>
+										<%
+											}
+										%>
 									</tbody>
 								</table>
 							</div>
@@ -234,6 +343,21 @@
 				</div>
 				<!--/row-->
 
+				<script type="text/javascript">
+					var win = null;
+
+					function NewWindow2(mypage, myname, w, h, scroll) {
+						LeftPosition = (screen.width) ? (screen.width - w) / 2
+								: 0;
+						TopPosition = (screen.height) ? (screen.height - h) / 2
+								: 0;
+						settings = 'height=' + h + ',width=' + w + ',top='
+								+ TopPosition + ',left=' + LeftPosition
+								+ ',scrollbars=' + scroll + ',resizable'
+						win = window.open(mypage, myname, settings)
+					}
+				</script>
+
 				<!-- content ends -->
 			</div>
 			<!--/#content.col-md-0-->
@@ -241,83 +365,128 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<div class="modal fade" id="ViewHistoryTeacher" tabindex="-1"
+		<div class="modal fade" id="settingviewteacher" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>ประวัติการสอน</h3>
+						<h3>Setting for view teacher</h3>
 					</div>
-					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>ปีการศึกษา</th>
-									<th>เทอม</th>
-									<th>รหัสวิชา</th>
-									<th>รายวิชา</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>2557</td>
-									<td>2</td>
-									<td>1305080</td>
-									<td>Basic Information Technology</td>
-								</tr>
-								<tr>
-									<td>2558</td>
-									<td>1</td>
-									<td>1305076</td>
-									<td>Introduction Information Technology</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-					</div>
+					<form method="post" action="Admin_History_SetViewTeacher.jsp">
+						<div class="modal-body">
+							<p>Select User Major</p>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="queryall" checked> Show All User
+									Major
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="queryit"> Show only Major
+									Information Technology
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="querycs"> Show only Major
+									Computer Science
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="queryse"> Show only Major Software
+									Engineering
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="querymta"> Show only Major
+									Multimedia Technology and Animation
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="queryce"> Show only Major
+									Computer Engineering
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="teachertype"
+									id="teachertype" value="queryice"> Show only Major
+									Information and Communication Engineering
+								</label>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+							<input type="submit" class="btn btn-primary" value="Submit" />
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
 
-		<div class="modal fade" id="ViewHistoryCourse" tabindex="-1"
+		<div class="modal fade" id="settingviewcourse" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>ประวัติการสอน</h3>
+						<h3>Setting for view course</h3>
 					</div>
-					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>ปีการศึกษา</th>
-									<th>เทอม</th>
-									<th>รายชื่ออาจารย์</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>2557</td>
-									<td>1</td>
-									<td>ดร.สมศักดิิ์</td>
-								</tr>
-								<tr>
-									<td>2558</td>
-									<td>1</td>
-									<td>นาย ณรง</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-					</div>
+					<form method="post" action="Admin_History_SetViewCourse.jsp">
+						<div class="modal-body">
+							<p>Select Course Major</p>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="queryall" checked> Show All Course
+									Major
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="queryit"> Show only Major
+									Information Technology
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="querycs"> Show only Major
+									Computer Science
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="queryse"> Show only Major Software
+									Engineering
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="querymta"> Show only Major
+									Multimedia Technology and Animation
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="queryce"> Show only Major
+									Computer Engineering
+								</label>
+							</div>
+							<div class="radio">
+								<label> <input type="radio" name="querycourse"
+									id="querycourse" value="queryice"> Show only Major
+									Information and Communication Engineering
+								</label>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+							<input type="submit" class="btn btn-primary" value="Submit" />
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

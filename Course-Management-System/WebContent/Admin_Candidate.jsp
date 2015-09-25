@@ -30,10 +30,9 @@
 	//check length of teacher
 	String Queryteacher = "SELECT * FROM user WHERE usertype = 'Teacher'";
 	ResultSet rsteacher = stmt.executeQuery(Queryteacher);
-	int countteacher = 0;
-	while (rsteacher.next()) {
-		countteacher++;
-	}
+	rsteacher.last();
+	int countteacher = rsteacher.getRow();
+	//System.out.println(countteacher);
 	//end check length of teacher
 	//query name of teacher
 	String[] arrayTeacher = new String[countteacher];
@@ -42,17 +41,18 @@
 	int countteacher2 = 0;
 	while (rsteacher2.next()) {
 		arrayTeacher[countteacher2] = rsteacher2
-				.getString("user.firstname");
+				.getString("user.firstname")
+				+ " "
+				+ rsteacher2.getString("user.lastname");
 		countteacher2++;
 	}
 	//end query name of teacher
 	//check length of ta
 	String Queryta = "SELECT * FROM user WHERE usertype = 'Teaching Assistance'";
 	ResultSet rsta = stmt.executeQuery(Queryta);
-	int countta = 0;
-	while (rsta.next()) {
-		countta++;
-	}
+	rsta.last();
+	int countta = rsta.getRow();
+	//System.out.println(countta);
 	//end check length of ta
 	//query name of ta
 	String[] arrayTa = new String[countta];
@@ -60,7 +60,8 @@
 	ResultSet rsta2 = stmt.executeQuery(Queryta2);
 	int countta2 = 0;
 	while (rsta2.next()) {
-		arrayTa[countta2] = rsta2.getString("user.firstname");
+		arrayTa[countta2] = rsta2.getString("user.firstname") + " "
+				+ rsta2.getString("user.lastname");
 		countta2++;
 	}
 	//end query name of ta
@@ -113,6 +114,9 @@
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
 <link href="css/custom.css" rel="stylesheet">
+
+<script src="dist/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="dist/sweetalert.css">
 
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
@@ -386,7 +390,6 @@
 											<p>
 												<b><i>Year : <%=academicyear%> Term : <%=academicterm%></i></b>
 											</p>
-
 											<%
 												} else {
 											%>
@@ -438,26 +441,37 @@
 															+ term
 															+ "' GROUP BY courseplan.courseCode;";
 													ResultSet rs = stmt.executeQuery(QueryString);
+
+													int count = 0;
 													while (rs.next()) {
 														// count length
 														stmt = con.createStatement();
 														String QueryString2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
-																+ rs.getString("courseplan.courseCode") + "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+																+ rs.getString("courseplan.courseCode")
+																+ "' AND course_survey.year = '"
+																+ year
+																+ "' AND course_survey.semester ='"
+																+ term
+																+ "' GROUP BY user.userID";
 														ResultSet rs2 = stmt.executeQuery(QueryString2);
-														int length = 0;
-														while (rs2.next()) {
-															length++;
-														}
-
+														rs2.last();
+														int length = rs2.getRow();
+														//System.out.println(length);
 														// get user firstname
 														stmt = con.createStatement();
 														String[] arrayusername = new String[length];
 														String QueryString3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
-																+ rs.getString("courseplan.courseCode") + "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+																+ rs.getString("courseplan.courseCode")
+																+ "' AND course_survey.year = '"
+																+ year
+																+ "' AND course_survey.semester ='"
+																+ term
+																+ "' GROUP BY user.userID";
 														ResultSet rs3 = stmt.executeQuery(QueryString3);
 														int length2 = 0;
 														while (rs3.next()) {
-															arrayusername[length2] = rs3.getString("user.firstname");
+															arrayusername[length2] = rs3.getString("user.firstname")
+																	+ " " + rs3.getString("user.lastname");
 															length2++;
 														}
 												%>
@@ -469,7 +483,7 @@
 													<td>
 														<%
 															out.print(rs.getString("course.courseCode"));
-														%> <input type="hidden" name="coursecode"
+														%> <input type="hidden" name="coursecode_<%=count%>"
 														value="<%=rs.getString("course.courseCode")%>"
 														form="savecandidate" /> <input type="hidden"
 														name="checkyear" id="checkyear" value="<%=year%>"
@@ -489,19 +503,24 @@
 													</td>
 													<td>
 														<p id="inputformajor">
-															<input type="text" id="" name=""
-																value="<%=rs.getString("courseplan.major")%>" />
+															<input type="text" id="major" name="major_<%=count%>"
+																value="<%=rs.getString("courseplan.major")%>"
+																form="savecandidate" />
 														</p>
 													</td>
 													<td><p id="inputforstudentnumber">
-															<input type="text" id="" name=""
-																value="<%=rs.getString("courseplan.numberofstudent")%>" />
+															<input type="text" id="numstudent"
+																name="numstudent_<%=count%>"
+																value="<%=rs.getString("courseplan.numberofstudent")%>"
+																form="savecandidate" />
 														</p></td>
 													<td><p id="inputforlect">
-															<input type="text" id="" name="" />
+															<input type="text" id="lect" name="lect_<%=count%>"
+																form="savecandidate" />
 														</p></td>
-													<td><select id="selectError1" multiple
-														class="form-control" data-rel="chosen">
+													<td><select name="selectlect_<%=count%>"
+														id="selectError1" multiple class="form-control"
+														data-rel="chosen" form="savecandidate">
 															<optgroup label="From Survey">
 																<%
 																	for (int i = 0; i < arrayusername.length; i++) {
@@ -531,10 +550,12 @@
 															</optgroup>
 													</select></td>
 													<td><p id="inputforlab">
-															<input type="text" id="" name="" />
+															<input type="text" id="lab" name="lab_<%=count%>"
+																form="savecandidate" />
 														</p></td>
-													<td><select id="selectError2" multiple
-														class="form-control" data-rel="chosen">
+													<td><select name="selectlab_<%=count%>"
+														id="selectlab_<%=count%>" multiple class="form-control"
+														data-rel="chosen" form="savecandidate">
 															<optgroup label="From Surey">
 																<%
 																	for (int i = 0; i < arrayusername.length; i++) {
@@ -566,43 +587,53 @@
 													<td></td>
 												</tr>
 												<%
+													count++;
 													}
 
 													stmt = con.createStatement();
 													String Queryfake = "SELECT * FROM notcandidate LEFT JOIN course ON course.courseCode = notcandidate.courseCode WHERE notcandidate.year = '"
 															+ year + "' AND notcandidate.semester = '" + term + "' ";
 													ResultSet rsfake = stmt.executeQuery(Queryfake);
+													int countfake = 0;
 													while (rsfake.next()) {
 														stmt = con.createStatement();
 														String Queryfake2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
 																+ rsfake.getString("notcandidate.courseCode")
-																+ "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+																+ "' AND course_survey.year = '"
+																+ year
+																+ "' AND course_survey.semester ='"
+																+ term
+																+ "' GROUP BY user.userID";
 														ResultSet rsfake2 = stmt.executeQuery(Queryfake2);
-														int lengthfake = 0;
-														while (rsfake2.next()) {
-															lengthfake++;
-														}
-
+														rsfake2.last();
+														int lengthfake = rsfake2.getRow();
+														//System.out.println(lengthfake);
 														stmt = con.createStatement();
 														String[] arrayusername = new String[lengthfake];
 														String Queryfake3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
 																+ rsfake.getString("notcandidate.courseCode")
-																+ "' AND course_survey.year = '"+year+"' AND course_survey.semester ='"+term+"' GROUP BY user.userID";
+																+ "' AND course_survey.year = '"
+																+ year
+																+ "' AND course_survey.semester ='"
+																+ term
+																+ "' GROUP BY user.userID";
 														ResultSet rsfake3 = stmt.executeQuery(Queryfake3);
 														int lengthfake2 = 0;
 														while (rsfake3.next()) {
 															arrayusername[lengthfake2] = rsfake3
-																	.getString("user.firstname");
+																	.getString("user.firstname")
+																	+ " "
+																	+ rsfake3.getString("user.lastname");
 															lengthfake2++;
 														}
 												%>
 												<tr>
 													<td><input type="hidden" name="surveyid"
-														value="<%=rsfake.getString("notcandidate.notcandidate_ID")%>"></td>
+														value="<%=rsfake.getString("notcandidate.notcandidateID")%>"></td>
 													<td>
 														<%
 															out.print(rsfake.getString("course.courseCode"));
-														%> <input type="hidden" name="coursecode2"
+														%> <input type="hidden" name="coursecode2_<%=countfake%>"
 														value="<%=rsfake.getString("course.courseCode")%>"
 														form="savecandidate" />
 													</td>
@@ -618,19 +649,25 @@
 													</td>
 													<td>
 														<p id="inputformajor">
-															<input type="text" id="" name=""
-																value="<%=rsfake.getString("notcandidate.major")%>" />
+															<input type="text" id="major2"
+																name="major2_<%=countfake%>"
+																value="<%=rsfake.getString("notcandidate.major")%>"
+																form="savecandidate" />
 														</p>
 													</td>
 													<td><p id="inputforstudentnumber">
-															<input type="text" id="" name=""
-																value="<%=rsfake.getString("notcandidate.numberofstudent")%>" />
+															<input type="text" id="numstudent2"
+																name="numstudent2_<%=countfake%>"
+																value="<%=rsfake.getString("notcandidate.numberofstudent")%>"
+																form="savecandidate" />
 														</p></td>
 													<td><p id="inputforlect">
-															<input type="text" id="" name="" />
+															<input type="text" id="lect2" name="lect2_<%=countfake%>"
+																form="savecandidate" />
 														</p></td>
-													<td><select id="selectError1" multiple
-														class="form-control" data-rel="chosen">
+													<td><select name="selectlect2_<%=countfake%>"
+														id="selectError1" multiple class="form-control"
+														data-rel="chosen" form="savecandidate">
 															<optgroup label="From Survey">
 																<%
 																	for (int i = 0; i < arrayusername.length; i++) {
@@ -660,10 +697,12 @@
 															</optgroup>
 													</select></td>
 													<td><p id="inputforlab">
-															<input type="text" id="" name="" />
+															<input type="text" id="lab2" name="lab2_<%=countfake%>"
+																form="savecandidate" />
 														</p></td>
-													<td><select id="selectError2" multiple
-														class="form-control" data-rel="chosen">
+													<td><select name="selectlab2_<%=countfake%>"
+														id="selectError2" multiple class="form-control"
+														data-rel="chosen" form="savecandidate">
 															<optgroup label="From Surey">
 																<%
 																	for (int i = 0; i < arrayusername.length; i++) {
@@ -693,23 +732,29 @@
 															</optgroup>
 													</select></td>
 													<td><a class="btn btn-danger confirmation"
-														href="Admin_Candidate_Duplicate_Delete.jsp?deleteid=<%=rsfake.getString("notcandidate.notcandidate_ID")%>">
+														href="Admin_Candidate_Duplicate_Delete.jsp?deleteid=<%=rsfake.getString("notcandidate.notcandidateID")%>">
 															<i class="glyphicon glyphicon-trash icon-white"></i>
 															Delete
-													</a><input type="hidden" name="deletetest" value="<%=rsfake.getString("notcandidate.notcandidate_ID")%>" form="savecandidate" /></td>
+													</a><input type="hidden" name="deletefake"
+														value="<%=rsfake.getString("notcandidate.notcandidateID")%>"
+														form="savecandidate" /></td>
 												</tr>
 												<%
+													countfake++;
 													}
 												%>
 											</tbody>
 										</table>
 										<div align="center">
+											<input type="hidden" name=totalcount value="<%=count%>"
+												form="savecandidate" /> <input type="hidden"
+												name=totalcount2 value="<%=countfake%>" form="savecandidate" />
 											<button class="btn btn-success savecandidatebtn"
 												id="savecandidatebtn" onclick="savecourse()">
 												<i class="glyphicon glyphicon-check"></i> Save
 											</button>
+											<br> <br>
 										</div>
-										<br> <br>
 									</div>
 								</div>
 							</div>
@@ -728,7 +773,7 @@
 											confirmIt, false);
 								}
 							</script>
-							
+
 							<!-- <script>
 								$(function() {
 									//twitter bootstrap script
@@ -747,7 +792,7 @@
 																		alert("Pass");
 																	},
 																	error : function() {
-																		alert("No Course in this year and semester.");
+																		alert("Error something went wrong");
 																	}
 																});
 													});
@@ -761,7 +806,7 @@
 									var checkterm = document
 											.getElementById("checkterm");
 									if (!checkyear || !checkterm) {
-										alert("You shall not pass");
+										swal("Select Year and Semester First.");
 									} else {
 										document.forms['savecandidate']
 												.submit()
@@ -794,7 +839,7 @@
 																		}
 																	});
 													if (allunchecked == true) {
-														alert("Please select course to duplicate.");
+														swal("Please select course to duplicate.");
 													} else {
 														var check = confirm("Are you sure to duplicate?");
 														if (check) {
@@ -834,6 +879,27 @@
 											<div class="box-content">
 												<table
 													class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+													<%
+														if (null == (String) session.getAttribute("NotCandidateYear")) {
+													%>
+
+													<p>
+														<b><i>Year : <%=academicyear%> Term : <%=academicterm%></i></b>
+													</p>
+													<%
+														} else {
+													%>
+
+													<p>
+														<b><i>Year : <%=(String) session.getAttribute("NotCandidateYear")%>
+																Term : <%=(String) session.getAttribute("NotCandidateTerm")%></i></b>
+													</p>
+
+													<%
+														}
+													%>
+
 													<thead>
 														<tr>
 															<th>Course Code</th>
@@ -847,82 +913,95 @@
 														</tr>
 													</thead>
 													<tbody>
+														<%
+															stmt = con.createStatement();
+															String QueryCandidateLength = "SELECT * FROM currentcourse INNER JOIN course ON currentcourse.courseCode = course.courseCode INNER JOIN section ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN candidate ON section.sectionID = candidate.sectionID WHERE currentcourse.year = '"
+																	+ year + "' AND currentcourse.semester = '" + term + "'";
+															ResultSet rscandidatelength = stmt
+																	.executeQuery(QueryCandidateLength);
+															rscandidatelength.last();
+															int candidatelength = rscandidatelength.getRow();
+															String QueryCandidate = "SELECT * FROM currentcourse INNER JOIN course ON currentcourse.courseCode = course.courseCode INNER JOIN section ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN candidate ON section.sectionID = candidate.sectionID WHERE currentcourse.year = '"
+																	+ year
+																	+ "' AND currentcourse.semester = '"
+																	+ term
+																	+ "' GROUP BY section.sectionID;";
+															ResultSet rscandidate = stmt.executeQuery(QueryCandidate);
+															int countcandidate = 0;
+															String sectionid[] = new String[candidatelength];
+															while (rscandidate.next()) {
+														%>
 														<tr>
-															<td>1302333</td>
-															<td>Database</td>
-															<td>3 (2-2-5)</td>
-															<td>IT56</td>
-															<td>50</td>
-															<td>1</td>
-															<td>1</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("currentcourse.courseCode"));
+																%>
+															</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("course.courseName"));
+																%>
+															</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("course.credit"));
+																%>
+															</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("section.major"));
+																%>
+															</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("section.numberofstudent"));
+																%>
+															</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("section.sectionlect"));
+																%>
+															</td>
+															<td>
+																<%
+																	out.print(rscandidate.getString("section.sectionlab"));
+																		sectionid[countcandidate] = rscandidate
+																				.getString("section.sectionID");
+																%>
+															</td>
 															<td><a class="btn btn btn-success btn-setting"
-																href="#AfterCandidate" data-toggle="modal"> <i
+																href="#AfterCandidate<%=sectionid[countcandidate]%>"
+																data-toggle="modal"> <i
 																	class="glyphicon glyphicon-zoom-in icon-white"></i>
 																	View
-															</a> <a class="btn btn-danger" href="#"> <i
-																	class="glyphicon glyphicon-trash icon-white"></i>
+															</a> <a class="btn btn-danger confirmation"
+																href="Admin_Candidate_DeleteCandidate.jsp?del=<%=sectionid[countcandidate]%>">
+																	<i class="glyphicon glyphicon-trash icon-white"></i>
 																	Delete
 															</a></td>
 														</tr>
-														<tr>
-															<td>1302333</td>
-															<td>Database</td>
-															<td>3 (2-2-5)</td>
-															<td>SE56</td>
-															<td>50</td>
-															<td>1</td>
-															<td>2</td>
-															<td><a class="btn btn btn-success btn-setting"
-																href="#AfterCandidate" data-toggle="modal"> <i
-																	class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	View
-															</a> <a class="btn btn-danger" href="#"> <i
-																	class="glyphicon glyphicon-trash icon-white"></i>
-																	Delete
-															</a></td>
-														</tr>
-														<tr>
-															<td>1305201</td>
-															<td>Software Architecture</td>
-															<td>3 (3-0-6)</td>
-															<td>SE56</td>
-															<td>50</td>
-															<td>1</td>
-															<td>1</td>
-															<td><a class="btn btn btn-success btn-setting"
-																href="#AfterCandidate" data-toggle="modal"> <i
-																	class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	View
-															</a> <a class="btn btn-danger" href="#"> <i
-																	class="glyphicon glyphicon-trash icon-white"></i>
-																	Delete
-															</a></td>
-														</tr>
-														<tr>
-															<td>1305210</td>
-															<td>Team Software Programming and System Testing
-																Workshop</td>
-															<td>1 (0-3-1)</td>
-															<td>SE56</td>
-															<td>50</td>
-															<td>1</td>
-															<td>1</td>
-															<td><a class="btn btn btn-success btn-setting"
-																href="#AfterCandidate" data-toggle="modal"> <i
-																	class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	View
-															</a> <a class="btn btn-danger" href="#"> <i
-																	class="glyphicon glyphicon-trash icon-white"></i>
-																	Delete
-															</a></td>
-														</tr>
+														<%
+															countcandidate++;
+															}
+														%>
 													</tbody>
 												</table>
 											</div>
 										</div>
 									</div>
 									<!--/span-->
-
+									<script type="text/javascript">
+										var elems = document
+												.getElementsByClassName('confirmation');
+										var confirmIt = function(e) {
+											if (!confirm('Are you sure to delete?'))
+												e.preventDefault();
+										};
+										for (var i = 0, l = elems.length; i < l; i++) {
+											elems[i].addEventListener('click',
+													confirmIt, false);
+										}
+									</script>
 								</div>
 								<!--/row-->
 
@@ -1000,8 +1079,21 @@
 							</div>
 						</div>
 
-						<div class="modal fade" id="AfterCandidate" tabindex="-1"
-							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<%
+							for (int d = 0; d < countcandidate; d++) {
+								stmt = con.createStatement();
+								String Querysection = "SELECT * FROM section INNER JOIN candidate ON candidate.sectionID = section.sectionID INNER JOIN user ON candidate.userID = user.userID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.year = '"
+										+ year
+										+ "' AND currentcourse.semester = '"
+										+ term
+										+ "' AND section.sectionID = '"
+										+ sectionid[d]
+										+ "' ORDER BY teachtype desc";
+								ResultSet rssection = stmt.executeQuery(Querysection);
+						%>
+						<div class="modal fade" id="AfterCandidate<%=sectionid[d]%>"
+							tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+							aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
@@ -1018,21 +1110,17 @@
 												</tr>
 											</thead>
 											<tbody>
+												<%
+													while (rssection.next()) {
+												%>
 												<tr>
-													<td>Muhammad Usman</td>
-													<td>Teacher</td>
-													<td>Lab</td>
+													<td><%=rssection.getString("user.firstname")%> <%=rssection.getString("user.lastname")%></td>
+													<td><%=rssection.getString("user.usertype")%></td>
+													<td><%=rssection.getString("candidate.teachtype")%></td>
 												</tr>
-												<tr>
-													<td>White Horse</td>
-													<td>Teacher</td>
-													<td>Lecture</td>
-												</tr>
-												<tr>
-													<td>Sheikh Heera</td>
-													<td>TA</td>
-													<td>Lab</td>
-												</tr>
+												<%
+													}
+												%>
 											</tbody>
 										</table>
 									</div>
@@ -1042,6 +1130,9 @@
 								</div>
 							</div>
 						</div>
+						<%
+							}
+						%>
 						<footer class="row">
 						<p class="col-md-9 col-sm-9 col-xs-12 copyright">
 							© <a href="http://usman.it" target="_blank">Muhammad Usman</a>
