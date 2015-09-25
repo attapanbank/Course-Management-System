@@ -1,368 +1,950 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1" import="java.sql.*"%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head>
-    <!--
-        ===
-        This comment should NOT be removed.
+<html>
+<head>
 
-        Charisma v2.0.0
+<meta charset="utf-8">
+<title>Course Survey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description"
+	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
+<meta name="author" content="Muhammad Usman">
 
-        Copyright 2012-2014 Muhammad Usman
-        Licensed under the Apache License v2.0
-        http://www.apache.org/licenses/LICENSE-2.0
+<!-- The styles -->
+<link id="bs-css" href="css/bootstrap-cerulean.min.css" rel="stylesheet">
 
-        http://usman.it
-        http://twitter.com/halalit_usman
-        ===
-    -->
-    <meta charset="utf-8">
-    <title>Course Survey</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
-    <meta name="author" content="Muhammad Usman">
+<link href="css/charisma-app.css" rel="stylesheet">
+<link href="bower_components/fullcalendar/dist/fullcalendar.css"
+	rel="stylesheet">
+<link href="bower_components/fullcalendar/dist/fullcalendar.print.css"
+	rel="stylesheet" media="print">
+<link href="bower_components/chosen/chosen.min.css" rel="stylesheet">
+<link href="bower_components/colorbox/example3/colorbox.css"
+	rel="stylesheet">
+<link href="bower_components/responsive-tables/responsive-tables.css"
+	rel="stylesheet">
+<link
+	href="bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css"
+	rel="stylesheet">
+<link href="css/jquery.noty.css" rel="stylesheet">
+<link href="css/noty_theme_default.css" rel="stylesheet">
+<link href="css/elfinder.min.css" rel="stylesheet">
+<link href="css/elfinder.theme.css" rel="stylesheet">
+<link href="css/jquery.iphone.toggle.css" rel="stylesheet">
+<link href="css/uploadify.css" rel="stylesheet">
+<link href="css/animate.min.css" rel="stylesheet">
 
-    <!-- The styles -->
-    <link id="bs-css" href="css/bootstrap-cerulean.min.css" rel="stylesheet">
+<!-- jQuery -->
+<script src="bower_components/jquery/jquery.min.js"></script>
 
-    <link href="css/charisma-app.css" rel="stylesheet">
-    <link href="bower_components/fullcalendar/dist/fullcalendar.css" rel="stylesheet">
-    <link href="bower_components/fullcalendar/dist/fullcalendar.print.css" rel="stylesheet" media="print">
-    <link href="bower_components/chosen/chosen.min.css" rel="stylesheet">
-    <link href="bower_components/colorbox/example3/colorbox.css" rel="stylesheet">
-    <link href="bower_components/responsive-tables/responsive-tables.css" rel="stylesheet">
-    <link href="bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css" rel="stylesheet">
-    <link href="css/jquery.noty.css" rel="stylesheet">
-    <link href="css/noty_theme_default.css" rel="stylesheet">
-    <link href="css/elfinder.min.css" rel="stylesheet">
-    <link href="css/elfinder.theme.css" rel="stylesheet">
-    <link href="css/jquery.iphone.toggle.css" rel="stylesheet">
-    <link href="css/uploadify.css" rel="stylesheet">
-    <link href="css/animate.min.css" rel="stylesheet">
-
-    <!-- jQuery -->
-    <script src="bower_components/jquery/jquery.min.js"></script>
-
-    <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
+<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <!-- The fav icon -->
-    <link rel="shortcut icon" href="img/favicon.ico">
+<!-- The fav icon -->
+<link rel="shortcut icon" href="img/favicon.ico">
 
 </head>
 
 <body>
-    <!-- topbar starts -->
-    <div class="navbar navbar-default" role="navigation">
-  <div class="navbar-inner">
-    <button type="button" class="navbar-toggle pull-left animated flip"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-    <a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a><!-- user dropdown starts -->
-    <div class="btn-group pull-right">
-      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> Teacher</span> <span class="caret"></span> </button>
-      <ul class="dropdown-menu">
-        <li><a href="#">Profile</a></li>
-        <li class="divider"></li>
-        <li><a href="login.html">Logout</a></li>
-      </ul>
-    </div>
-    <!-- user dropdown ends --> 
-    
-    <!-- theme selector starts --> 
-    
-    <!-- theme selector ends --> 
-    
-  </div>
-</div>
+	<!-- topbar starts -->
+	<div class="navbar navbar-default" role="navigation">
+		<div class="navbar-inner">
+			<button type="button" class="navbar-toggle pull-left animated flip">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a>
+			<!-- user dropdown starts -->
+			<div class="btn-group pull-right">
+				<button class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown">
+					<%
+						Object strUserID = session.getAttribute("sUserID");
+						String sFirstname = String.valueOf(session
+								.getAttribute("sFirstname"));
+						String sLastname = String
+								.valueOf(session.getAttribute("sLastname"));
+					%>
+					<i class="glyphicon glyphicon-user"></i><span
+						class="hidden-sm hidden-xs"> <%
+ 	out.print(sFirstname);
+ %>
+					</span> <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="Teacher_Profile.jsp">Profile</a></li>
+					<li class="divider"></li>
+					<li><a href="login.html">Logout</a></li>
+				</ul>
+			</div>
+			<!-- user dropdown ends -->
 
-    <!-- topbar ends -->
-<div class="ch-container">
-    <div class="row">
-        
-        <!-- left menu starts -->
-       <div class="col-sm-2 col-lg-2">
-      <div class="sidebar-nav">
-        <div class="nav-canvas">
-          <div class="nav-sm nav nav-stacked"> </div>
-          <ul style="" class="nav nav-pills nav-stacked main-menu">
-            <li class="nav-header">Main</li>
-           <li ><a class="ajax-link" href="Teacher_News.jsp"><i class="glyphicon glyphicon-home"></i><span> News</span></a>
-                        </li>
-                        <li class="nav-header hidden-md">Management</li>
-<li ><a class="ajax-link" href="Teacher_Workload.jsp"><i class="glyphicon glyphicon-align-justify"></i><span> Workload</span></a></li>
-            <li class="active"><a class="ajax-link" href="Teacher_Course.jsp"><i class="glyphicon glyphicon-align-justify"></i><span> Course</span></a></li>
-            <li ><a class="ajax-link" href="Teacher_Exam.jsp"><i class="glyphicon glyphicon-align-justify"></i><span> Examination</span></a></li>
-            
-          </ul>
-        </div>
-      </div>
-    </div>
-        <!--/span-->
-        <!-- left menu ends -->
+			<!-- theme selector starts -->
 
-        <noscript>
-            &amp;lt;div class="alert alert-block col-md-12"&amp;gt;
-                &amp;lt;h4 class="alert-heading"&amp;gt;Warning!&amp;lt;/h4&amp;gt;
+			<!-- theme selector ends -->
 
-                &amp;lt;p&amp;gt;You need to have &amp;lt;a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank"&amp;gt;JavaScript&amp;lt;/a&amp;gt;
-                    enabled to use this site.&amp;lt;/p&amp;gt;
-            &amp;lt;/div&amp;gt;
-        </noscript>
+		</div>
+	</div>
 
-        <div id="content" class="col-lg-10 col-sm-10">
-            <!-- content starts -->
-            
+	<!-- topbar ends -->
+	<div class="ch-container">
+		<div class="row">
 
-<div>
-    <ul class="breadcrumb">
-        <li>
-            <a href="#">Home</a>
-        </li>
-        <li>
-            <a href="#">Course Select</a>
-        </li>
-    </ul>
-</div>
+			<!-- left menu starts -->
+			<div class="col-sm-2 col-lg-2">
+				<div class="sidebar-nav">
+					<div class="nav-canvas">
+						<div class="nav-sm nav nav-stacked"></div>
+						<ul style="" class="nav nav-pills nav-stacked main-menu">
+							<li class="nav-header">Main</li>
+							<li><a class="ajax-link" href="Teacher_News.jsp"><i
+									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
+							<li class="nav-header hidden-md">Management</li>
+							<li><a class="ajax-link" href="Teacher_Workload.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Workload</span></a></li>
+							<li class="active"><a class="ajax-link"
+								href="Teacher_Course.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Course</span></a></li>
+							<li><a class="ajax-link" href="Teacher_Exam.jsp"><i
+									class="glyphicon glyphicon-align-justify"></i><span>
+										Examination</span></a></li>
 
-<div class="row">
-    <div class="box col-md-6">
-        <div class="box-inner">
-            <div class="box-header well" data-original-title="">
-                <h2><i class="glyphicon glyphicon-star-empty"></i> Course Select</h2>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--/span-->
+			<!-- left menu ends -->
 
-                <div class="box-icon">
-                    <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
-                    <a href="#" class="btn btn-minimize btn-round btn-default"><i class="glyphicon glyphicon-chevron-up"></i></a>
-                    <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
-                </div>
-            </div>
-            <div class="box-content" style="display: block;">
-                <!-- put your content here -->
-                 
-                 <div class="control-group">
-                    <label class="control-label" for="selectError2">Select course</label>
-                    <div class="controls">
-                        <select data-placeholder="Select course that your need to teach" id="selectError2" data-rel="chosen">
-                            <option value=""></option>
-                                <option>1305011 Network programming</option>
-                                <option>New York Giants</option>
-                                <option>Philadelphia Eagles hahahahahahahahahahahahahaha</option>
-                                <option>Washington Redskins</option>
-                                <option>Chicago Bears</option>
-                                <option>Detroit Lions</option>
-                                <option>Green Bay Packers</option>
-                                <option>Minnesota Vikings</option>
-                                <option>Atlanta Falcons</option>
-                                <option>Carolina Panthers</option>
-                                <option>New Orleans Saints</option>
-                                <option>Tampa Bay Buccaneers</option>
-                                <option>Arizona Cardinals</option>
-                                <option>St. Louis Rams</option>
-                                <option>San Francisco 49ers</option>
-                                <option>Seattle Seahawks</option>
-                                <option>Buffalo Bills</option>
-                                <option>Miami Dolphins</option>
-                                <option>New England Patriots</option>
-                                <option>New York Jets</option>
-                                <option>Baltimore Ravens</option>
-                                <option>Cincinnati Bengals</option>
-                            </optgroup>
-                        </select>
-                         <a align="right" class="btn btn-success" href="#">
-                             <i class="glyphicon glyphicon glyphicon-check"></i>
-                                 Select
-                                    </a>
-                    </div>
+			<noscript>&amp;lt;div class="alert alert-block
+				col-md-12"&amp;gt; &amp;lt;h4
+				class="alert-heading"&amp;gt;Warning!&amp;lt;/h4&amp;gt;
+
+				&amp;lt;p&amp;gt;You need to have &amp;lt;a
+				href="http://en.wikipedia.org/wiki/JavaScript"
+				target="_blank"&amp;gt;JavaScript&amp;lt;/a&amp;gt; enabled to use
+				this site.&amp;lt;/p&amp;gt; &amp;lt;/div&amp;gt;</noscript>
+
+			<div id="content" class="col-lg-10 col-sm-10">
+				<!-- content starts -->
 
 
-                </div>
-         
+				<div>
+					<ul class="breadcrumb">
+						<li><a href="#">Home</a></li>
+						<li><a href="#">Course Select</a></li>
+					</ul>
+				</div>
 
-         
-        
-            </div>
-        </div>
-    </div>
+				<%
+					Statement stmt;
+					Connection con;
 
-    <div class="box col-md-6">
-        <div class="box-inner">
-            <div class="box-header well" data-original-title="">
-                <h2><i class="glyphicon glyphicon-star-empty"></i> Your select Course</h2>
+					InputStream stream = application
+							.getResourceAsStream("/fileUpload/db.properties");
+					Properties props = new Properties();
+					props.load(stream);
+					String url = props.getProperty("driver");
+					String dbUrl = props.getProperty("url");
+					String dbUser = props.getProperty("user");
+					String dbPassword = props.getProperty("password");
+					con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+					stmt = con.createStatement();
 
-                <div class="box-icon">
-                    <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
-                    <a href="#" class="btn btn-minimize btn-round btn-default"><i class="glyphicon glyphicon-chevron-up"></i></a>
-                    <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
-                </div>
-            </div>
-            <div class="box-content" style="display: block;">
-                 <div class="box-content" style="display: block;">
-                <!-- put your content here -->
-                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
-        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
-            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
-            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
-                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
-                <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper" role="grid">
-                    <table aria-describedby="DataTables_Table_0_info" id="DataTables_Table_0" class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
-    <thead>
-    <tr role="row">
-         <th style="width: 100px;" colspan="1" rowspan="1" aria-controls="DataTables_Table_0" tabindex="0" role="columnheader" class="sorting" aria-label="Role: activate to sort column ascending">Course Code
-        </th>
-        <th style="width: 150px;" colspan="1" rowspan="1" aria-controls="DataTables_Table_0" tabindex="0" role="columnheader" class="sorting" aria-label="Role: activate to sort column ascending">Course Name
-        </th>
-        
-        <th style="width: 150px;" colspan="1" rowspan="1" aria-controls="DataTables_Table_0" tabindex="0" role="columnheader" class="sorting" aria-label="Status: activate to sort column ascending">Credit
-        </th>
-       
-        
-    </tr>
-    </thead>
-    
-    <tbody aria-relevant="all" aria-live="polite" role="alert">
-        <tr class="odd">
-        <td class="">1302305</td>
-        <td class="center">Network Programing</td>
-        <td class="center">3(1-1-1)</td>
-       
-       
-    </tr>
-      <tr class="even">
-        <td class="">1302312</td>
-        <td class="center">Data Storage</td>
-        <td class="center">2(2-1-1)</td>
-       
-    </tr>
-    
-    
-   
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><!-- put your content here -->
-<div align ="center">
-<a class="btn btn-success" href="#">
-                <i class="glyphicon glyphicon glyphicon-check"></i>
-                Confirm
-            </a></div>
+					String QueryString = "select * from cms.courseplan_checksurvey ";
+					ResultSet rs = stmt.executeQuery(QueryString);
 
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</div><!--/fluid-row-->
+					String on = null;
+					int year = 0;
+					int semester = 0;
 
-    <!-- Ad, you can remove it -->
-    
-    <!-- Ad ends -->
+					while (rs.next()) {
+						on = rs.getString("checksurvey");
+						year = rs.getInt("year");
+						semester = rs.getInt("semester");
 
-    <hr>
-
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h3>รายละเอียด</h3>
-                </div>
-                <div class="modal-body">
-                    <!--แก้ไขตรงนี้-->
-                   <table>
-                    <tr>
-                    <td><p>รหัสรายวิขา:</p></td>
-                    <td><p>1302305</p></td>
-                </tr>
-                     <tr>
-                    <td><p>ชื่อรายวิชา:</p></td>
-                    <td><p>Network Programing</p></td>
-                </tr>
-                   <tr>
-                    <td><p>หน่วยกิต:</p></td>
-                    <td><p>3(2-2-5)</p></td>
-                </tr> 
-                <tr>
-                    <td><p>Section:</p></td>
-                    <td><select >
-                            <option>Section 01</option>
-                            <option>Section 02</option>
-                            <option>Section 03</option>
-                            <option>Section 04</option>
-                        </select></td>
-                </tr> 
-                <tr>
-                    <td><p>นักศึกษาสาขาวิชา:</p></td>
-                    <td><p>CS57</p></td>
-                </tr> 
-                <tr>
-                    <td><p>Lecture:</p></td>
-                    <td><p>2 hour/lec</p></td>
-                </tr> 
-                 <tr>
-                    <td><p>Lab:</p></td>
-                    <td><p>2 hour/lab</p></td>
-                </tr> 
-                </table>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                    <a href="#" class="btn btn-primary" data-dismiss="modal">Select</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="row">
-        <p class="col-md-9 col-sm-9 col-xs-12 copyright">© <a href="http://usman.it" target="_blank">Muhammad
-                Usman</a> 2012 - 2014</p>
-
-        <p class="col-md-3 col-sm-3 col-xs-12 powered-by">Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a></p>
-    </footer>
-
-</div><!--/.fluid-container-->
-
-<!-- external javascript -->
-
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-<!-- library for cookie management -->
-<script src="js/jquery.cookie.js"></script>
-<!-- calender plugin -->
-<script src="bower_components/moment/min/moment.min.js"></script>
-<script src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-<!-- data table plugin -->
-<script src="js/jquery.dataTables.min.js"></script>
-
-<!-- select or dropdown enhancer -->
-<script src="bower_components/chosen/chosen.jquery.min.js"></script>
-<!-- plugin for gallery image view -->
-<script src="bower_components/colorbox/jquery.colorbox-min.js"></script>
-<!-- notification plugin -->
-<script src="js/jquery.noty.js"></script>
-<!-- library for making tables responsive -->
-<script src="bower_components/responsive-tables/responsive-tables.js"></script>
-<!-- tour plugin -->
-<script src="bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
-<!-- star rating plugin -->
-<script src="js/jquery.raty.min.js"></script>
-<!-- for iOS style toggle switch -->
-<script src="js/jquery.iphone.toggle.js"></script>
-<!-- autogrowing textarea plugin -->
-<script src="js/jquery.autogrow-textarea.js"></script>
-<!-- multiple file upload plugin -->
-<script src="js/jquery.uploadify-3.1.min.js"></script>
-<!-- history.js for cross-browser state change on ajax -->
-<script src="js/jquery.history.js"></script>
-<!-- application script for Charisma demo -->
-<script src="js/charisma.js"></script>
+						session.setAttribute("sYear", year);
+						session.setAttribute("sSemester", semester);
+					}
+				%>
 
 
 
 
-<div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" role="dialog" tabindex="-1" style="display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cboxContent" style="float: left;"><div id="cboxTitle" style="float: left;"></div><div id="cboxCurrent" style="float: left;"></div><button type="button" id="cboxPrevious"></button><button type="button" id="cboxNext"></button><button id="cboxSlideshow"></button><div id="cboxLoadingOverlay" style="float: left;"></div><div id="cboxLoadingGraphic" style="float: left;"></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div></div><div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" role="dialog" tabindex="-1" style="display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cboxContent" style="float: left;"><div id="cboxTitle" style="float: left;"></div><div id="cboxCurrent" style="float: left;"></div><button type="button" id="cboxPrevious"></button><button type="button" id="cboxNext"></button><button id="cboxSlideshow"></button><div id="cboxLoadingOverlay" style="float: left;"></div><div id="cboxLoadingGraphic" style="float: left;"></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div></div></body></html>
+				<div class="row">
+					<div class="box col-md-6">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-star-empty"></i> Course Select
+
+									<%
+										if (year != 0 && semester != 0) {
+									%>
+									Year :
+									<%
+										out.print(year);
+									%>
+									Term :
+									<%
+										out.print(semester);
+										}
+									%>
+								</h2>
+
+								<div class="box-icon">
+									<a href="#" class="btn btn-setting btn-round btn-default"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
+										class="btn btn-close btn-round btn-default"><i
+										class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
+							<div class="box-content" style="display: block;">
+								<!-- put your content here -->
+
+
+								<%
+									String QueryString1301 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1301%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1302 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1302%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1305 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1305%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1306 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1306%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1501 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1501%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1502 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1502%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+								%>
+
+								<%
+									if (on != null) {
+										if (on.equals("ON")) {
+								%>
+
+								<form action="Teacher_Save_Survey.jsp" method="post" id="myform">
+									<div class="center">
+										<div class="control-group">
+											<label class="control-label" for="selectError2">Select
+												course <%
+												out.print(on);
+											%>
+											</label>
+											<div class="controls">
+												<select name="courseSelect"
+													data-placeholder="Select course that your need to teach"
+													id="selectError2" data-rel="chosen">
+													<optgroup label="Information Technology">
+														<%
+															ResultSet rs1301 = stmt.executeQuery(QueryString1301);
+																	while (rs1301.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1301.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Computer Science">
+														<%
+															ResultSet rs1302 = stmt.executeQuery(QueryString1302);
+																	while (rs1302.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1302.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Software Engineering">
+														<%
+															ResultSet rs1305 = stmt.executeQuery(QueryString1305);
+																	while (rs1305.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1305.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+
+													<optgroup label="Multimedia Technology and Animation">
+														<%
+															ResultSet rs1306 = stmt.executeQuery(QueryString1306);
+																	while (rs1306.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1306.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Computer Engineering">
+														<%
+															ResultSet rs1501 = stmt.executeQuery(QueryString1501);
+																	while (rs1501.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1501.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Information and Communication Engineering">
+														<%
+															ResultSet rs1502 = stmt.executeQuery(QueryString1502);
+																	while (rs1502.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1502.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+
+												</select><br> <br>
+												<div class="center">
+													<input type="submit" class="btn btn-success"
+														onclick="submitRunAjax();"
+														class="glyphicon glyphicon glyphicon-check" value="Select">
+												</div>
+
+
+											</div>
+
+
+										</div>
+									</div>
+								</form>
+
+
+
+								<%
+									} else if (on.equals("OFF")) {
+								%>
+								<div class="alert alert-info">
+									<button type="button" class="close" data-dismiss="alert">&times;</button>
+
+									<strong> Course survey has been close. !</strong> Please wait
+									openning course survey.
+								</div>
+								<%
+									}
+								%>
+								<%
+									} else {
+								%>
+								<div class="alert alert-info">
+									<button type="button" class="close" data-dismiss="alert">&times;</button>
+									<strong> Course survey is not open !</strong> Please wait
+									openning course survey.<%
+										out.print(on);
+									%>
+
+								</div>
+								<%
+									}
+								%>
+
+							</div>
+						</div>
+					</div>
+
+
+					<%
+						if (on != null) {
+							if (on.equals("ON")) {
+					%>
+
+					<div class="box col-md-6">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-star-empty"></i> Your select
+									Course
+								</h2>
+
+								<div class="box-icon">
+									<a href="#" class="btn btn-setting btn-round btn-default"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
+										class="btn btn-close btn-round btn-default"><i
+										class="glyphicon glyphicon-remove"></i></a>
+								</div>
+							</div>
+							<div class="box-content" style="display: block;">
+								<div class="box-content" style="display: block;">
+									<!-- put your content here -->
+									<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
+										role="grid">
+										<div id="DataTables_Table_0_wrapper"
+											class="dataTables_wrapper" role="grid">
+											<div id="DataTables_Table_0_wrapper"
+												class="dataTables_wrapper" role="grid">
+												<div id="DataTables_Table_0_wrapper"
+													class="dataTables_wrapper" role="grid">
+													<div id="DataTables_Table_0_wrapper"
+														class="dataTables_wrapper" role="grid">
+														<div id="DataTables_Table_0_wrapper"
+															class="dataTables_wrapper" role="grid">
+															<table aria-describedby="DataTables_Table_0_info"
+																id="DataTables_Table_0"
+																class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
+																<thead>
+																	<tr role="row">
+																		<th style="width: 100px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Role: activate to sort column ascending">Course
+																			Code</th>
+																		<th style="width: 150px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Role: activate to sort column ascending">Course
+																			Name</th>
+
+
+																		<th style="width: 150px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Status: activate to sort column ascending">Action
+																		</th>
+
+
+																	</tr>
+																</thead>
+																<%
+																	String cos = null;
+																			String cosCo = null;
+																			String cosCe = null;
+
+																			String QueryString_selectCourse = "SELECT * FROM cms.course_survey where userID = '"
+																					+ strUserID + "';";
+
+																			ResultSet rsSelectCourse = stmt
+																					.executeQuery(QueryString_selectCourse);
+																%>
+																<%
+																	if (strUserID != null) {
+																				while (rsSelectCourse.next()) {
+																%>
+																<tbody aria-relevant="all" aria-live="polite"
+																	role="alert">
+																	<tr>
+																		<td>
+																			<%
+																				cosCo = rsSelectCourse.getString("courseCode");
+																								out.print(cosCo);
+																			%>
+																		</td>
+																		<td>
+																			<%
+																				cos = rsSelectCourse.getString("courseName");
+																								out.print(cos);
+																			%>
+																		</td>
+
+																		<td><a class="btn btn-danger"
+																			href="Teacher_Delete_Course_Session.jsp?coursesurveyID=<%out.print(rsSelectCourse
+									.getString("coursesurveyID"));%>">
+																				<i class="glyphicon glyphicon-trash icon-white"></i>
+																				Delete
+																		</a></td>
+																	</tr>
+																	<%
+																		}
+																				}
+																	%>
+
+
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- put your content here -->
+									<div align="center"></div>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<%
+						} else {
+					%>
+
+					<div class="box col-md-6">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-star-empty"></i> Your select
+									Course
+								</h2>
+
+								<div class="box-icon">
+									<a href="#" class="btn btn-setting btn-round btn-default"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a>
+								</div>
+							</div>
+							<div class="box-content" style="display: block;">
+								<div class="box-content" style="display: block;">
+									<!-- put your content here -->
+									<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
+										role="grid">
+										<div id="DataTables_Table_0_wrapper"
+											class="dataTables_wrapper" role="grid">
+											<div id="DataTables_Table_0_wrapper"
+												class="dataTables_wrapper" role="grid">
+												<div id="DataTables_Table_0_wrapper"
+													class="dataTables_wrapper" role="grid">
+													<div id="DataTables_Table_0_wrapper"
+														class="dataTables_wrapper" role="grid">
+														<div id="DataTables_Table_0_wrapper"
+															class="dataTables_wrapper" role="grid">
+															<table aria-describedby="DataTables_Table_0_info"
+																id="DataTables_Table_0"
+																class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
+																<thead>
+																	<tr role="row">
+																		<th style="width: 100px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Role: activate to sort column ascending">Course
+																			Code</th>
+																		<th style="width: 150px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Role: activate to sort column ascending">Course
+																			Name</th>
+
+
+																		<th style="width: 150px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Status: activate to sort column ascending">Action
+																		</th>
+
+
+																	</tr>
+																</thead>
+																<%
+																	String cos = null;
+																			String cosCo = null;
+																			String cosCe = null;
+
+																			String QueryString_selectCourse = "SELECT * FROM cms.course_survey where userID = '"
+																					+ strUserID + "';";
+
+																			ResultSet rsSelectCourse = stmt
+																					.executeQuery(QueryString_selectCourse);
+																%>
+																<%
+																	if (strUserID != null) {
+																				while (rsSelectCourse.next()) {
+																%>
+																<tbody aria-relevant="all" aria-live="polite"
+																	role="alert">
+																	<tr>
+																		<td>
+																			<%
+																				cosCo = rsSelectCourse.getString("courseCode");
+																								out.print(cosCo);
+																			%>
+																		</td>
+																		<td>
+																			<%
+																				cos = rsSelectCourse.getString("courseName");
+																								out.print(cos);
+																			%>
+																		</td>
+
+																		<td>Waitting for comfirm</td>
+																	</tr>
+																	<%
+																		}
+																				}
+																	%>
+
+
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- put your content here -->
+									<div align="center"></div>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+					<div class="box col-md-12">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-star-empty"></i>Course that you
+									teach in this term
+
+								</h2>
+
+								<div class="box-icon">
+									<a href="#" class="btn btn-setting btn-round btn-default"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a>
+								</div>
+							</div>
+							<div class="box-content" style="display: block;">
+								<!-- put your content here -->
+								<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
+									role="grid">
+
+
+									<%
+										String courseFinal = "SELECT * FROM cms.section inner join cms.candidate inner join cms.currentcourse inner join cms.course where userID = '"+strUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '2556' and currentcourse.semester = '1' and candidate.teachtype = 'Lect' and  section.sectionID = candidate.sectionID;";
+												ResultSet rsFinal = stmt.executeQuery(courseFinal);
+												stmt = con.createStatement();
+									%>
+
+
+									<table aria-describedby="DataTables_Table_0_info"
+										id="DataTables_Table_0"
+										class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
+										<thead>
+											<tr role="row">
+												<th style="width: 100px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Role: activate to sort column ascending">Course
+													Code</th>
+												<th style="width: 150px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Role: activate to sort column ascending">Course
+													Name</th>
+
+
+												<th style="width: 150px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Teaching
+													assistance</th>
+
+
+												<th style="width: 150px;" colspan="2" rowspan="1"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Section
+												</th>
+
+
+
+											</tr>
+
+											<tr>
+
+												<td style="width: 150px;" colspan="1" rowspan="1"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Lect
+												</td>
+												<td style="width: 150px;" colspan="1" rowspan="1"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Lab
+												</td>
+											</tr>
+
+										</thead>
+
+
+										<%
+											while (rsFinal.next()) {
+										%>
+										<tbody aria-relevant="all" aria-live="polite" role="alert">
+											<tr>
+												<td>
+													<%
+														out.print(rsFinal.getString("course.courseCode"));
+													%>
+												</td>
+												<td>
+													<%
+														out.print(rsFinal.getString("course.courseName"));
+													%>
+												</td>
+
+												<td>Teacher assitance</td>
+
+												<td>
+													<%
+														out.print(rsFinal.getString("section.sectionlect"));
+													%>
+												</td>
+												<td>
+													<%
+														String secLab = rsFinal.getString("section.sectionlab");
+													if(secLab ==null){
+														out.print("-");
+													}else{
+														rsFinal.getString("section.sectionlab");
+													}
+													%>
+												</td>
+											</tr>
+
+											<%
+												}
+											%>
+
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+							<!-- put your content here -->
+							<div align="center"></div>
+
+
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
+
+
+			<%
+				}
+
+				}
+			%>
+		</div>
+	</div>
+	<!--/fluid-row-->
+
+	<!-- Ad, you can remove it -->
+
+	<!-- Ad ends -->
+
+	<hr>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">Ã</button>
+					<h3>à¸£à¸²à¸¢à¸¥à¸°à¹à¸­à¸µà¸¢à¸</h3>
+				</div>
+				<div class="modal-body">
+					<!--à¹à¸à¹à¹à¸à¸à¸£à¸à¸à¸µà¹-->
+					<table>
+						<tr>
+							<td><p>à¸£à¸«à¸±à¸ªà¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
+							<td><p>1302305</p></td>
+						</tr>
+						<tr>
+							<td><p>à¸à¸·à¹à¸­à¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
+							<td><p>Network Programing</p></td>
+						</tr>
+						<tr>
+							<td><p>à¸«à¸à¹à¸§à¸¢à¸à¸´à¸:</p></td>
+							<td><p>3(2-2-5)</p></td>
+						</tr>
+						<tr>
+							<td><p>Section:</p></td>
+							<td><select>
+									<option>Section 01</option>
+									<option>Section 02</option>
+									<option>Section 03</option>
+									<option>Section 04</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td><p>à¸à¸±à¸à¸¨à¸¶à¸à¸©à¸²à¸ªà¸²à¸à¸²à¸§à¸´à¸à¸²:</p></td>
+							<td><p>CS57</p></td>
+						</tr>
+						<tr>
+							<td><p>Lecture:</p></td>
+							<td><p>2 hour/lec</p></td>
+						</tr>
+						<tr>
+							<td><p>Lab:</p></td>
+							<td><p>2 hour/lab</p></td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+					<a href="#" class="btn btn-primary" data-dismiss="modal">Select</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="row">
+	<p class="col-md-9 col-sm-9 col-xs-12 copyright">
+		Â© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
+		2014
+	</p>
+
+	<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
+		Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a>
+	</p>
+	</footer>
+
+	</div>
+	<!--/.fluid-container-->
+
+	<!-- external javascript -->
+
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+	<!-- library for cookie management -->
+	<script src="js/jquery.cookie.js"></script>
+	<!-- calender plugin -->
+	<script src="bower_components/moment/min/moment.min.js"></script>
+	<script src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+	<!-- data table plugin -->
+	<script src="js/jquery.dataTables.min.js"></script>
+
+	<!-- select or dropdown enhancer -->
+	<script src="bower_components/chosen/chosen.jquery.min.js"></script>
+	<!-- plugin for gallery image view -->
+	<script src="bower_components/colorbox/jquery.colorbox-min.js"></script>
+	<!-- notification plugin -->
+	<script src="js/jquery.noty.js"></script>
+	<!-- library for making tables responsive -->
+	<script src="bower_components/responsive-tables/responsive-tables.js"></script>
+	<!-- tour plugin -->
+	<script
+		src="bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
+	<!-- star rating plugin -->
+	<script src="js/jquery.raty.min.js"></script>
+	<!-- for iOS style toggle switch -->
+	<script src="js/jquery.iphone.toggle.js"></script>
+	<!-- autogrowing textarea plugin -->
+	<script src="js/jquery.autogrow-textarea.js"></script>
+	<!-- multiple file upload plugin -->
+	<script src="js/jquery.uploadify-3.1.min.js"></script>
+	<!-- history.js for cross-browser state change on ajax -->
+	<script src="js/jquery.history.js"></script>
+	<!-- application script for Charisma demo -->
+	<script src="js/charisma.js"></script>
+
+
+
+
+	<div id="cboxOverlay" style="display: none;"></div>
+	<div id="colorbox" class="" role="dialog" tabindex="-1"
+		style="display: none;">
+		<div id="cboxWrapper">
+			<div>
+				<div id="cboxTopLeft" style="float: left;"></div>
+				<div id="cboxTopCenter" style="float: left;"></div>
+				<div id="cboxTopRight" style="float: left;"></div>
+			</div>
+			<div style="clear: left;">
+				<div id="cboxMiddleLeft" style="float: left;"></div>
+				<div id="cboxContent" style="float: left;">
+					<div id="cboxTitle" style="float: left;"></div>
+					<div id="cboxCurrent" style="float: left;"></div>
+					<button type="button" id="cboxPrevious"></button>
+					<button type="button" id="cboxNext"></button>
+					<button id="cboxSlideshow"></button>
+					<div id="cboxLoadingOverlay" style="float: left;"></div>
+					<div id="cboxLoadingGraphic" style="float: left;"></div>
+				</div>
+				<div id="cboxMiddleRight" style="float: left;"></div>
+			</div>
+			<div style="clear: left;">
+				<div id="cboxBottomLeft" style="float: left;"></div>
+				<div id="cboxBottomCenter" style="float: left;"></div>
+				<div id="cboxBottomRight" style="float: left;"></div>
+			</div>
+		</div>
+		<div
+			style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
+	</div>
+	<div id="cboxOverlay" style="display: none;"></div>
+	<div id="colorbox" class="" role="dialog" tabindex="-1"
+		style="display: none;">
+		<div id="cboxWrapper">
+			<div>
+				<div id="cboxTopLeft" style="float: left;"></div>
+				<div id="cboxTopCenter" style="float: left;"></div>
+				<div id="cboxTopRight" style="float: left;"></div>
+			</div>
+			<div style="clear: left;">
+				<div id="cboxMiddleLeft" style="float: left;"></div>
+				<div id="cboxContent" style="float: left;">
+					<div id="cboxTitle" style="float: left;"></div>
+					<div id="cboxCurrent" style="float: left;"></div>
+					<button type="button" id="cboxPrevious"></button>
+					<button type="button" id="cboxNext"></button>
+					<button id="cboxSlideshow"></button>
+					<div id="cboxLoadingOverlay" style="float: left;"></div>
+					<div id="cboxLoadingGraphic" style="float: left;"></div>
+				</div>
+				<div id="cboxMiddleRight" style="float: left;"></div>
+			</div>
+			<div style="clear: left;">
+				<div id="cboxBottomLeft" style="float: left;"></div>
+				<div id="cboxBottomCenter" style="float: left;"></div>
+				<div id="cboxBottomRight" style="float: left;"></div>
+			</div>
+		</div>
+		<div
+			style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
+	</div>
+</body>
+</html>
