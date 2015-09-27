@@ -232,10 +232,6 @@
 															try {
 																Class.forName("com.mysql.jdbc.Driver");
 
-																connect = DriverManager
-																		.getConnection("jdbc:mysql://localhost:3306/CMS"
-																				+ "?user=root&password=toor");
-
 																stmt = connect.createStatement();
 
 																String sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"

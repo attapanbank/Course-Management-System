@@ -203,7 +203,7 @@
 					Class.forName("com.mysql.jdbc.Driver");
 					stmt = con.createStatement();
 
-					String sql = "SELECT studyplan.year FROM studyplan group by studyplan.year order by studyplan.year desc";
+					String sql = "SELECT studyplan.studyyear FROM studyplan group by studyplan.studyyear order by studyplan.studyyear desc";
 					ResultSet rec = stmt.executeQuery(sql);
 			%>
 			<div id="content" class="col-lg-10 col-sm-10">
@@ -277,46 +277,46 @@
 																	while ((rec != null) && (rec.next())) {
 																%>
 																<tr>
-																	<td class=" sorting_1"><%=rec.getInt("year")%></td>
+																	<td class=" sorting_1"><%=rec.getInt("studyyear")%></td>
 																	<td class="center"><a
 																		class="btn btn-primary btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			All major
 																	</a></td>
 																	<td class="center"><a
 																		class="btn btn-info btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			IT
 																	</a></td>
 																	<td class="center"><a
 																		class="btn btn-info btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			CS
 																	</a></td>
 																	<td class="center"><a
 																		class="btn btn-success btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			SE
 																	</a></td>
 																	<td class="center"><a
 																		class="btn btn-success btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			MTA
 																	</a></td>
 																	<td class="center"><a
 																		class="btn btn-danger btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			CE
 																	</a></td>
 																	<td class="center"><a
 																		class="btn btn-danger btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("year")%>">
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("studyyear")%>">
 																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
 																			ICE
 																	</a></td>
@@ -389,7 +389,7 @@
 																		aria-relevant="all">
 																		<%
 																			// Year 1
-																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
+																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where studyyear like '"
 																						+ yearOnBEStr1 + "'";
 																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
@@ -467,7 +467,7 @@
 																	aria-relevant="all">
 																	<%
 																		// Year 2
-																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
+																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where studyyear like '"
 																					+ yearOnBEStr2 + "'";
 																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
@@ -547,7 +547,7 @@
 																		aria-relevant="all">
 																		<%
 																			// Year 3
-																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
+																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where studyyear like '"
 																						+ yearOnBEStr3 + "'";
 																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
@@ -626,7 +626,7 @@
 																	aria-relevant="all">
 																	<%
 																		// Year 4
-																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
+																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where studyyear like '"
 																					+ yearOnBEStr4 + "'";
 																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
