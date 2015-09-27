@@ -203,7 +203,7 @@
 					Class.forName("com.mysql.jdbc.Driver");
 					stmt = con.createStatement();
 
-					String sql = "SELECT test.studyplan.year FROM test.studyplan group by test.studyplan.year order by test.studyplan.year desc";
+					String sql = "SELECT studyplan.year FROM studyplan group by studyplan.year order by studyplan.year desc";
 					ResultSet rec = stmt.executeQuery(sql);
 			%>
 			<div id="content" class="col-lg-10 col-sm-10">
@@ -389,7 +389,7 @@
 																		aria-relevant="all">
 																		<%
 																			// Year 1
-																				sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
 																						+ yearOnBEStr1 + "'";
 																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
@@ -467,7 +467,7 @@
 																	aria-relevant="all">
 																	<%
 																		// Year 2
-																			sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
 																					+ yearOnBEStr2 + "'";
 																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
@@ -547,7 +547,7 @@
 																		aria-relevant="all">
 																		<%
 																			// Year 3
-																				sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
 																						+ yearOnBEStr3 + "'";
 																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
@@ -626,7 +626,7 @@
 																	aria-relevant="all">
 																	<%
 																		// Year 4
-																			sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
 																					+ yearOnBEStr4 + "'";
 																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {

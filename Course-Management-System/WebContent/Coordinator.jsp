@@ -213,7 +213,7 @@
 												Class.forName("com.mysql.jdbc.Driver");
 												stmt = con.createStatement();
 
-												String sql = "SELECT * FROM test.courseplan join test.course where test.courseplan.CourseCode=test.course.courseCode";
+												String sql = "SELECT * FROM courseplan join course where courseplan.CourseCode=course.courseCode";
 
 												ResultSet rec = stmt.executeQuery(sql);
 										%>
@@ -303,7 +303,7 @@
 												stmt = con.createStatement();
 
 												// match
-												String sqlp = "SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode)";
+												String sqlp = "SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode)";
 												ResultSet recp = stmt.executeQuery(sqlp);
 										%>
 										<div id="DataTables_Table_0_wrapper"
@@ -348,7 +348,7 @@
 														}
 
 															//not match
-															sqlp = "select * from test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode)where test.studyplan.courseCode not in (select test.courseplan.courseCode from test.courseplan)union all select * from test.courseplan inner join test.course on (test.courseplan.courseCode=test.course.courseCode)where test.coursePlan.courseCode not in (select test.studyplan.courseCode from test.studyplan)";
+															sqlp = "select * from studyplan inner join course on (studyplan.courseCode=course.courseCode)where studyplan.courseCode not in (select courseplan.courseCode from courseplan)union all select * from courseplan inner join course on (courseplan.courseCode=course.courseCode)where coursePlan.courseCode not in (select studyplan.courseCode from studyplan)";
 															recp = stmt.executeQuery(sqlp);
 													%>
 													<%

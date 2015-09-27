@@ -6,6 +6,32 @@
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.util.Calendar"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection connect = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	connect = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -203,9 +229,6 @@
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
 														<%
-															Connection connect = null;
-															Statement s = null;
-
 															try {
 																Class.forName("com.mysql.jdbc.Driver");
 
@@ -213,12 +236,12 @@
 																		.getConnection("jdbc:mysql://localhost:3306/CMS"
 																				+ "?user=root&password=toor");
 
-																s = connect.createStatement();
+																stmt = connect.createStatement();
 
-																String sql = "SELECT * FROM test.studyplan inner join test.course on (test.studyPlan.courseCode=test.course.courseCode) Where year like '"
+																String sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
 																		+ year + "';";
-																//SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode) where test.studyplan.year like
-																ResultSet rec = s.executeQuery(sql);
+																//SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode) where studyplan.year like
+																ResultSet rec = stmt.executeQuery(sql);
 														%>
 														<table
 															class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
@@ -289,8 +312,8 @@
 															}
 
 															try {
-																if (s != null) {
-																	s.close();
+																if (stmt != null) {
+																	stmt.close();
 																	connect.close();
 																}
 															} catch (SQLException e) {

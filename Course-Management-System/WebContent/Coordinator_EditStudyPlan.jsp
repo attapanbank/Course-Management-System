@@ -7,14 +7,38 @@
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.util.Calendar"%>
 <%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection connect = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	connect = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
+<%
 	String studyplanId = request.getParameter("studyplanId");
 	String year = request.getParameter("year");
 	String semester = request.getParameter("semester");
 	String courseCode = request.getParameter("courseCode");
 %>
 <%
-	Connection connect = null;
-	Statement s = null;
 
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
@@ -23,10 +47,10 @@
 				.getConnection("jdbc:mysql://localhost:3306/CMS"
 						+ "?user=root&password=toor");
 
-		s = connect.createStatement();
+		stmt = connect.createStatement();
 
-		String sql = "UPDATE test.studyplan SET year='"+year+"',semester='"+semester+"',courseCode='"+courseCode+"' WHERE studyPlanID='"+studyplanId+"';";
-		s.execute(sql);
+		String sql = "UPDATE studyplan SET year='"+year+"',semester='"+semester+"',courseCode='"+courseCode+"' WHERE studyPlanID='"+studyplanId+"';";
+		stmt.execute(sql);
 		
 		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="+year;
 		response.sendRedirect(redirectURL);
@@ -37,8 +61,8 @@
 	}
 
 	try {
-		if (s != null) {
-			s.close();
+		if (stmt != null) {
+			stmt.close();
 			connect.close();
 		}
 	} catch (SQLException e) {
