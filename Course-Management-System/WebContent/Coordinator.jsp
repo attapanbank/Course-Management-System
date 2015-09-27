@@ -405,26 +405,7 @@
 			<!--/#content.col-md-0-->
 		</div>
 		<!--/fluid-row-->
-
-		<!-- Ad, you can remove it -->
-		<div class="row">
-			<div class="col-md-9 col-lg-9 col-xs-9  hidden-xs">
-				<script async=""
-					src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- Charisma Demo 2 -->
-				<ins class="adsbygoogle"
-					style="display: inline-block; width: 728px; height: 90px"
-					data-ad-client="ca-pub-5108790028230107" data-ad-slot="3193373905"></ins>
-				<script>
-					(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
-			</div>
-
-
-		</div>
-		<!-- Ad ends -->
-
-		<hr>
+<hr>
 
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
