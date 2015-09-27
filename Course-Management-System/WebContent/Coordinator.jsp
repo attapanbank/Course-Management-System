@@ -3,6 +3,32 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <html lang="en">
 <head>
 <!--
@@ -182,21 +208,14 @@
 									<div class="box-content" style="display: block;">
 										<%
 											// part of coursePlan
-											Connection connect = null;
-											Statement s = null;
 
 											try {
 												Class.forName("com.mysql.jdbc.Driver");
-
-												connect = DriverManager
-														.getConnection("jdbc:mysql://localhost:3306/CMS"
-																+ "?user=root&password=toor");
-
-												s = connect.createStatement();
+												stmt = con.createStatement();
 
 												String sql = "SELECT * FROM test.courseplan join test.course where test.courseplan.CourseCode=test.course.courseCode";
 
-												ResultSet rec = s.executeQuery(sql);
+												ResultSet rec = stmt.executeQuery(sql);
 										%>
 										<div id="Table_1" class="dataTables_wrapper" role="grid">
 											<div id="Table_1" class="dataTables_wrapper" role="grid">
@@ -210,15 +229,18 @@
 																<tr role="row">
 																	<th class="sorting_asc" role="columnheader"
 																		tabindex="0" aria-controls="DataTables_Table_0"
-																		rowspan="1" colspan="1" style="width: 185px;"
+																		rowspan="1" colspan="1" style="width: 120px;"
 																		aria-sort="ascending"
-																		aria-label="Code: activate to sort column descending">Course
-																		Code</th>
+																		aria-label="Code: activate to sort column descending">Code</th>
 																	<th class="sorting" role="columnheader" tabindex="0"
 																		aria-controls="DataTables_Table_0" rowspan="1"
 																		colspan="1" style="width: 283px;"
 																		aria-label="Name: activate to sort column ascending">Course
 																		Name</th>
+																	<th class="sorting" role="columnheader" tabindex="0"
+																		aria-controls="DataTables_Table_0" rowspan="1"
+																		colspan="1" style="width: 283px;"
+																		aria-label="Name: activate to sort column ascending">Major</th>
 																</tr>
 															</thead>
 
@@ -230,6 +252,7 @@
 																<tr>
 																	<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																	<td class="center"><%=rec.getString("courseName")%></td>
+																	<td class="center">Major</td>
 																</tr>
 																<%
 																	}
@@ -254,17 +277,6 @@
 									out.println(e.getMessage());
 									e.printStackTrace();
 								}
-
-								try {
-									if (s != null) {
-										s.close();
-										connect.close();
-									}
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									out.println(e.getMessage());
-									e.printStackTrace();
-								}
 							%>
 							<!--/span-->
 
@@ -285,21 +297,14 @@
 									<div class="box-content" style="display: block;">
 										<%
 											// part of studyplan
-											Connection connectp = null;
-											Statement sp = null;
 
 											try {
 												Class.forName("com.mysql.jdbc.Driver");
-
-												connectp = DriverManager
-														.getConnection("jdbc:mysql://localhost:3306/CMS"
-																+ "?user=root&password=toor");
-
-												sp = connectp.createStatement();
+												stmt = con.createStatement();
 
 												// match
 												String sqlp = "SELECT * FROM test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode) inner join test.courseplan on (test.studyplan.courseCode=test.courseplan.courseCode)";
-												ResultSet recp = sp.executeQuery(sqlp);
+												ResultSet recp = stmt.executeQuery(sqlp);
 										%>
 										<div id="DataTables_Table_0_wrapper"
 											class="dataTables_wrapper" role="grid">
@@ -310,16 +315,19 @@
 													<tr role="row">
 														<th class="sorting_asc" role="columnheader" tabindex="0"
 															aria-controls="DataTables_Table_0" rowspan="1"
-															colspan="1" style="width: 113px;" aria-sort="ascending"
-															aria-label="Code: activate to sort column descending">Course
-															Code</th>
+															colspan="1" style="width: 120px;" aria-sort="ascending"
+															aria-label="Code: activate to sort column descending">Code</th>
 														<th class="sorting" role="columnheader" tabindex="0"
 															aria-controls="DataTables_Table_0" rowspan="1"
 															colspan="1" style="width: 167px;"
 															aria-label="Name: activate to sort column ascending">Course
 															Name</th>
-														<th aria-label="Status: activate to sort column ascending"
+															<th aria-label="Status: activate to sort column ascending"
 															style="width: 170px;" colspan="1" rowspan="1"
+															aria-controls="DataTables_Table_0" tabindex="0"
+															role="columnheader" class="sorting">Major</th>
+														<th aria-label="Status: activate to sort column ascending"
+															style="width: 120px;" colspan="1" rowspan="1"
 															aria-controls="DataTables_Table_0" tabindex="0"
 															role="columnheader" class="sorting">Status</th>
 													</tr>
@@ -332,6 +340,7 @@
 													<tr>
 														<td class="sorting_1"><%=recp.getString("courseCode")%></td>
 														<td class="center"><%=recp.getString("courseName")%></td>
+														<td class="center">Major</td>
 														<td class=" "><span
 															class="label-success label label-default">Match</span></td>
 													</tr>
@@ -340,7 +349,7 @@
 
 															//not match
 															sqlp = "select * from test.studyplan inner join test.course on (test.studyplan.courseCode=test.course.courseCode)where test.studyplan.courseCode not in (select test.courseplan.courseCode from test.courseplan)union all select * from test.courseplan inner join test.course on (test.courseplan.courseCode=test.course.courseCode)where test.coursePlan.courseCode not in (select test.studyplan.courseCode from test.studyplan)";
-															recp = sp.executeQuery(sqlp);
+															recp = stmt.executeQuery(sqlp);
 													%>
 													<%
 														while ((recp != null) && (recp.next())) {
@@ -348,6 +357,7 @@
 													<tr>
 														<td class="sorting_1"><%=recp.getString("courseCode")%></td>
 														<td class="center"><%=recp.getString("courseName")%></td>
+														<td class="center">Major</td>
 														<td class=" "><span
 															class="label-default label label-danger">Mismatch</span></td>
 													</tr>
@@ -371,9 +381,9 @@
 								}
 
 								try {
-									if (s != null) {
-										s.close();
-										connect.close();
+									if (stmt != null) {
+										stmt.close();
+										con.close();
 									}
 								} catch (SQLException e) {
 									// TODO Auto-generated catch block
