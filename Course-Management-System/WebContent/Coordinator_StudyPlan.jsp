@@ -699,12 +699,12 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">ื</button>
+						<button type="button" class="close" data-dismiss="modal">x</button>
 						<h3>Please select the file</h3>
 					</div>
 					<div class="modal-body">
 						<form name="formUpload" id="formUpload" method="post"
-							action="uploadStudyPlan.jsp" enctype="multipart/form-data">
+							action="Coordinator_UploadStudyPlan.jsp" enctype="multipart/form-data">
 							<div class="form-group">
 								<label for="exampleInputFile">File input</label> <input
 									type="file" id="planFile" accept=".xls,.xlsx">

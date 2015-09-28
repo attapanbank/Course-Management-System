@@ -46,7 +46,7 @@
 						formDataLength);
 				totalBytesRead += byteRead;
 			}
-			String file = new String(dataBytes, "CP1256");
+			String file = new String(dataBytes);
 
 			//for saving the file name
 			String saveFile = file
@@ -65,10 +65,10 @@
 			pos = file.indexOf("\n", pos) + 1;
 			pos = file.indexOf("\n", pos) + 1;
 			int boundaryLocation = file.indexOf(boundary, pos) - 4;
-			int startPos = ((file.substring(0, pos)).getBytes("CP1256")).length;
+			int startPos = ((file.substring(0, pos)).getBytes()).length;
 			int endPos = ((file.substring(0, boundaryLocation))
-					.getBytes("CP1256")).length;
-//"CP1256"
+					.getBytes()).length;
+			//"CP1256"
 			// creating a new file with the same name and writing the content in new file
 
 			savePath = application.getRealPath("\\fileUpload\\" + saveFile);
@@ -87,7 +87,7 @@
 
 		// Part take file to the database
 		Class.forName("com.mysql.jdbc.Driver");
-		String url = "jdbc:mysql://localhost:3306/CMS";
+		String url = "jdbc:mysql://localhost:3306/cmsit";
 		String username = "root";
 		String password = "root";
 
@@ -111,15 +111,22 @@
 			Row row;
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				row = sheet.getRow(i);
-				int year = (int) row.getCell(0).getNumericCellValue();
-				String semester = row.getCell(1).toString();
-				int currentCourseCode = (int) row.getCell(2).getNumericCellValue();
-				String sql = " INSERT INTO `cms`.`studyplan` (year, semester, courseCode) VALUES ('"
-						+ year
+				int academicYear = (int) row.getCell(0).getNumericCellValue();
+				int studyYear = (int) row.getCell(1).getNumericCellValue();
+				int studySemester = (int) row.getCell(2).getNumericCellValue();
+				int courseCode = (int) row.getCell(3).getNumericCellValue();
+				String major = row.getCell(4).toString();
+
+				String sql = " INSERT INTO `studyplan` (academicYear, studyYear, studySemester,courseCode,major) VALUES ('"
+						+ academicYear
 						+ "', '"
-						+ semester
+						+ studyYear
 						+ "', '"
-						+ currentCourseCode + "'); ";
+						+ studySemester
+						+ "', '"
+						+ courseCode
+						+ "', '"
+						+ major + "'); ";
 				pstm = (PreparedStatement) con.prepareStatement(sql);
 				pstm.execute();
 				System.out.println("Import rows " + i);
