@@ -91,6 +91,52 @@
 </head>
 
 <body>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+
+		<div class="modal-dialog">
+			<form method="post" action="Coordinator_UploadStudyPlan.jsp"
+				role="form" name="" id="fileupload" enctype="multipart/form-data">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">x</button>
+						<h3>Please select the file</h3>
+					</div>
+					<div class="modal-body">
+
+						<div class="form-group">
+							<label for="exampleInputFile">File input</label> <input
+								type="file" id="planFile" accept=".xls,.xlsx">
+							<p class="help-block">Example excel.xls or excel.xlsx.</p>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+						<a onclick="uploadFile()" href="#" class="btn btn-primary"
+							data-dismiss="modal">Upload File</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- Aniroot's javascript -->
+	<script type="text/javascript">
+		function showUploadFile() {
+			$(document).ready(function() {
+				$("#myModal").modal('show');
+			});
+		}
+
+		function uploadFile() {
+			if (document.getElementById("planFile").files.length == 0) {
+				alert("No file input.");
+			} else {
+				document.getElementById("formUpload").submit();
+			}
+
+		}
+	</script>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
 
@@ -277,42 +323,37 @@
 																	while ((rec != null) && (rec.next())) {
 																%>
 																<tr>
-															<td class=" sorting_1"><%=rec.getInt("academicYear")%></td>
-															<td class="center"><a class="btn btn-primary btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	All major
-															</a>
-															<a class="btn btn-info btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=IT">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	IT
-															</a>
-															<a class="btn btn-info btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=CS">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	CS
-															</a>
-															<a class="btn btn-success btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=SE">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	SE
-															</a>
-															<a class="btn btn-success btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=MTA">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	MTA
-															</a>
-															<a class="btn btn-danger btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=CE">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	CE
-															</a>
-															<a class="btn btn-danger btn-sm"
-																href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=ICE">
-																	<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																	ICE
-															</a></td>
+																	<td class=" sorting_1"><%=rec.getInt("academicYear")%></td>
+																	<td class="center"><a
+																		class="btn btn-primary btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			All major
+																	</a> <a class="btn btn-info btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=IT">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			IT
+																	</a> <a class="btn btn-info btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=CS">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			CS
+																	</a> <a class="btn btn-success btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=SE">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			SE
+																	</a> <a class="btn btn-success btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=MTA">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			MTA
+																	</a> <a class="btn btn-danger btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=CE">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			CE
+																	</a> <a class="btn btn-danger btn-sm"
+																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=ICE">
+																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			ICE
+																	</a></td>
 																</tr>
 																<%
 																	}
@@ -373,7 +414,7 @@
 																				aria-controls="DataTables_Table_0" rowspan="1"
 																				colspan="1" style="width: 292px;"
 																				aria-label="Name: activate to sort column ascending">Name</th>
-																				<th class="sorting" role="columnheader" tabindex="0"
+																			<th class="sorting" role="columnheader" tabindex="0"
 																				aria-controls="DataTables_Table_0" rowspan="1"
 																				colspan="1" style="width: 80px;"
 																				aria-label="Name: activate to sort column ascending">Major</th>
@@ -383,20 +424,20 @@
 																	<tbody role="alert" aria-live="polite"
 																		aria-relevant="all">
 																		<%
-														// Year 1st
-															sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																	+ yearOnBEStr1 + "'";
-															rec = stmt.executeQuery(sql);
-															while ((rec != null) && (rec.next())) {
-													%>
-													<tr>
-														<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-														<td class="center"><%=rec.getString("courseName")%></td>
-														<td class="center"><%=rec.getString("major")%></td>
-													</tr>
-													<%
-														}
-													%>
+																			// Year 1st
+																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
+																						+ yearOnBEStr1 + "'";
+																				rec = stmt.executeQuery(sql);
+																				while ((rec != null) && (rec.next())) {
+																		%>
+																		<tr>
+																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																			<td class="center"><%=rec.getString("courseName")%></td>
+																			<td class="center"><%=rec.getString("major")%></td>
+																		</tr>
+																		<%
+																			}
+																		%>
 																	</tbody>
 
 																</table>
@@ -415,7 +456,9 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>2 nd year current course (<%=yearOnBE2%>)</h2>
+										<h2>
+											2 nd year current course (<%=yearOnBE2%>)
+										</h2>
 
 										<div class="box-icon">
 
@@ -451,30 +494,30 @@
 																			aria-controls="DataTables_Table_0" rowspan="1"
 																			colspan="1" style="width: 267px;"
 																			aria-label="Name: activate to sort column ascending">Name</th>
-																			<th class="sorting" role="columnheader" tabindex="0"
-																				aria-controls="DataTables_Table_0" rowspan="1"
-																				colspan="1" style="width: 80px;"
-																				aria-label="Name: activate to sort column ascending">Major</th>
+																		<th class="sorting" role="columnheader" tabindex="0"
+																			aria-controls="DataTables_Table_0" rowspan="1"
+																			colspan="1" style="width: 80px;"
+																			aria-label="Name: activate to sort column ascending">Major</th>
 																	</tr>
 																</thead>
 
 																<tbody role="alert" aria-live="polite"
 																	aria-relevant="all">
 																	<%
-														// Year 2
-															sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																	+ yearOnBEStr2 + "'";
-															rec = stmt.executeQuery(sql);
-															while ((rec != null) && (rec.next())) {
-													%>
-													<tr>
-														<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-														<td class="center"><%=rec.getString("courseName")%></td>
-														<td class="center"><%=rec.getString("major")%></td>
-													</tr>
-													<%
-														}
-													%>
+																		// Year 2
+																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
+																					+ yearOnBEStr2 + "'";
+																			rec = stmt.executeQuery(sql);
+																			while ((rec != null) && (rec.next())) {
+																	%>
+																	<tr>
+																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																		<td class="center"><%=rec.getString("courseName")%></td>
+																		<td class="center"><%=rec.getString("major")%></td>
+																	</tr>
+																	<%
+																		}
+																	%>
 
 
 
@@ -495,7 +538,9 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>3 rd year current course (<%=yearOnBE3%>)</h2>
+										<h2>
+											3 rd year current course (<%=yearOnBE3%>)
+										</h2>
 
 										<div class="box-icon">
 
@@ -532,7 +577,7 @@
 																				aria-controls="DataTables_Table_0" rowspan="1"
 																				colspan="1" style="width: 292px;"
 																				aria-label="Name: activate to sort column ascending">Name</th>
-																				<th class="sorting" role="columnheader" tabindex="0"
+																			<th class="sorting" role="columnheader" tabindex="0"
 																				aria-controls="DataTables_Table_0" rowspan="1"
 																				colspan="1" style="width: 80px;"
 																				aria-label="Name: activate to sort column ascending">Major</th>
@@ -542,20 +587,20 @@
 																	<tbody role="alert" aria-live="polite"
 																		aria-relevant="all">
 																		<%
-														// Year 3
-															sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																	+ yearOnBEStr3 + "'";
-															rec = stmt.executeQuery(sql);
-															while ((rec != null) && (rec.next())) {
-													%>
-													<tr>
-														<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-														<td class="center"><%=rec.getString("courseName")%></td>
-														<td class="center"><%=rec.getString("major")%></td>
-													</tr>
-													<%
-														}
-													%>
+																			// Year 3
+																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
+																						+ yearOnBEStr3 + "'";
+																				rec = stmt.executeQuery(sql);
+																				while ((rec != null) && (rec.next())) {
+																		%>
+																		<tr>
+																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																			<td class="center"><%=rec.getString("courseName")%></td>
+																			<td class="center"><%=rec.getString("major")%></td>
+																		</tr>
+																		<%
+																			}
+																		%>
 
 
 																	</tbody>
@@ -575,7 +620,9 @@
 							<div class="box col-md-6">
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
-										<h2>4 th year current course (<%=yearOnBE4%>)</h2>
+										<h2>
+											4 th year current course (<%=yearOnBE4%>)
+										</h2>
 
 										<div class="box-icon">
 
@@ -611,30 +658,30 @@
 																			aria-controls="DataTables_Table_0" rowspan="1"
 																			colspan="1" style="width: 267px;"
 																			aria-label="Name: activate to sort column ascending">Name</th>
-																			<th class="sorting" role="columnheader" tabindex="0"
-																				aria-controls="DataTables_Table_0" rowspan="1"
-																				colspan="1" style="width: 80px;"
-																				aria-label="Name: activate to sort column ascending">Major</th>
+																		<th class="sorting" role="columnheader" tabindex="0"
+																			aria-controls="DataTables_Table_0" rowspan="1"
+																			colspan="1" style="width: 80px;"
+																			aria-label="Name: activate to sort column ascending">Major</th>
 																	</tr>
 																</thead>
 
 																<tbody role="alert" aria-live="polite"
 																	aria-relevant="all">
 																	<%
-														// Year 4
-															sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																	+ yearOnBEStr4 + "'";
-															rec = stmt.executeQuery(sql);
-															while ((rec != null) && (rec.next())) {
-													%>
-													<tr>
-														<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-														<td class="center"><%=rec.getString("courseName")%></td>
-														<td class="center"><%=rec.getString("major")%></td>
-													</tr>
-													<%
-														}
-													%>
+																		// Year 4
+																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
+																					+ yearOnBEStr4 + "'";
+																			rec = stmt.executeQuery(sql);
+																			while ((rec != null) && (rec.next())) {
+																	%>
+																	<tr>
+																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+																		<td class="center"><%=rec.getString("courseName")%></td>
+																		<td class="center"><%=rec.getString("major")%></td>
+																	</tr>
+																	<%
+																		}
+																	%>
 
 
 																</tbody>
@@ -681,46 +728,8 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<!-- Aniroot's javascript -->
-		<script type="text/javascript">
-			function showUploadFile() {
-				$(document).ready(function() {
-					$("#myModal").modal('show');
-				});
-			}
 
-			function uploadFile() {
-				document.getElementById("formUpload").submit();
-			}
-		</script>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
 
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">x</button>
-						<h3>Please select the file</h3>
-					</div>
-					<div class="modal-body">
-						<form name="formUpload" id="formUpload" method="post"
-							action="Coordinator_UploadStudyPlan.jsp" enctype="multipart/form-data">
-							<div class="form-group">
-								<label for="exampleInputFile">File input</label> <input
-									type="file" id="planFile" accept=".xls,.xlsx">
-
-								<p class="help-block">Example excel.xls or excel.xlsx.</p>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a onclick="uploadFile()" href="#" class="btn btn-primary"
-							data-dismiss="modal">Upload File</a>
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
