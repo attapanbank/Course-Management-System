@@ -46,7 +46,7 @@
 						formDataLength);
 				totalBytesRead += byteRead;
 			}
-			String file = new String(dataBytes);
+			String file = new String(dataBytes, "CP1256");
 
 			//for saving the file name
 			String saveFile = file
@@ -65,9 +65,9 @@
 			pos = file.indexOf("\n", pos) + 1;
 			pos = file.indexOf("\n", pos) + 1;
 			int boundaryLocation = file.indexOf(boundary, pos) - 4;
-			int startPos = ((file.substring(0, pos)).getBytes()).length;
+			int startPos = ((file.substring(0, pos)).getBytes("CP1256")).length;
 			int endPos = ((file.substring(0, boundaryLocation))
-					.getBytes()).length;
+					.getBytes("CP1256")).length;
 			//"CP1256"
 			// creating a new file with the same name and writing the content in new file
 
