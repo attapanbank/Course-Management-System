@@ -95,6 +95,12 @@
 </head>
 <%
 	String year = request.getParameter("year");
+	String major = request.getParameter("major");
+
+	// Prevent null value
+	if (major.equalsIgnoreCase("")) {
+		major = "%";
+	}
 %>
 <body>
 	<!-- topbar starts -->
@@ -152,7 +158,8 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
+							<li class="active"><a class="ajax-link"
+								href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -195,148 +202,131 @@
 						<li><a href="#"><%=year%></a></li>
 					</ul>
 				</div>
-
-
 				<div class="row">
 					<div class="box col-md-12">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-user"></i> Study Plan (<%=year%>)
+								</h2>
 
+								<div class="box-icon">
 
-						<div class="row">
-							<div class="box col-md-12">
-								<div class="box-inner">
-									<div class="box-header well" data-original-title="">
-										<h2>
-											<i class="glyphicon glyphicon-user"></i>Study Plan (<%=year%>)
-										</h2>
-
-										<div class="box-icon">
-
-											<a href="#" class="btn btn-minimize btn-round btn-default"><i
-												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-												class="btn btn-close btn-round btn-default"><i
-												class="glyphicon glyphicon-remove"></i></a>
-										</div>
-									</div>
-									<div class="box-content">
-
-										<div id="DataTables_Table_0_wrapper"
-											class="dataTables_wrapper" role="grid">
-											<div id="DataTables_Table_0_wrapper"
-												class="dataTables_wrapper" role="grid">
-												<div id="DataTables_Table_0_wrapper"
-													class="dataTables_wrapper" role="grid">
-
-													<div id="DataTables_Table_0_wrapper"
-														class="dataTables_wrapper" role="grid">
-														<%
-															try {
-																Class.forName("com.mysql.jdbc.Driver");
-
-																stmt = connect.createStatement();
-
-																String sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where year like '"
-																		+ year + "';";
-																//SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode) where studyplan.year like
-																ResultSet rec = stmt.executeQuery(sql);
-														%>
-														<table
-															class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-															id="DataTables_Table_0"
-															aria-describedby="DataTables_Table_0_info">
-															<tr role="row">
-																<th class="sorting_desc" role="columnheader"
-																	tabindex="0" aria-controls="DataTables_Table_0"
-																	rowspan="1" colspan="1" style="width: 330px;"
-																	aria-sort="descending"
-																	aria-label="Year: activate to sort column ascending">Year</th>
-																<th class="sorting_desc" role="columnheader"
-																	tabindex="0" aria-controls="DataTables_Table_0"
-																	rowspan="1" colspan="1" style="width: 330px;"
-																	aria-sort="descending"
-																	aria-label="Year: activate to sort column ascending">Semester</th>
-																<th class="sorting_desc" role="columnheader"
-																	tabindex="0" aria-controls="DataTables_Table_0"
-																	rowspan="1" colspan="1" style="width: 330px;"
-																	aria-sort="descending"
-																	aria-label="Year: activate to sort column ascending">Course
-																	Code</th>
-																<th class="sorting" role="columnheader" tabindex="0"
-																	aria-controls="DataTables_Table_0" rowspan="1"
-																	colspan="1" style="width: 696px;"
-																	aria-label="Actions: activate to sort column ascending">Course
-																	Name</th>
-																<th class="sorting" role="columnheader" tabindex="0"
-																	aria-controls="DataTables_Table_0" rowspan="1"
-																	colspan="1" style="width: 696px;"
-																	aria-label="Actions: activate to sort column ascending">Credit</th>
-																<th class="sorting" role="columnheader" tabindex="0"
-																	aria-controls="DataTables_Table_0" rowspan="1"
-																	colspan="1" style="width: 540px;"
-																	aria-label="Actions: activate to sort column ascending">Actions</th>
-															</tr>
-
-															<tbody role="alert" aria-live="polite"
-																aria-relevant="all">
-																<%
-																	while ((rec != null) && (rec.next())) {
-																%>
-																<tr>
-																	<td class=" sorting_1"><%=rec.getString("year")%></td>
-																	<td class=" sorting_1"><%=rec.getString("semester")%></td>
-																	<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-																	<td class="center"><%=rec.getString("courseName")%></td>
-																	<td class="center"><%=rec.getString("credit")%></td>
-																	<td class="center     "><a
-																		class="btn btn-info btn-sm" href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>"> <i
-																			class="glyphicon glyphicon-edit icon-white"></i> Edit
-																	</a> <a class="btn btn-danger btn-sm" href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&year=<%=rec.getString("year")%>"> <i
-																			class="glyphicon glyphicon-trash icon-white"></i>
-																			Delete
-																	</a></td>
-																</tr>
-																<%
-																	}
-																%>
-
-															</tbody>
-														</table>
-														<%
-															} catch (Exception e) {
-																// TODO Auto-generated catch block
-																out.println(e.getMessage());
-																e.printStackTrace();
-															}
-
-															try {
-																if (stmt != null) {
-																	stmt.close();
-																	connect.close();
-																}
-															} catch (SQLException e) {
-																// TODO Auto-generated catch block
-																out.println(e.getMessage());
-																e.printStackTrace();
-															}
-														%>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
+										class="btn btn-close btn-round btn-default"><i
+										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							<!--/span-->
+							<div class="box-content">
+								<%
+									try {
+										Class.forName("com.mysql.jdbc.Driver");
 
+										stmt = connect.createStatement();
+
+										String sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicyear like '"
+												+ year + "' and major like '" + major + "';";
+										//SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode) where studyplan.year like
+										ResultSet rec = stmt.executeQuery(sql);
+								%>
+
+								<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
+									role="grid">
+									<table
+										class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+										id="DataTables_Table_0"
+										aria-describedby="DataTables_Table_0_info">
+										<thead>
+
+											<tr role="row">
+												<th class="sorting_asc" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style="" aria-sort="ascending"
+													aria-label="Year: activate to sort column descending">Study
+													year</th>
+												<th class="sorting" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style=""
+													aria-label="Actions: activate to sort column ascending">Study
+													semester</th>
+												<th class="sorting" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style="width: 300px;"
+													aria-label="Actions: activate to sort column ascending">Course
+													code</th>
+												<th class="sorting" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style="width: 700px;"
+													aria-label="Actions: activate to sort column ascending">Course
+													name</th>
+												<th class="sorting" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style="width: 300px;"
+													aria-label="Actions: activate to sort column ascending">Credit</th>
+												<th class="sorting" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style="width: 80px;"
+													aria-label="Actions: activate to sort column ascending">Major</th>
+												<th class="sorting" role="columnheader" tabindex="0"
+													aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+													style="width: 300px;"
+													aria-label="Actions: activate to sort column ascending">Actions</th>
+											</tr>
+
+										</thead>
+
+
+										<tbody role="alert" aria-live="polite" aria-relevant="all">
+											<%
+												while ((rec != null) && (rec.next())) {
+											%>
+											<tr>
+												<td class=" sorting_1"><%=rec.getString("studyyear")%></td>
+												<td class=" sorting_1"><%=rec.getString("studySemester")%></td>
+												<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+												<td class="center"><%=rec.getString("courseName")%></td>
+												<td class="center"><%=rec.getString("credit")%></td>
+												<td class="center"><%=rec.getString("major")%></td>
+												<td class="center"><a class="btn btn-info btn-sm"
+													href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>">
+														<i class="glyphicon glyphicon-edit icon-white"></i> Edit
+												</a> <a class="btn btn-danger btn-sm"
+													href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&year=<%=rec.getString("academicyear")%>">
+														<i class="glyphicon glyphicon-trash icon-white"></i>
+														Delete
+												</a></td>
+											</tr>
+											<%
+												}
+											%>
+										</tbody>
+									</table>
+									<%
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											out.println(e.getMessage());
+											e.printStackTrace();
+										}
+
+										try {
+											if (stmt != null) {
+												stmt.close();
+												connect.close();
+											}
+										} catch (SQLException e) {
+											// TODO Auto-generated catch block
+											out.println(e.getMessage());
+											e.printStackTrace();
+										}
+									%>
+								</div>
+							</div>
 						</div>
-
-
-
 					</div>
+					<!--/span-->
+
 				</div>
-
-
-
-
 
 				<!-- content ends -->
 			</div>
@@ -345,51 +335,11 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<!-- Aniroot's javascript -->
-		<script type="text/javascript">
-			function showUploadFile() {
-				$(document).ready(function() {
-					$("#myModal").modal('show');
-				});
-			}
-
-			function uploadFile() {
-				document.getElementById("formUpload").submit();
-			}
-		</script>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">�</button>
-						<h3>Please select the file</h3>
-					</div>
-					<div class="modal-body">
-						<form name="formUpload" id="formUpload" method="post"
-							action="uploadStudyPlan.jsp" enctype="multipart/form-data">
-							<div class="form-group">
-								<label for="exampleInputFile">File input</label> <input
-									type="file" id="planFile" accept=".xls,.xlsx" name="filUpload">
-
-								<p class="help-block">Example excel.xls or excel.xlsx.</p>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a onclick="uploadFile()" href="#" class="btn btn-primary"
-							data-dismiss="modal">Upload File</a>
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<footer class="row">
 		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			� <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
+			� <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
+			- 2014
 		</p>
 
 		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
