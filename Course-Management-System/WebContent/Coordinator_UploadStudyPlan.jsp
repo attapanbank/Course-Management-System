@@ -117,17 +117,21 @@
 		Workbook wb = WorkbookFactory.create(file);
 		Sheet sheet = wb.getSheetAt(0);
 		Row row;
+		
+		String academicYear = (String)request.getAttribute("academicyear");
+		int academicYearInt = (int)Integer.parseInt(academicYear);
+		String major = (String)request.getAttribute("major");
 
 		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
-			int academicYear = (int) row.getCell(0).getNumericCellValue();
-			int studyYear = (int) row.getCell(1).getNumericCellValue();
-			int studySemester = (int) row.getCell(2).getNumericCellValue();
-			int courseCode = (int) row.getCell(3).getNumericCellValue();
-			String major = row.getCell(4).toString();
+			//int academicYear = (int) row.getCell(0).getNumericCellValue();
+			int studyYear = (int) row.getCell(0).getNumericCellValue();
+			int studySemester = (int) row.getCell(1).getNumericCellValue();
+			int courseCode = (int) row.getCell(2).getNumericCellValue();
+			//String major = row.getCell(4).toString();
 
 			String sql = " INSERT INTO `studyplan` (academicYear, studyYear, studySemester,courseCode,major) VALUES ('"
-					+ academicYear
+					+ academicYearInt
 					+ "', '"
 					+ studyYear
 					+ "', '"
@@ -176,7 +180,7 @@
 
 	// end Part for delete file
 	//response.sendRedirect("Admin_CoursePlan.jsp");
+	session.setAttribute("stateupload", "notyet");
 	request.getRequestDispatcher("/Coordinator_StudyPlan.jsp").forward(
 			request, response);
 %>
-

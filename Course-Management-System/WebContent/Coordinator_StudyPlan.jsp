@@ -93,50 +93,72 @@
 <body>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true">
-
 		<div class="modal-dialog">
 			<form method="post" action="Coordinator_UploadStudyPlan.jsp"
-				role="form" name="" id="fileupload" enctype="multipart/form-data">
+				role="form" name="" id="formUpload" enctype="multipart/form-data">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">x</button>
 						<h3>Please select the file</h3>
 					</div>
 					<div class="modal-body">
+						<form method="post" action="Admin_CoursePlan_UploadCoursePlan.jsp"
+							role="form" name="fileupload" id="fileupload"
+							enctype="multipart/form-data">
 
-						<div class="form-group">
-							<label for="exampleInputFile">File input</label> <input
-								type="file" id="planFile" accept=".xls,.xlsx">
-							<p class="help-block">Example excel.xls or excel.xlsx.</p>
-						</div>
+							<div class="form-group">
+								<label for="exampleInputFile">File input</label> <input
+									type="file" accept=".xls,.xlsx" name="exampleInputFile"
+									id="exampleInputFile">
 
+								<p class="help-block">Example excel.xls or excel.xlsx</p>
+							</div>
+
+
+						</form>
 					</div>
 					<div class="modal-footer">
 						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a onclick="uploadFile()" href="#" class="btn btn-primary"
-							data-dismiss="modal">Upload File</a>
+						<button type="button" onclick="checkuploadfile()"
+							class="btn btn-default">Submit</button>
 					</div>
+					<script type="text/javascript">
+						function showUploadFile() {
+							<%
+							String stateupload = "empty";
+							stateupload = (String)session.getAttribute("stateupload");
+							System.out.println(stateupload);
+							if (stateupload.equals("ready")){
+								System.out.println("If condition");
+								%>
+							
+								$(document).ready(function() {
+									$("#myModal").modal('show');
+								});
+								<%
+							}
+							else {
+								%>document.getElementById("formsetsession").submit();<%
+							}
+							%>
+							
+						}
+
+						function checkuploadfile() {
+							if (document.getElementById("exampleInputFile").files.length == 0) {
+								alert("No file input.");
+							} else {
+								document.getElementById("formUpload").submit();
+							}
+
+						}
+					</script>
 				</div>
 			</form>
 		</div>
 	</div>
 	<!-- Aniroot's javascript -->
-	<script type="text/javascript">
-		function showUploadFile() {
-			$(document).ready(function() {
-				$("#myModal").modal('show');
-			});
-		}
 
-		function uploadFile() {
-			if (document.getElementById("planFile").files.length == 0) {
-				alert("No file input.");
-			} else {
-				document.getElementById("formUpload").submit();
-			}
-
-		}
-	</script>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
 
@@ -291,10 +313,44 @@
 												class="dataTables_wrapper" role="grid">
 												<div id="DataTables_Table_0_wrapper"
 													class="dataTables_wrapper" role="grid">
-													<p>
-														<button onclick="showUploadFile()"
+													<p><form method="get" action="Coordinator_setSession.jsp" id="formsetsession">
+														<label for="Year">Academic year</label> <select
+															id="academicyear" name="academicyear" form="formsetsession">
+															<script type="text/javascript">
+																var myDate = new Date();
+																var year = myDate
+																		.getFullYear() + 543;
+																for (var i = (year - 10); i < year; i++) {
+																	document
+																			.write('<option value="'+i+'">'
+																					+ i
+																					+ '</option>');
+																}
+																document
+																		.write('<option value="'+year+'">'
+																				+ year
+																				+ '</option>');
+																for (var i = year + 1; i < (year + 10); i++) {
+																	document
+																			.write('<option value="'+i+'">'
+																					+ i
+																					+ '</option>');
+																}
+															</script>
+														</select> <label for="Term">Major</label> <select id="major"
+															name="major" form="formsetsession">
+															<option value="IT">IT</option>
+															<option value="CS">CS</option>
+															<option value="SE">SE</option>
+															<option value="MTA">MTA</option>
+															<option value="CE">CE</option>
+															<option value="ICE">ICE</option>
+														</select></form> <button onclick="showUploadFile()"
 															class="btn btn-warning btn-sm">Add Study Plan</button>
+														
+														
 													</p>
+													<p></p>
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
 														<table
@@ -733,8 +789,8 @@
 
 		<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				ฉ <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
-				- 2014
+				ฉ <a href="http://usman.it" target="_blank">Muhammad Usman</a>
+				2012 - 2014
 			</p>
 
 			<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
