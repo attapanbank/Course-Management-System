@@ -292,7 +292,7 @@
 													href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>">
 														<i class="glyphicon glyphicon-edit icon-white"></i> Edit
 												</a> <a class="btn btn-danger btn-sm"
-													href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&year=<%=rec.getString("academicyear")%>">
+													href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&acayear=<%=rec.getString("academicyear")%>&major=<%=rec.getString("major")%>">
 														<i class="glyphicon glyphicon-trash icon-white"></i>
 														Delete
 												</a></td>

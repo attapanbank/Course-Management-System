@@ -188,10 +188,6 @@
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
 
-					connect = DriverManager
-							.getConnection("jdbc:mysql://localhost:3306/CMS"
-									+ "?user=root&password=toor");
-
 					stmt = connect.createStatement();
 
 					String sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where studyPlanId ='"
@@ -247,17 +243,26 @@
 														class="dataTables_wrapper" role="grid">
 														<form method="get" action="Coordinator_EditStudyPlan.jsp">
 															<p>
-																Year : <input type="text" name="year"
-																	value="<%=rec.getString("year")%>">
+																Academic Year : <input type="text" name="acayear"
+																	value="<%=rec.getString("academicYear")%>">
 															</p>
 															<p>
-																Semester : <input type="text" name="semester"
-																	value="<%=rec.getString("semester")%>">
+																Study year : <input type="text" name="stuyear"
+																	value="<%=rec.getString("studyYear")%>">
+															</p>
+															<p>
+																Study semester : <input type="text" name="stusemester"
+																	value="<%=rec.getString("studySemester")%>">
+															</p>
+															<p>
+																Major : <input type="text" name="major"
+																	value="<%=rec.getString("major")%>">
 															</p>
 															<p>
 																Course code : <input type="text" name="courseCode"
 																	value="<%=rec.getString("courseCode")%>">
 															</p>
+															
 
 
 															<p>

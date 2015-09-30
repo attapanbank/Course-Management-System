@@ -34,15 +34,13 @@
 %>
 <%
 	String studyplanId = request.getParameter("studyplanId");
-	String year = request.getParameter("year");
+	String academicYear = request.getParameter("acayear");
+	int intacademicYear = (int) Integer.parseInt(academicYear);
+	String major = request.getParameter("major");
 %>
 <%
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
-
-		connect = DriverManager
-				.getConnection("jdbc:mysql://localhost:3306/CMS"
-						+ "?user=root&password=toor");
 
 		stmt = connect.createStatement();
 
@@ -50,7 +48,8 @@
 				+ studyplanId + "';";
 		stmt.execute(sql);
 
-		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="+year;
+		String redirectURL = "Coordinator_ListStudyPlan.jsp?year="
+				+ academicYear + "&major=" + major;
 		response.sendRedirect(redirectURL);
 	} catch (Exception e) {
 		// TODO Auto-generated catch block

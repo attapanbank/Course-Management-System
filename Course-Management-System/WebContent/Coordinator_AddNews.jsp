@@ -44,28 +44,30 @@
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 
-			connect = DriverManager
-					.getConnection("jdbc:mysql://localhost:3306/CMS"
-							+ "?user=root&password=toor");
-
 			stmt = connect.createStatement();
 
 			String sql = "select * from studyplan inner join course on (studyplan.courseCode=course.courseCode)where studyplan.courseCode not in (select courseplan.courseCode from courseplan)union all select * from courseplan inner join course on (courseplan.courseCode=course.courseCode)where coursePlan.courseCode not in (select studyplan.courseCode from studyplan)";
 			ResultSet rec = stmt.executeQuery(sql);
-
+			
 			String newsDetail = "The follow Courses is Missmatch:  ";
 			if (rec != null) {
 				while ((rec != null) && (rec.next())) {
-					newsDetail += rec.getString("courseCode") + " ("
+					newsDetail = "The follow Courses is Missmatch:  "
+							+ rec.getString("courseCode") + " ("
 							+ rec.getString("courseName") + ") ";
+					//System.out.println(newsDetail);
+					
+					stmt = connect.createStatement();
+					sql = "INSERT INTO `news` (`user`, `group`, `news`) VALUES ('admin', 'admin', '"
+							+ newsDetail + "');";
+					stmt.execute(sql);
+					stmt.close();
 				}
 			} else {
 				newsDetail = "All course matching.";
 			}
 
-			sql = "INSERT INTO `news` (`user`, `group`, `news`) VALUES ('admin', 'admin', '"
-					+ newsDetail + "');";
-			stmt.execute(sql);
+			System.out.println("Update Complete.");
 			String redirectURL = "Coordinator.jsp";
 			response.sendRedirect(redirectURL);
 			//out.println(newsDetail);
