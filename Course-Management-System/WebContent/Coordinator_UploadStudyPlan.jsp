@@ -25,6 +25,9 @@
 	String savePath = null; // decare the gobal for use all of this page
 
 	//to get the content type information from JSP Request Header
+	String academicYear = (String) session.getAttribute("academicyear");
+	int academicYearInt = (int) Integer.parseInt(academicYear);
+	String major = (String) session.getAttribute("major");
 	String contentType = request.getContentType();
 	//here we are checking the content type is not equal to Null and
 
@@ -71,8 +74,7 @@
 
 		savePath = application.getRealPath("\\fileUpload\\" + saveFile);
 
-		System.out.println("Upload file Successfully.<br>");
-
+		System.out.println("Upload file Successfully.");
 		System.out.println("Save to : " + savePath);
 
 		FileOutputStream fileOut = new FileOutputStream(savePath);
@@ -117,20 +119,16 @@
 		Workbook wb = WorkbookFactory.create(file);
 		Sheet sheet = wb.getSheetAt(0);
 		Row row;
-		
-		String academicYear = (String)request.getAttribute("academicyear");
-		int academicYearInt = (int)Integer.parseInt(academicYear);
-		String major = (String)request.getAttribute("major");
 
 		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			row = sheet.getRow(i);
-			//int academicYear = (int) row.getCell(0).getNumericCellValue();
-			int studyYear = (int) row.getCell(0).getNumericCellValue();
-			int studySemester = (int) row.getCell(1).getNumericCellValue();
-			int courseCode = (int) row.getCell(2).getNumericCellValue();
-			//String major = row.getCell(4).toString();
 
-			String sql = " INSERT INTO `studyplan` (academicYear, studyYear, studySemester,courseCode,major) VALUES ('"
+			int studyYear = (int) row.getCell(0).getNumericCellValue();
+			int studySemester = (int) row.getCell(1)
+					.getNumericCellValue();
+			int courseCode = (int) row.getCell(2).getNumericCellValue();
+
+			String sql = " INSERT INTO `cmsit`.`studyplan` (`academicYear`,`studyYear`, `studySemester`, `courseCode`, `major`) VALUES ('"
 					+ academicYearInt
 					+ "', '"
 					+ studyYear
@@ -179,8 +177,6 @@
 	}
 
 	// end Part for delete file
-	//response.sendRedirect("Admin_CoursePlan.jsp");
-	session.setAttribute("stateupload", "notyet");
-	request.getRequestDispatcher("/Coordinator_StudyPlan.jsp").forward(
-			request, response);
+	response.sendRedirect("Coordinator_StudyPlan.jsp");
+	//request.getRequestDispatcher("/Coordinator_StudyPlan.jsp").forward(request, response);
 %>
