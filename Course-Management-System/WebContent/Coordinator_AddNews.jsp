@@ -48,18 +48,13 @@
 
 			String sql = "select * from studyplan inner join course on (studyplan.courseCode=course.courseCode)where studyplan.courseCode not in (select courseplan.courseCode from courseplan)union all select * from courseplan inner join course on (courseplan.courseCode=course.courseCode)where coursePlan.courseCode not in (select studyplan.courseCode from studyplan)";
 			ResultSet rec = stmt.executeQuery(sql);
-			
-			String newsDetail = "The follow Courses is Missmatch:  ";
+
+			String newsDetail = null;
 			if (rec != null) {
 				while ((rec != null) && (rec.next())) {
-					newsDetail = "The follow Courses is Missmatch:  "
-							+ rec.getString("courseCode") + " ("
-							+ rec.getString("courseName") + ") ";
-					//System.out.println(newsDetail);
-					
 					stmt = connect.createStatement();
-					sql = "INSERT INTO `news` (`user`, `group`, `news`) VALUES ('admin', 'admin', '"
-							+ newsDetail + "');";
+					sql = "INSERT INTO `news` (`user`, `group`, `courseCode`, `courseName`, `major`) VALUES ('admin', 'admin', '"
+							+ rec.getString("courseCode")+"', '"+rec.getString("courseName")+"', '"+rec.getString("major")+"');";
 					stmt.execute(sql);
 					stmt.close();
 				}

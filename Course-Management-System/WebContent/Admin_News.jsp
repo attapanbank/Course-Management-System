@@ -1,5 +1,37 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.sql.SQLException"%>
+<%@ page import="java.sql.Statement"%>
+<%@ page import="java.sql.Connection"%>
+<%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.util.Calendar"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection connect = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	connect = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -168,25 +200,105 @@
 				<div class="row">
 					<div class="box col-md-12">
 						<div class="box-inner">
-
-							<div class="box-header well">
+							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-info-sign"></i> News
+									<i class="glyphicon glyphicon-user"></i> Study Plan Management
 								</h2>
 
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"><i
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							<div class="box-content row" align="center">
-								<img style="width: 650px; height: 350px" src="img/schoolIt.jpg"
-									align="middle">
+							<div class="box-content" style="display: block;">
+								<%
+									try {
+										Class.forName("com.mysql.jdbc.Driver");
 
+										stmt = connect.createStatement();
+
+										String sql = "SELECT * FROM cmsit.news;";
+										ResultSet rec = null;
+										rec = stmt.executeQuery(sql);
+								%>
+								<%
+									if (!rec.isBeforeFirst()) {
+								%>
+								<div class="box-content row" align="center">
+									<img style="width: 650px; height: 350px" src="img/schoolIt.jpg"
+										align="middle">
+
+								</div>
+								<%
+									} else {
+								%>
+								<label>The follow Courses is Missmatch:</label>
+								<table
+									class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
+									id="DataTables_Table_0"
+									aria-describedby="DataTables_Table_0_info" >
+									<thead>
+
+										<tr role="row">
+
+											<th class="sorting" role="columnheader" tabindex="0"
+												aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+												
+												aria-label="Actions: activate to sort column ascending">Course
+												code</th>
+											<th class="sorting" role="columnheader" tabindex="0"
+												aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+												
+												aria-label="Actions: activate to sort column ascending">Course
+												name</th>
+
+											<th class="sorting" role="columnheader" tabindex="0"
+												aria-controls="DataTables_Table_0" rowspan="1" colspan="1"
+												
+												aria-label="Actions: activate to sort column ascending">Major</th>
+
+										</tr>
+
+									</thead>
+
+
+									<tbody role="alert" aria-live="polite" aria-relevant="all">
+										<%
+											while ((rec != null) && (rec.next())) {
+										%>
+										<tr>
+											<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
+											<td class="center"><%=rec.getString("courseName")%></td>
+											<td class="center"><%=rec.getString("major")%></td>
+
+										</tr>
+										<%
+											}
+												}
+										%>
+									</tbody>
+								</table>
+								<%
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										out.println(e.getMessage());
+										e.printStackTrace();
+									}
+
+									try {
+										if (stmt != null) {
+											stmt.close();
+											connect.close();
+										}
+									} catch (SQLException e) {
+										// TODO Auto-generated catch block
+										out.println(e.getMessage());
+										e.printStackTrace();
+									}
+								%>
 							</div>
 						</div>
 					</div>
