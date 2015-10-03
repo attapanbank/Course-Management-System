@@ -4,6 +4,28 @@
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+<%
 	// Prepare for connect DB
 %>
 <%@page import="java.io.InputStream"%>
@@ -113,7 +135,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.html">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -286,7 +308,8 @@
 										<h2>Study Plan</h2>
 
 										<div class="box-icon">
-											<a href="Coordinator_AddNews.jsp" class="btn btn-round btn-default"><i
+											<a href="Coordinator_AddNews.jsp"
+												class="btn btn-round btn-default"><i
 												class="glyphicon glyphicon-share"></i></a> <a href="#"
 												class="btn btn-minimize btn-round btn-default"><i
 												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
@@ -322,7 +345,7 @@
 															colspan="1" style="width: 167px;"
 															aria-label="Name: activate to sort column ascending">Course
 															Name</th>
-															<th aria-label="Status: activate to sort column ascending"
+														<th aria-label="Status: activate to sort column ascending"
 															style="width: 80px;" colspan="1" rowspan="1"
 															aria-controls="DataTables_Table_0" tabindex="0"
 															role="columnheader" class="sorting">Major</th>
@@ -364,7 +387,7 @@
 													<%
 														}
 													%>
-												
+
 													</tr>
 												</tbody>
 											</table>
@@ -405,11 +428,11 @@
 			<!--/#content.col-md-0-->
 		</div>
 		<!--/fluid-row-->
-<hr>
+		<hr>
 		<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				 <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
-				- 2014
+				<a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
+				2014
 			</p>
 
 			<p class="col-md-3 col-sm-3 col-xs-12 powered-by">

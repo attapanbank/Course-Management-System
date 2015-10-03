@@ -22,11 +22,11 @@
 	String readpass = props.getProperty("password");
 
 	Statement stmt = null;
-	Connection con = null;
+	Connection connect = null;
 	String url = readurl;
 
 	Class.forName(readdriver);
-	con = DriverManager.getConnection(url, readuser, readpass);
+	connect = DriverManager.getConnection(url, readuser, readpass);
 %>
 <%
 	// End Prepare for connect DB
@@ -62,7 +62,7 @@
 
 	function submitRunAjax() {
 		loginCheck = document.getElementById("loginCheck").value;
-		var url = "loginCheck.jsp?examSelect=" + loginCheck;
+		var url = "Main_LoginCheck.jsp?examSelect=" + loginCheck;
 		createXMLHttpRequest();
 		xmlHttp.onreadystatechange = handleStateChangeAjax;
 		xmlHttp.open("POST", url, true);
@@ -137,48 +137,42 @@
 	<%
 		if (request.getParameter("Action") != null) {
 
-			Connection connect = null;
-			Statement s = null;
-
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 
 				String username = request.getParameter("txtUsername");
 				String password = request.getParameter("txtPassword");
 
-				s = connect.createStatement();
+				stmt = connect.createStatement();
 
-				String sql = "SELECT * FROM  user WHERE " + " username = '"+ username + "' AND " + " password = '" + password + "' ";
+				String sql = "SELECT * FROM  user WHERE " + " username = '"
+						+ username + "' AND " + " password = '" + password
+						+ "' ";
 
-				ResultSet rec = s.executeQuery(sql);
+				ResultSet rec = stmt.executeQuery(sql);
 
-				String fristname = null ;
+				String fristname = null;
 				String lastname = null;
 				if (!rec.next()) {
-					
-					
-					
-					%>
-					<div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Oh snap!</strong> Username and Password Incorrect!
-                </div>
-					<% 
-					
-				} else {
-					
+	%>
+	<div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>Oh snap!</strong> Username and Password Incorrect!
+	</div>
+	<%
+		} else {
+
 					rec.first();
 					session.setAttribute("sUserID", rec.getString("userID"));
-					response.sendRedirect("checkLogin.jsp");
-					%>
-					<div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Success!</strong> You successfully Login.
-                </div>
-					<% 
-				}
+					response.sendRedirect("Main_CheckLogin.jsp");
+	%>
+	<div class="alert alert-success">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		<strong>Success!</strong> You successfully Login.
+	</div>
+	<%
+		}
 
-				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				out.println(e.getMessage());
@@ -186,8 +180,8 @@
 			}
 
 			try {
-				if (s != null) {
-					s.close();
+				if (stmt != null) {
+					stmt.close();
 					connect.close();
 				}
 			} catch (SQLException e) {
@@ -208,42 +202,45 @@
 				<!--/span-->
 			</div>
 			<!--/row-->
-<form name="frmLogin" method="post" action="LoginCMS.jsp?Action=Login">
-			<div class="row">
-				<div class="well col-md-5 center login-box">
-					<div class="alert alert-info">Please login with your Username
-						and Password.</div>
-					<form class="form-horizontal" action="index.html" method="post">
-						<fieldset>
-							<div class="input-group input-group-lg">
-								<span class="input-group-addon"><i
-									class="glyphicon glyphicon-user red"></i></span> <input name="txtUsername" type="text" id="txtUsername"
-									class="form-control" placeholder="Username">
-							</div>
-							<div class="clearfix"></div>
-							<br>
+			<form name="frmLogin" method="post"
+				action="Main_Login.jsp?Action=Login">
+				<div class="row">
+					<div class="well col-md-5 center login-box">
+						<div class="alert alert-info">Please login with your
+							Username and Password.</div>
+						<form class="form-horizontal" action="index.html" method="post">
+							<fieldset>
+								<div class="input-group input-group-lg">
+									<span class="input-group-addon"><i
+										class="glyphicon glyphicon-user red"></i></span> <input
+										name="txtUsername" type="text" id="txtUsername"
+										class="form-control" placeholder="Username">
+								</div>
+								<div class="clearfix"></div>
+								<br>
 
-							<div class="input-group input-group-lg">
-								<span class="input-group-addon"><i
-									class="glyphicon glyphicon-lock red"></i></span> <input
-									name="txtPassword" type="password" id="txtPassword" class="form-control" placeholder="Password">
-							</div>
-							<div class="clearfix"></div>
+								<div class="input-group input-group-lg">
+									<span class="input-group-addon"><i
+										class="glyphicon glyphicon-lock red"></i></span> <input
+										name="txtPassword" type="password" id="txtPassword"
+										class="form-control" placeholder="Password">
+								</div>
+								<div class="clearfix"></div>
 
-							<div class="input-prepend">
-								<label class="remember" for="remember"><input
-									type="checkbox" id="remember"> Remember me</label>
-							</div>
-							<div class="clearfix"></div>
+								<div class="input-prepend">
+									<label class="remember" for="remember"><input
+										type="checkbox" id="remember"> Remember me</label>
+								</div>
+								<div class="clearfix"></div>
 
-							<p class="center col-md-5">
-								<button type="submit" class="btn btn-primary">Login</button>
-							</p>
-						</fieldset>
-					</form>
+								<p class="center col-md-5">
+									<button type="submit" class="btn btn-primary">Login</button>
+								</p>
+							</fieldset>
+						</form>
+					</div>
+					<!--/span-->
 				</div>
-				<!--/span-->
-			</div>
 			</form>
 			<!--/row-->
 		</div>
