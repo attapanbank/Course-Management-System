@@ -5,6 +5,28 @@
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.util.Calendar"%>
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+<%
 	// Prepare for connect DB
 %>
 <%@page import="java.io.InputStream"%>
@@ -131,7 +153,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.html">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
