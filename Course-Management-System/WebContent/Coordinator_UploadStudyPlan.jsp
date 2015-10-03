@@ -140,7 +140,7 @@
 					+ major + "'); ";
 			pstm = (PreparedStatement) con.prepareStatement(sql);
 			pstm.execute();
-			System.out.println("Import rows " + i);
+			//System.out.println("Import rows " + i);
 		}
 		con.commit();
 		wb.close();
@@ -175,7 +175,8 @@
 		deleteFile.delete();
 		System.out.println("file deleted");
 	}
-
+	System.out.println("Import success.");
+	
 	// end Part for delete file
 	response.sendRedirect("Coordinator_StudyPlan.jsp");
 	//request.getRequestDispatcher("/Coordinator_StudyPlan.jsp").forward(request, response);

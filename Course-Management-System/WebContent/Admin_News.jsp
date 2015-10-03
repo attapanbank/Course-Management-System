@@ -202,7 +202,7 @@
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-user"></i> Study Plan Management
+									<i class="glyphicon glyphicon-user"></i> News
 								</h2>
 
 								<div class="box-icon">

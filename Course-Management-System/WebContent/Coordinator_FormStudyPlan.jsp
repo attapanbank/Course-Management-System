@@ -152,7 +152,8 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link" href="Coordinator_StudyPlan.jsp"><i
+							<li class="active"><a class="ajax-link"
+								href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
 
@@ -201,7 +202,8 @@
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="Coordinator_StudyPlan.jsp">Study Plan Management</a></li>
+						<li><a href="Coordinator_StudyPlan.jsp">Study Plan
+								Management</a></li>
 					</ul>
 				</div>
 
@@ -235,41 +237,59 @@
 												class="dataTables_wrapper" role="grid">
 												<div id="DataTables_Table_0_wrapper"
 													class="dataTables_wrapper" role="grid">
-													<p>
-														<button onclick="showUploadFile()"
-															class="btn btn-warning btn-sm">Add Study Plan</button>
-													</p>
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
 														<form method="get" action="Coordinator_EditStudyPlan.jsp">
-															<p>
-																Academic Year : <input type="text" name="acayear"
-																	value="<%=rec.getString("academicYear")%>">
-															</p>
-															<p>
-																Study year : <input type="text" name="stuyear"
-																	value="<%=rec.getString("studyYear")%>">
-															</p>
-															<p>
-																Study semester : <input type="text" name="stusemester"
-																	value="<%=rec.getString("studySemester")%>">
-															</p>
-															<p>
-																Major : <input type="text" name="major"
-																	value="<%=rec.getString("major")%>">
-															</p>
-															<p>
-																Course code : <input type="text" name="courseCode"
-																	value="<%=rec.getString("courseCode")%>">
-															</p>
-															
+															<table border="0">
+																<tr>
+																	<td><p>Academic Year :</td>
+																	<td><input type="text" name="acayear"
+																		value="<%=rec.getString("academicYear")%>">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>Study year :
+																	</td>
+																	<td><input type="text" name="stuyear"
+																		value="<%=rec.getString("studyYear")%>">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>Study semester :
+																	</td>
+																	<td><input type="text" name="stusemester"
+																		value="<%=rec.getString("studySemester")%>">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>Major :
+																	</td>
+																	<td><input type="text" name="major"
+																		value="<%=rec.getString("major")%>">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>Course code :
+																	</td>
+																	<td><input type="text" name="courseCode"
+																		value="<%=rec.getString("courseCode")%>">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>
+																			<input type="hidden" name="studyplanId"
+																				value="<%=studyplanId%>"> <input
+																				type="submit" value="Edit">
 
-
-															<p>
-																<input type="hidden" name="studyplanId"
-																	value="<%=studyplanId%>"> <input type="submit">
-
-															</p>
+																		</p>
+																	</td>
+																</tr>
+															</table>
 														</form>
 
 													</div>
@@ -359,8 +379,8 @@
 
 		<footer class="row">
 		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			� <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
+			� <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
+			- 2014
 		</p>
 
 		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">

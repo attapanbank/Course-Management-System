@@ -298,7 +298,7 @@
 															<option value="CE">CE</option>
 															<option value="ICE">ICE</option>
 														</select>
-
+														<br/>
 														<button type="submit" class="btn btn-warning btn-sm">Add
 															Study Plan</button>
 													</form>
@@ -743,7 +743,7 @@
 
 		<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				ฉ <a href="http://usman.it" target="_blank">Muhammad Usman</a>
+				<a href="http://usman.it" target="_blank">Muhammad Usman</a>
 				2012 - 2014
 			</p>
 

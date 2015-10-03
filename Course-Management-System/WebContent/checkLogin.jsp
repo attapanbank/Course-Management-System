@@ -3,13 +3,38 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
 
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 
 
 <%
 	// Create by Fatez
 
-Object strUserID = session.getAttribute("sUserID");
+	Object strUserID = session.getAttribute("sUserID");
 	if (strUserID == null) // Check Login
 	{
 		response.sendRedirect("LoginCMS.jsp");
@@ -20,10 +45,6 @@ Object strUserID = session.getAttribute("sUserID");
 
 	try {
 		Class.forName("com.mysql.jdbc.Driver");
-
-		connect = DriverManager
-				.getConnection("jdbc:mysql://localhost/cms"
-						+ "?user=root&password=root");
 
 		s = connect.createStatement();
 
@@ -51,12 +72,11 @@ Object strUserID = session.getAttribute("sUserID");
 			session.setAttribute("sFirstname", firstname);
 			session.setAttribute("sLastname", lastname);
 			session.setAttribute("sUserType", userType);
-			
+
 			// check type of user to auther user
 			if (userType.equals(userAdminType)) {
 				out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=Admin_News.jsp\">");
-			}
-			else if (userType.equals(userTeacherType)) {
+			} else if (userType.equals(userTeacherType)) {
 				out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=Teacher_News.jsp\">");
 
 			} else if (userType.equals(userTAType)) {
@@ -65,7 +85,7 @@ Object strUserID = session.getAttribute("sUserID");
 			} else if (userType.equals(userCoType)) {
 				out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=Coordinator.jsp\">");
 
-			}else{
+			} else {
 				out.print("Type of user not have roles");
 			}
 		}

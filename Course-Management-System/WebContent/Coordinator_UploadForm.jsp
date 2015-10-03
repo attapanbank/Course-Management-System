@@ -68,10 +68,10 @@
 
 <script type="text/javascript">
 	function checkuploadfile() {
-		if (document.getElementById("exampleInputFile").files.length == 0) {
+		if (document.getElementById("InputFile").files.length == 0) {
 			alert("No file input.");
 		} else {
-			document.getElementById("formUpload").submit();
+			document.getElementById("fileupload").submit();
 		}
 
 	}
@@ -210,10 +210,10 @@
 												enctype="multipart/form-data">
 												<label for="exampleInputFile">File input</label> <input
 													type="file" accept=".xls,.xlsx" name="exampleInputFile"
-													id="exampleInputFile">
+													id="InputFile">
 
 												<p class="help-block">Example excel.xls or excel.xlsx</p>
-												<button type="submit" class="btn btn-warning btn-sm">Submit</button>
+												<button type="button" onclick="checkuploadfile()" class="btn btn-warning btn-sm">Submit</button>
 											</form>
 										</div>
 
@@ -246,7 +246,7 @@
 
 		<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				à¸‰ <a href="http://usman.it" target="_blank">Muhammad Usman</a>
+				<a href="http://usman.it" target="_blank">Muhammad Usman</a>
 				2012 - 2014
 			</p>
 

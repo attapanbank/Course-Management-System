@@ -5,6 +5,32 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
+<%
+	// Prepare for connect DB
+%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt = null;
+	Connection con = null;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
+<%
+	// End Prepare for connect DB
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,10 +142,6 @@
 
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
-
-				connect = DriverManager
-						.getConnection("jdbc:mysql://localhost/cms"
-								+ "?user=root&password=root");
 
 				String username = request.getParameter("txtUsername");
 				String password = request.getParameter("txtPassword");
