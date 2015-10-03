@@ -230,7 +230,21 @@
 										</div>
 									</div>
 									<div class="box-content">
-
+										<script type="text/javascript">
+											function checkForm() {
+											    var ay = document.getElementById("acayear").value;
+											    var sy = document.getElementById("stuyear").value;
+											    var ss = document.getElementById("stusemester").value;
+											    var m = document.getElementById("major").value;
+											    var cd = document.getElementById("courseCode").value;
+											    
+											    if (!ay||!sy||!ss||!m||!cd){
+											    	alert("Please fill all of information.");
+											    } else {
+											    	document.getElementById("editForm").submit();
+											    }
+											}
+										</script>
 										<div id="DataTables_Table_0_wrapper"
 											class="dataTables_wrapper" role="grid">
 											<div id="DataTables_Table_0_wrapper"
@@ -239,11 +253,11 @@
 													class="dataTables_wrapper" role="grid">
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
-														<form method="get" action="Coordinator_EditStudyPlan.jsp">
+														<form method="get" action="Coordinator_EditStudyPlan.jsp" id="editForm">
 															<table border="0">
 																<tr>
 																	<td><p>Academic Year :</td>
-																	<td><input type="text" name="acayear"
+																	<td><input type="text" name="acayear" id="acayear"
 																		value="<%=rec.getString("academicYear")%>">
 																		</p></td>
 																</tr>
@@ -251,7 +265,7 @@
 																	<td>
 																		<p>Study year :
 																	</td>
-																	<td><input type="text" name="stuyear"
+																	<td><input type="text" name="stuyear" id="stuyear"
 																		value="<%=rec.getString("studyYear")%>">
 																		</p></td>
 																</tr>
@@ -260,6 +274,7 @@
 																		<p>Study semester :
 																	</td>
 																	<td><input type="text" name="stusemester"
+																		id="stusemester"
 																		value="<%=rec.getString("studySemester")%>">
 																		</p></td>
 																</tr>
@@ -267,7 +282,7 @@
 																	<td>
 																		<p>Major :
 																	</td>
-																	<td><input type="text" name="major"
+																	<td><input type="text" name="major" id="major"
 																		value="<%=rec.getString("major")%>">
 																		</p></td>
 																</tr>
@@ -276,6 +291,7 @@
 																		<p>Course code :
 																	</td>
 																	<td><input type="text" name="courseCode"
+																		id="courseCode"
 																		value="<%=rec.getString("courseCode")%>">
 																		</p></td>
 																</tr>
@@ -284,7 +300,7 @@
 																		<p>
 																			<input type="hidden" name="studyplanId"
 																				value="<%=studyplanId%>"> <input
-																				type="submit" value="Edit">
+																				type="button" value="Edit" onclick="checkForm()">
 
 																		</p>
 																	</td>
