@@ -5,6 +5,27 @@
 <%@page import="java.util.Properties"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	InputStream stream = application
 			.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
@@ -115,10 +136,19 @@
 		<tbody>
 			<%
 				stmt = con.createStatement();
-				String QueryString = "SELECT currentcourse.year, currentcourse.semester, section.sectionlect, section.sectionlab, user.firstname, user.lastname, candidate.teachtype FROM cms.course INNER JOIN currentcourse ON currentcourse.courseCode = course.courseCode INNER JOIN section ON section.currentcourseID = currentcourse.currentcourseID INNER JOIN candidate ON candidate.sectionID = section.sectionID INNER JOIN user ON user.userID = candidate.userID WHERE course.courseCode = '"
-						+ coursecode + "';";
+				String QueryString = "SELECT * FROM course INNER JOIN currentcourse ON currentcourse.courseCode = course.courseCode INNER JOIN section ON section.currentcourseID = currentcourse.currentcourseID INNER JOIN candidate ON candidate.sectionID = section.sectionID INNER JOIN user ON user.userID = candidate.userID WHERE course.courseCode = '"
+						+ coursecode + "' GROUP BY section.sectionID, user.userID;";
 				ResultSet rs = stmt.executeQuery(QueryString);
 				while (rs.next()) {
+					stmt = con.createStatement();
+					String QuerySelect = "SELECT * FROM course INNER JOIN currentcourse ON currentcourse.courseCode = course.courseCode INNER JOIN section ON section.currentcourseID = currentcourse.currentcourseID INNER JOIN candidate ON candidate.sectionID = section.sectionID INNER JOIN user ON user.userID = candidate.userID WHERE course.courseCode = '"
+							+ coursecode
+							+ "' AND user.userID = '"
+							+ rs.getString("user.userID")
+							+ "' AND section.sectionID = '"
+							+ rs.getString("section.sectionID")
+							+ "' ORDER BY candidate.teachtype desc;";
+					ResultSet rsselect = stmt.executeQuery(QuerySelect);
 			%>
 			<tr>
 				<td><%=rs.getString("currentcourse.year")%></td>
@@ -127,7 +157,15 @@
 				<td><%=rs.getString("section.sectionlab")%></td>
 				<td><%=rs.getString("user.firstname") + " "
 						+ rs.getString("user.lastname")%></td>
-				<td><%=rs.getString("candidate.teachtype")%></td>
+				<td>
+					<%
+						while (rsselect.next()) {
+								out.println("- "
+										+ rsselect.getString("candidate.teachtype")
+										+ "<br>");
+							}
+					%>
+				</td>
 			</tr>
 			<%
 				}

@@ -1,5 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
+	import="java.sql.*" pageEncoding="utf-8"%>
+
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+
+<%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+
+	String readurl = props.getProperty("url");
+	String readdriver = props.getProperty("driver");
+	String readuser = props.getProperty("user");
+	String readpass = props.getProperty("password");
+
+	Statement stmt;
+	Connection con;
+	String url = readurl;
+
+	Class.forName(readdriver);
+	con = DriverManager.getConnection(url, readuser, readpass);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -79,7 +122,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -151,9 +194,7 @@
 								</h2>
 
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"><i
 										class="glyphicon glyphicon-remove"></i></a>
@@ -174,7 +215,6 @@
 								</select> <label for="Term">Term</label> <select id="term" name="term">
 									<option value="1">1</option>
 									<option value="2">2</option>
-									<option value="3">3</option>
 								</select> <br>
 
 								<div class="control-group">
@@ -183,14 +223,14 @@
 
 									<div class="controls">
 										<select>
-											<option>Report อาจารย์ที่เลือกในแต่ละรายวิชา
+											<option>Report อาจารย์ที่เลือกสอนในแต่ละรายวิชา
 												(เรียงตามผู้สอน)</option>
-											<option>Report อาจารย์ที่เลือกในแต่ละรายวิชา
+											<option>Report อาจารย์ที่เลือกสอนในแต่ละรายวิชา
 												(เรียงตามรายวิชา)</option>
-											<option>Report รายชื่ออาจารย์ที่จะสอนในแต่ละวิชา +
+											<option>Report รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา +
 												Workload</option>
-											<option>Report รายชื่ออาจารย์ที่จะสอนในแต่ละวิชา +
-												วิธีการสอบในแต่ละวิชา</option>
+											<option>Report รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา +
+												วิธีการสอบ</option>
 										</select>
 									</div>
 								</div>

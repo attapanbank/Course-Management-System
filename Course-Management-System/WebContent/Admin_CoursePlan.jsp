@@ -9,6 +9,27 @@
 <%@ page import="java.io.*,java.util.Locale"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	InputStream stream = application
 			.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
@@ -109,7 +130,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -241,12 +262,11 @@
 								<%=session.getAttribute("UploadCoursePlanTerm")%>
 									;
 										if (document
-												.getElementById("exampleInputFile").files.length == 0
-												) {
+												.getElementById("exampleInputFile").files.length == 0) {
 											swal("No file input.");
-										} else if(!uploadyear || !uploadterm){
+										} else if (!uploadyear || !uploadterm) {
 											swal("Select Year and Semester First.");
-										}else {
+										} else {
 											document.getElementById(
 													"fileupload").submit();
 										}
@@ -403,7 +423,7 @@
 												String academicyear = null;
 												String academicterm = null;
 
-												if (null == (String) session.getAttribute("NotCandidateYear")) {
+												if (null == (String) session.getAttribute("CoursePlanYear")) {
 
 													Date td = new Date();
 													String strtd = new String("");
@@ -458,7 +478,6 @@
 														} else {
 															academicyear = "";
 															academicterm = "";
-															System.out.println("None");
 														}
 													}
 
@@ -553,7 +572,7 @@
 														%>
 													</td>
 													<td><a class="btn btn-info"
-														href="Admin_CoursePlan_EditForm.jsp?coursePlanID=<%=rs.getString("courseplan.coursePlanID")%>&coursecode=<%=rs.getString("course.courseCode")%>&coursename=<%=rs.getString("course.courseName")%>&major=<%=rs.getString("courseplan.major")%>&numberofstudent=<%=rs.getString("courseplan.numberofstudent")%>&year=<%=year%>&term=<%=term%>">
+														href="Admin_CoursePlan_EditForm.jsp?coursePlanID=<%=rs.getString("courseplan.coursePlanID")%>&year=<%=year%>&term=<%=term%>">
 															<i class="glyphicon glyphicon-edit icon-white"></i> Edit
 													</a> <a class="btn btn-danger confirmation"
 														href="Admin_CoursePlan_Delete.jsp?&coursePlanID=<%=rs.getString("courseplan.coursePlanID")%>&year=<%=year%>&term=<%=term%>">
@@ -564,21 +583,6 @@
 												<%
 													}
 												%>
-												<script type="text/javascript">
-													var elems = document
-															.getElementsByClassName('confirmation');
-													var confirmIt = function(e) {
-														if (!confirm('Are you sure to delete?'))
-															e.preventDefault();
-													};
-													for (var i = 0, l = elems.length; i < l; i++) {
-														elems[i]
-																.addEventListener(
-																		'click',
-																		confirmIt,
-																		false);
-													}
-												</script>
 											</tbody>
 										</table>
 										<p align="center">
@@ -592,7 +596,18 @@
 								</div>
 							</div>
 							<!--/span-->
-
+							<script type="text/javascript">
+								var elems = document
+										.getElementsByClassName('confirmation');
+								var confirmIt = function(e) {
+									if (!confirm('Are you sure to delete?'))
+										e.preventDefault();
+								};
+								for (var i = 0, l = elems.length; i < l; i++) {
+									elems[i].addEventListener('click',
+											confirmIt, false);
+								}
+							</script>
 						</div>
 						<!--/row-->
 

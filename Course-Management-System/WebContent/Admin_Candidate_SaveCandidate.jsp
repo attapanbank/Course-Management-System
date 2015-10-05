@@ -5,6 +5,27 @@
 <%@page import="java.util.Properties"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	InputStream stream = application
 			.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
@@ -148,7 +169,7 @@
 								+ strnumstudent[i] + "')";
 						stmt.executeUpdate(QueryInsert2);
 						String QuerySelect2 = "SELECT * FROM section WHERE currentcourseID ='"
-								+ currentcourseid + "'";
+								+ currentcourseid + "' ORDER BY sectionID desc";
 						ResultSet rs2 = stmt.executeQuery(QuerySelect2);
 						String sectionid = "";
 						if (rs2.next()) {
@@ -198,7 +219,7 @@
 								+ strnumstudent[i] + "')";
 						stmt.executeUpdate(QueryInsert2);
 						String QuerySelect2 = "SELECT * FROM section WHERE currentcourseID ='"
-								+ currentcourseid + "'";
+								+ currentcourseid + "' ORDER BY sectionID desc";
 						ResultSet rs2 = stmt.executeQuery(QuerySelect2);
 						String sectionid = "";
 						if (rs2.next()) {
@@ -358,7 +379,7 @@
 								+ strnumstudent2[i] + "')";
 						stmt.executeUpdate(QueryInsertfake2);
 						String QuerySelectfake2 = "SELECT * FROM section WHERE currentcourseID ='"
-								+ currentcourseid2 + "'";
+								+ currentcourseid2 + "' ORDER BY sectionID desc";
 						ResultSet rsfake2 = stmt
 								.executeQuery(QuerySelectfake2);
 						String sectionid2 = "";
@@ -410,7 +431,7 @@
 								+ strnumstudent2[i] + "')";
 						stmt.executeUpdate(QueryInsertfake2);
 						String QuerySelectfake2 = "SELECT * FROM section WHERE currentcourseID ='"
-								+ currentcourseid2 + "'";
+								+ currentcourseid2 + "' ORDER BY sectionID desc";
 						ResultSet rsfake2 = stmt
 								.executeQuery(QuerySelectfake2);
 						String sectionid2 = "";

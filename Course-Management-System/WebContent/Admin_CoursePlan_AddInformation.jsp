@@ -5,6 +5,27 @@
 <%@page import="java.util.Properties"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	String year = request.getParameter("year");
 	String term = request.getParameter("term");
 	String major = request.getParameter("major");
@@ -25,7 +46,7 @@
 	System.out.println(coursename);
 	
 	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
+	.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
 	props.load(stream);
 	
@@ -42,14 +63,14 @@
 		Class.forName(readdriver);
 		con = DriverManager.getConnection(url, readuser, readpass);
 		stmt = con.createStatement();
-		String QueryString = "Insert into courseplan (year, semester, courseCode, major, numberofstudent) values ('"
-				+ year
-				+ "','"
-				+ term
-				+ "','"
-				+ coursecode
-				+ "','"
-				+ major + "','" + numberofstudent + "')";
+		String QueryString = "INSERT INTO courseplan (year, semester, courseCode, major, numberofstudent) values ('"
+		+ year
+		+ "','"
+		+ term
+		+ "','"
+		+ coursecode
+		+ "','"
+		+ major + "','" + numberofstudent + "')";
 		stmt.executeUpdate(QueryString);
 		System.out.println("Insert Success.");
 	} catch (ClassNotFoundException e) {

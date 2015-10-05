@@ -5,6 +5,27 @@
 <%@page import="java.util.Properties"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	InputStream stream = application
 			.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
@@ -92,11 +113,13 @@
 				+ "';";
 		ResultSet rsname = stmt.executeQuery(QueryName);
 		if (rsname.next()) {
-			out.println("<div align="+"center"+"><font size="+6+">"+rsname.getString("user.firstname") + " "
-					+ rsname.getString("user.lastname") +"</font></div>");
+			out.println("<div align=" + "center" + "><font size=" + 6 + ">"
+					+ rsname.getString("user.firstname") + " "
+					+ rsname.getString("user.lastname") + "</font></div>");
 		}
 	%>
-	<br><br>
+	<br>
+	<br>
 	<table
 		class="table table-striped table-bordered bootstrap-datatable datatable responsive">
 		<thead>
@@ -113,10 +136,18 @@
 		<tbody>
 			<%
 				stmt = con.createStatement();
-				String QueryString = "SELECT currentcourse.year, currentcourse.semester, currentcourse.courseCode, course.courseName, section.sectionlect, section.sectionlab, candidate.teachtype FROM cms.candidate INNER JOIN section ON section.sectionID = candidate.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN course ON course.courseCode = currentcourse.courseCode WHERE userID = '"
-						+ userid + "';";
+				String QueryString = "SELECT * FROM candidate INNER JOIN section ON section.sectionID = candidate.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN course ON course.courseCode = currentcourse.courseCode WHERE userID = '"
+						+ userid
+						+ "' GROUP BY section.sectionID ORDER BY candidate.teachtype desc;";
 				ResultSet rs = stmt.executeQuery(QueryString);
 				while (rs.next()) {
+					stmt = con.createStatement();
+					String QuerySelect = "SELECT * FROM candidate INNER JOIN section ON section.sectionID = candidate.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN course ON course.courseCode = currentcourse.courseCode WHERE userID = '"
+							+ userid
+							+ "' AND section.sectionID = '"
+							+ rs.getString("section.sectionID")
+							+ "' ORDER BY candidate.teachtype desc";
+					ResultSet rsselect = stmt.executeQuery(QuerySelect);
 			%>
 			<tr>
 				<td><%=rs.getString("currentcourse.year")%></td>
@@ -125,14 +156,22 @@
 				<td><%=rs.getString("course.courseName")%></td>
 				<td><%=rs.getString("section.sectionlect")%></td>
 				<td><%=rs.getString("section.sectionlab")%></td>
-				<td><%=rs.getString("candidate.teachtype")%></td>
+				<td>
+					<%
+						while (rsselect.next()) {
+								out.println("- "
+										+ rsselect.getString("candidate.teachtype")
+										+ "<br>");
+							}
+					%>
+				</td>
 			</tr>
 			<%
 				}
 			%>
 		</tbody>
 	</table>
-	
+
 	<div align="center">
 		<button class="btn btn-danger" onclick="window.close()">Close</button>
 	</div>

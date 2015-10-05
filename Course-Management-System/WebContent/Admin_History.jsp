@@ -5,6 +5,27 @@
 <%@page import="java.util.Properties"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	InputStream stream = application
 			.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
@@ -102,7 +123,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -378,8 +399,8 @@
 							<p>Select User Major</p>
 							<div class="radio">
 								<label> <input type="radio" name="teachertype"
-									id="teachertype" value="queryall" checked> Show All User
-									Major
+									id="teachertype" value="queryall" checked> Show All
+									User Major
 								</label>
 							</div>
 							<div class="radio">
@@ -396,8 +417,8 @@
 							</div>
 							<div class="radio">
 								<label> <input type="radio" name="teachertype"
-									id="teachertype" value="queryse"> Show only Major Software
-									Engineering
+									id="teachertype" value="queryse"> Show only Major
+									Software Engineering
 								</label>
 							</div>
 							<div class="radio">
@@ -441,8 +462,8 @@
 							<p>Select Course Major</p>
 							<div class="radio">
 								<label> <input type="radio" name="querycourse"
-									id="querycourse" value="queryall" checked> Show All Course
-									Major
+									id="querycourse" value="queryall" checked> Show All
+									Course Major
 								</label>
 							</div>
 							<div class="radio">
@@ -459,8 +480,8 @@
 							</div>
 							<div class="radio">
 								<label> <input type="radio" name="querycourse"
-									id="querycourse" value="queryse"> Show only Major Software
-									Engineering
+									id="querycourse" value="queryse"> Show only Major
+									Software Engineering
 								</label>
 							</div>
 							<div class="radio">

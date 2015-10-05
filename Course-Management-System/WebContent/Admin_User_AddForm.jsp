@@ -1,6 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	import="java.sql.*" pageEncoding="utf-8"%>
 
+<%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -114,7 +135,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -261,9 +282,9 @@
 											<select id="selectmajor" name="selectmajor" data-rel="chosen">
 												<option style="text-align: left;">Information
 													Technology</option>
+												<option style="text-align: left;">Computer Science</option>
 												<option style="text-align: left;">Software
 													Engineering</option>
-												<option style="text-align: left;">Computer Science</option>
 												<option style="text-align: left;">Multimedia
 													Technology and Animation</option>
 												<option style="text-align: left;">Computer

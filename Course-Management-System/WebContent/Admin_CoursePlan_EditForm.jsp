@@ -5,6 +5,27 @@
 <%@page import="java.util.Properties"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	InputStream stream = application
 			.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
@@ -120,7 +141,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -176,10 +197,6 @@
 
 			<%
 				String coursePlanID = request.getParameter("coursePlanID");
-				String coursecode = request.getParameter("coursecode");
-				String coursename = request.getParameter("coursename");
-				String major = request.getParameter("major");
-				String numberofstudent = request.getParameter("numberofstudent");
 				String Year = request.getParameter("year");
 				String Term = request.getParameter("term");
 			%>
@@ -222,6 +239,13 @@
 										role="selectcourseform" id="EditcourseplanForm"
 										autocomplete="off">
 										<table>
+											<%
+												stmt = con.createStatement();
+												String QueryString = "SELECT * FROM courseplan INNER JOIN course WHERE courseplan.courseCode = course.courseCode AND coursePlanID = '"
+														+ coursePlanID + "';";
+												ResultSet rs = stmt.executeQuery(QueryString);
+												if (rs.next()) {
+											%>
 											<tr>
 												<td style="text-align: right">Year : <%=Year%></td>
 												<td>Term : <%=Term%></td>
@@ -229,23 +253,28 @@
 											<tr>
 												<td style="text-align: right">Major :</td>
 												<td><input type="text" id="major" name="major"
-													value="<%=major%>" /></td>
+													value="<%=rs.getString("courseplan.major")%>" /></td>
 											</tr>
 											<tr>
 												<td style="text-align: right">Number of Students :</td>
 												<td><input type="text" id="numberofstudent"
-													name="numberofstudent" value="<%=numberofstudent%>" /></td>
+													name="numberofstudent"
+													value="<%=rs.getString("courseplan.numberofstudent")%>" /></td>
 											</tr>
 											<tr>
-												<td colspan="2" style="text-align: center"><%=coursecode + " " + coursename%></td>
+												<td colspan="2" style="text-align: center"><%=rs.getString("courseplan.courseCode") + " "
+						+ rs.getString("course.courseName")%></td>
 											</tr>
+											<%
+												}
+											%>
 										</table>
 										<input type="hidden" name="coursePlanID"
 											value="<%=coursePlanID%>" /> <input type="hidden"
 											name="year" value="<%=Year%>" /><input type="hidden"
 											name="term" value="<%=Term%>" /> <input type="hidden"
 											name="selectcourse"
-											value="<%=coursecode + " " + coursename%>" /> <input
+											value="<%=rs.getString("courseplan.courseCode") + " " + rs.getString("course.courseName")%>" /> <input
 											type="button" onclick="checkeditcourseplanform()"
 											class="btn btn-success" value="Submit" />
 									</form>
