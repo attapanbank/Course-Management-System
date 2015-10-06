@@ -1,9 +1,4 @@
-<%@ page import="java.sql.ResultSet"%>
-<%@ page import="java.sql.SQLException"%>
-<%@ page import="java.sql.Statement"%>
-<%@ page import="java.sql.Connection"%>
-<%@ page import="java.sql.DriverManager"%>
-<%@ page import="java.util.Calendar"%>
+<%@page language="java" session="true"%>
 <%
 	// Validate USER
 	String sUserID = null;
@@ -27,30 +22,13 @@
 	}
 %>
 <%
-	// Prepare for connect DB
-%>
-<%@page import="java.io.InputStream"%>
-<%@page import="java.util.Properties"%>
-<%
-	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
-	Properties props = new Properties();
-	props.load(stream);
+	String academicYear = request.getParameter("academicyear");
+	String major = request.getParameter("major");
 
-	String readurl = props.getProperty("url");
-	String readdriver = props.getProperty("driver");
-	String readuser = props.getProperty("user");
-	String readpass = props.getProperty("password");
-
-	Statement stmt = null;
-	Connection con = null;
-	String url = readurl;
-
-	Class.forName(readdriver);
-	con = DriverManager.getConnection(url, readuser, readpass);
-%>
-<%
-	// End Prepare for connect DB
+	session.setAttribute("academicyear", academicYear);
+	session.setAttribute("major", major);
+	System.out.println(major + " " + academicYear);
+	System.out.println("Set Session complete");
 %>
 <html lang="en">
 <head>
@@ -111,23 +89,19 @@
 <link rel="shortcut icon" href="img/favicon.ico">
 
 <script type="text/javascript">
-	function showUploadFile() {
-		document.getElementById("formsetsession").submit();
-	}
-
 	function checkuploadfile() {
-		if (document.getElementById("exampleInputFile").files.length == 0) {
+		if (document.getElementById("InputFile").files.length == 0) {
 			alert("No file input.");
 		} else {
-			document.getElementById("formUpload").submit();
+			document.getElementById("fileupload").submit();
 		}
 
 	}
 </script>
-
 </head>
 
 <body>
+
 	<!-- Aniroot's javascript -->
 
 	<!-- topbar starts -->
@@ -204,47 +178,21 @@
 			<!-- left menu ends -->
 
 			<noscript>
-				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;div class="alert
+				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;div class="alert
 				alert-block
-				col-md-12"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
-				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;h4
-				class="alert-heading"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Warning!&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/h4&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+				col-md-12"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;h4
+				class="alert-heading"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;Warning!&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/h4&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 
-				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;You
-				need to have &amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;a
+				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;You
+				need to have &amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;a
 				href="http://en.wikipedia.org/wiki/JavaScript"
-				target="_blank"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;JavaScript&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+				target="_blank"&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;JavaScript&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/a&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 				enabled to use this
-				site.&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
-				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+				site.&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
+				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 			</noscript>
-			<%
-				// start get data  from SQL server
-				int year = Calendar.getInstance().get(Calendar.YEAR);
-				// 1 st year
-				int yearOnBE1 = (year) + 543;
-				String yearOnBEStr1 = Integer.toString(yearOnBE1);
-				//System.out.println(yearOnBEStr1);
-				//2 nd year
-				int yearOnBE2 = (year) + 543 - 1;
-				String yearOnBEStr2 = Integer.toString(yearOnBE2);
-				//System.out.println(yearOnBEStr2);
-				//3 rd year
-				int yearOnBE3 = (year) + 543 - 2;
-				String yearOnBEStr3 = Integer.toString(yearOnBE3);
-				//System.out.println(yearOnBEStr3);
-				//4 th year
-				int yearOnBE4 = (year) + 543 - 3;
-				String yearOnBEStr4 = Integer.toString(yearOnBE4);
-				//System.out.println(yearOnBEStr4);
 
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					stmt = con.createStatement();
-
-					String sql = "SELECT studyplan.academicYear FROM studyplan group by studyplan.academicYear order by studyplan.academicYear desc";
-					ResultSet rec = stmt.executeQuery(sql);
-			%>
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
 				<div>
@@ -276,130 +224,79 @@
 												class="glyphicon glyphicon-remove"></i></a>
 										</div>
 									</div>
-									<div class="box-content">
-
-										<div id="DataTables_Table_0_wrapper"
-											class="dataTables_wrapper" role="grid">
-											<div id="DataTables_Table_0_wrapper"
-												class="dataTables_wrapper" role="grid">
-												<div id="DataTables_Table_0_wrapper"
-													class="dataTables_wrapper" role="grid">
-													<p>
-													<form method="get" action="Coordinator_UploadForm.jsp"
-														id="formsetsession">
-														<label for="Year">Academic year</label> <select
-															id="academicyear" name="academicyear"
-															form="formsetsession">
-															<script type="text/javascript">
-																var myDate = new Date();
-																var year = myDate
-																		.getFullYear() + 543;
-																for (var i = (year - 10); i < year; i++) {
-																	document
-																			.write('<option value="'+i+'">'
-																					+ i
-																					+ '</option>');
-																}
-																document
-																		.write('<option value="'+year+'">'
-																				+ year
-																				+ '</option>');
-																for (var i = year + 1; i < (year + 10); i++) {
-																	document
-																			.write('<option value="'+i+'">'
-																					+ i
-																					+ '</option>');
-																}
-															</script>
-														</select> <label for="Term">Major</label> <select id="major"
-															name="major" form="formsetsession">
-															<option value="IT">IT</option>
-															<option value="CS">CS</option>
-															<option value="SE">SE</option>
-															<option value="MTA">MTA</option>
-															<option value="CE">CE</option>
-															<option value="ICE">ICE</option>
-														</select> <br />
-														<button type="submit" class="btn btn-warning btn-sm">Add
-															Study Plan</button>&nbsp
-														<a class="btn btn-primary btn-sm"
-															href="Coordinator_DuplicateStudyPlanForm.jsp">
-															Duplicate
-														</a>
-													</form>
-
-
-													</p>
-													<p></p>
-													<div id="DataTables_Table_0_wrapper"
-														class="dataTables_wrapper" role="grid">
-														<table
-															class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable"
-															id="DataTables_Table_0"
-															aria-describedby="DataTables_Table_0_info">
-															<thead>
-
-																<tr role="row">
-																	<th class="sorting_desc" role="columnheader"
-																		tabindex="0" aria-controls="DataTables_Table_0"
-																		rowspan="1" colspan="1" style="width: 330px;"
-																		aria-sort="descending"
-																		aria-label="Year: activate to sort column ascending">Year</th>
-																	<th class="sorting" role="columnheader" tabindex="0"
-																		aria-controls="DataTables_Table_0" rowspan="1"
-																		colspan="1" style="width: 696px;"
-																		aria-label="Actions: activate to sort column ascending">Actions</th>
-																</tr>
-
-															</thead>
-
-															<tbody role="alert" aria-live="polite"
-																aria-relevant="all">
-																<%
-																	while ((rec != null) && (rec.next())) {
-																%>
-																<tr>
-																	<td class=" sorting_1"><%=rec.getInt("academicYear")%></td>
-																	<td class="center"><a
-																		class="btn btn-primary btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			All major
-																	</a> <a class="btn btn-info btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=IT">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			IT
-																	</a> <a class="btn btn-info btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=CS">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			CS
-																	</a> <a class="btn btn-success btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=SE">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			SE
-																	</a> <a class="btn btn-success btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=MTA">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			MTA
-																	</a> <a class="btn btn-danger btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=CE">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			CE
-																	</a> <a class="btn btn-danger btn-sm"
-																		href="Coordinator_ListStudyPlan.jsp?year=<%=rec.getInt("academicYear")%>&major=ICE">
-																			<i class="glyphicon glyphicon-zoom-in icon-white"></i>
-																			ICE
-																	</a></td>
-																</tr>
-																<%
-																	}
-																%>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											</div>
+									<div class="box-content" style="display: block;">
+										<div class="form-group">
+											<form method="get" action="Coordinator_DuplicateStudyPlan.jsp"
+												id="formsetsession">
+												<label for="Year">Form&nbsp&nbsp</label> <select
+													id="academicyear" name="fromacademicyear" form="formsetsession">
+													<script type="text/javascript">
+														var myDate = new Date();
+														var year = myDate
+																.getFullYear() + 543;
+														for (var i = (year - 10); i < year; i++) {
+															document
+																	.write('<option value="'+i+'">'
+																			+ i
+																			+ '</option>');
+														}
+														document
+																.write('<option value="'+year+'">'
+																		+ year
+																		+ '</option>');
+														for (var i = year + 1; i < (year + 10); i++) {
+															document
+																	.write('<option value="'+i+'">'
+																			+ i
+																			+ '</option>');
+														}
+													</script>
+												</select> <label for="Term">&nbsp&nbspMajor</label> <select id="major"
+													name="frommajor" form="formsetsession">
+													<option value="IT">IT</option>
+													<option value="CS">CS</option>
+													<option value="SE">SE</option>
+													<option value="MTA">MTA</option>
+													<option value="CE">CE</option>
+													<option value="ICE">ICE</option>
+												</select> <br><br>
+												<label for="Year">To&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label> <select
+													id="academicyear" name="toacademicyear" form="formsetsession">
+													<script type="text/javascript">
+														var myDate = new Date();
+														var year = myDate
+																.getFullYear() + 543;
+														for (var i = (year - 10); i < year; i++) {
+															document
+																	.write('<option value="'+i+'">'
+																			+ i
+																			+ '</option>');
+														}
+														document
+																.write('<option value="'+year+'">'
+																		+ year
+																		+ '</option>');
+														for (var i = year + 1; i < (year + 10); i++) {
+															document
+																	.write('<option value="'+i+'">'
+																			+ i
+																			+ '</option>');
+														}
+													</script>
+												</select> <label for="Term">&nbsp&nbspMajor</label> <select id="major"
+													name="tomajor" form="formsetsession">
+													<option value="IT">IT</option>
+													<option value="CS">CS</option>
+													<option value="SE">SE</option>
+													<option value="MTA">MTA</option>
+													<option value="CE">CE</option>
+													<option value="ICE">ICE</option>
+												</select> <br><br>
+												<button type="submit" class="btn btn-warning btn-sm">Duplicate</button>
+											</form>
 										</div>
+
+
 									</div>
 								</div>
 							</div>
@@ -407,354 +304,13 @@
 
 						</div>
 
-						<div class="row">
-							<div class="box col-md-6">
-								<div class="box-inner">
-									<div class="box-header well" data-original-title="">
-										<h2>
-											1 st year current course (<%=yearOnBE1%>)
-										</h2>
-
-										<div class="box-icon">
-
-											<a href="#" class="btn btn-minimize btn-round btn-default"><i
-												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-												class="btn btn-close btn-round btn-default"><i
-												class="glyphicon glyphicon-remove"></i></a>
-										</div>
-									</div>
-									<div class="box-content" style="display: block;">
-										<div id="DataTables_Table_0_wrapper"
-											class="dataTables_wrapper" role="grid">
-											<div id="DataTables_Table_0_wrapper"
-												class="dataTables_wrapper" role="grid">
-												<div id="DataTables_Table_0_wrapper"
-													class="dataTables_wrapper" role="grid">
-													<div id="DataTables_Table_0_wrapper"
-														class="dataTables_wrapper" role="grid">
-														<div id="DataTables_Table_0_wrapper"
-															class="dataTables_wrapper" role="grid">
-															<div id="DataTables_Table_0_wrapper"
-																class="dataTables_wrapper" role="grid">
-																<table aria-describedby="DataTables_Table_0_info"
-																	id="DataTables_Table_0"
-																	class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
-																	<thead>
-																		<tr role="row">
-																			<th class="sorting_asc" role="columnheader"
-																				tabindex="0" aria-controls="DataTables_Table_0"
-																				rowspan="1" colspan="1" style="width: 176px;"
-																				aria-sort="ascending"
-																				aria-label="Code: activate to sort column descending">Code</th>
-																			<th class="sorting" role="columnheader" tabindex="0"
-																				aria-controls="DataTables_Table_0" rowspan="1"
-																				colspan="1" style="width: 292px;"
-																				aria-label="Name: activate to sort column ascending">Name</th>
-																			<th class="sorting" role="columnheader" tabindex="0"
-																				aria-controls="DataTables_Table_0" rowspan="1"
-																				colspan="1" style="width: 80px;"
-																				aria-label="Name: activate to sort column ascending">Major</th>
-																		</tr>
-																	</thead>
-
-																	<tbody role="alert" aria-live="polite"
-																		aria-relevant="all">
-																		<%
-																			// Year 1st
-																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																						+ yearOnBEStr1 + "'";
-																				rec = stmt.executeQuery(sql);
-																				while ((rec != null) && (rec.next())) {
-																		%>
-																		<tr>
-																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-																			<td class="center"><%=rec.getString("courseName")%></td>
-																			<td class="center"><%=rec.getString("major")%></td>
-																		</tr>
-																		<%
-																			}
-																		%>
-																	</tbody>
-
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!--/span-->
-
-							<div class="box col-md-6">
-								<div class="box-inner">
-									<div class="box-header well" data-original-title="">
-										<h2>
-											2 nd year current course (<%=yearOnBE2%>)
-										</h2>
-
-										<div class="box-icon">
-
-											<a href="#" class="btn btn-minimize btn-round btn-default"><i
-												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-												class="btn btn-close btn-round btn-default"><i
-												class="glyphicon glyphicon-remove"></i></a>
-										</div>
-									</div>
-									<div class="box-content" style="display: block;">
-										<div id="DataTables_Table_0_wrapper"
-											class="dataTables_wrapper" role="grid">
-											<div id="DataTables_Table_0_wrapper"
-												class="dataTables_wrapper" role="grid">
-												<div id="DataTables_Table_0_wrapper"
-													class="dataTables_wrapper" role="grid">
-													<div id="DataTables_Table_0_wrapper"
-														class="dataTables_wrapper" role="grid">
-														<div id="DataTables_Table_0_wrapper"
-															class="dataTables_wrapper" role="grid">
-															<table table=""
-																aria-describedby="DataTables_Table_0_info"
-																id="DataTables_Table_0"
-																class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
-																<thead>
-																	<tr role="row">
-																		<th class="sorting_asc" role="columnheader"
-																			tabindex="0" aria-controls="DataTables_Table_0"
-																			rowspan="1" colspan="1" style="width: 201px;"
-																			aria-sort="ascending"
-																			aria-label="Code: activate to sort column descending">Code</th>
-																		<th class="sorting" role="columnheader" tabindex="0"
-																			aria-controls="DataTables_Table_0" rowspan="1"
-																			colspan="1" style="width: 267px;"
-																			aria-label="Name: activate to sort column ascending">Name</th>
-																		<th class="sorting" role="columnheader" tabindex="0"
-																			aria-controls="DataTables_Table_0" rowspan="1"
-																			colspan="1" style="width: 80px;"
-																			aria-label="Name: activate to sort column ascending">Major</th>
-																	</tr>
-																</thead>
-
-																<tbody role="alert" aria-live="polite"
-																	aria-relevant="all">
-																	<%
-																		// Year 2
-																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																					+ yearOnBEStr2 + "'";
-																			rec = stmt.executeQuery(sql);
-																			while ((rec != null) && (rec.next())) {
-																	%>
-																	<tr>
-																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-																		<td class="center"><%=rec.getString("courseName")%></td>
-																		<td class="center"><%=rec.getString("major")%></td>
-																	</tr>
-																	<%
-																		}
-																	%>
 
 
-
-																</tbody>
-															</table>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!--/span-->
-						</div>
-						<div class="row">
-							<div class="box col-md-6">
-								<div class="box-inner">
-									<div class="box-header well" data-original-title="">
-										<h2>
-											3 rd year current course (<%=yearOnBE3%>)
-										</h2>
-
-										<div class="box-icon">
-
-											<a href="#" class="btn btn-minimize btn-round btn-default"><i
-												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-												class="btn btn-close btn-round btn-default"><i
-												class="glyphicon glyphicon-remove"></i></a>
-										</div>
-									</div>
-									<div class="box-content" style="display: block;">
-										<div id="DataTables_Table_0_wrapper"
-											class="dataTables_wrapper" role="grid">
-											<div id="DataTables_Table_0_wrapper"
-												class="dataTables_wrapper" role="grid">
-												<div id="DataTables_Table_0_wrapper"
-													class="dataTables_wrapper" role="grid">
-													<div id="DataTables_Table_0_wrapper"
-														class="dataTables_wrapper" role="grid">
-														<div id="DataTables_Table_0_wrapper"
-															class="dataTables_wrapper" role="grid">
-															<div id="DataTables_Table_0_wrapper"
-																class="dataTables_wrapper" role="grid">
-																<table aria-describedby="DataTables_Table_0_info"
-																	id="DataTables_Table_0"
-																	class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
-																	<thead>
-																		<tr role="row">
-																			<th class="sorting_asc" role="columnheader"
-																				tabindex="0" aria-controls="DataTables_Table_0"
-																				rowspan="1" colspan="1" style="width: 176px;"
-																				aria-sort="ascending"
-																				aria-label="Code: activate to sort column descending">Code</th>
-																			<th class="sorting" role="columnheader" tabindex="0"
-																				aria-controls="DataTables_Table_0" rowspan="1"
-																				colspan="1" style="width: 292px;"
-																				aria-label="Name: activate to sort column ascending">Name</th>
-																			<th class="sorting" role="columnheader" tabindex="0"
-																				aria-controls="DataTables_Table_0" rowspan="1"
-																				colspan="1" style="width: 80px;"
-																				aria-label="Name: activate to sort column ascending">Major</th>
-																		</tr>
-																	</thead>
-
-																	<tbody role="alert" aria-live="polite"
-																		aria-relevant="all">
-																		<%
-																			// Year 3
-																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																						+ yearOnBEStr3 + "'";
-																				rec = stmt.executeQuery(sql);
-																				while ((rec != null) && (rec.next())) {
-																		%>
-																		<tr>
-																			<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-																			<td class="center"><%=rec.getString("courseName")%></td>
-																			<td class="center"><%=rec.getString("major")%></td>
-																		</tr>
-																		<%
-																			}
-																		%>
-
-
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!--/span-->
-
-							<div class="box col-md-6">
-								<div class="box-inner">
-									<div class="box-header well" data-original-title="">
-										<h2>
-											4 th year current course (<%=yearOnBE4%>)
-										</h2>
-
-										<div class="box-icon">
-
-											<a href="#" class="btn btn-minimize btn-round btn-default"><i
-												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-												class="btn btn-close btn-round btn-default"><i
-												class="glyphicon glyphicon-remove"></i></a>
-										</div>
-									</div>
-									<div class="box-content" style="display: block;">
-										<div id="DataTables_Table_0_wrapper"
-											class="dataTables_wrapper" role="grid">
-											<div id="DataTables_Table_0_wrapper"
-												class="dataTables_wrapper" role="grid">
-												<div id="DataTables_Table_0_wrapper"
-													class="dataTables_wrapper" role="grid">
-													<div id="DataTables_Table_0_wrapper"
-														class="dataTables_wrapper" role="grid">
-														<div id="DataTables_Table_0_wrapper"
-															class="dataTables_wrapper" role="grid">
-															<table table=""
-																aria-describedby="DataTables_Table_0_info"
-																id="DataTables_Table_0"
-																class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
-																<thead>
-																	<tr role="row">
-																		<th class="sorting_asc" role="columnheader"
-																			tabindex="0" aria-controls="DataTables_Table_0"
-																			rowspan="1" colspan="1" style="width: 201px;"
-																			aria-sort="ascending"
-																			aria-label="Code: activate to sort column descending">Code</th>
-																		<th class="sorting" role="columnheader" tabindex="0"
-																			aria-controls="DataTables_Table_0" rowspan="1"
-																			colspan="1" style="width: 267px;"
-																			aria-label="Name: activate to sort column ascending">Name</th>
-																		<th class="sorting" role="columnheader" tabindex="0"
-																			aria-controls="DataTables_Table_0" rowspan="1"
-																			colspan="1" style="width: 80px;"
-																			aria-label="Name: activate to sort column ascending">Major</th>
-																	</tr>
-																</thead>
-
-																<tbody role="alert" aria-live="polite"
-																	aria-relevant="all">
-																	<%
-																		// Year 4
-																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																					+ yearOnBEStr4 + "'";
-																			rec = stmt.executeQuery(sql);
-																			while ((rec != null) && (rec.next())) {
-																	%>
-																	<tr>
-																		<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
-																		<td class="center"><%=rec.getString("courseName")%></td>
-																		<td class="center"><%=rec.getString("major")%></td>
-																	</tr>
-																	<%
-																		}
-																	%>
-
-
-																</tbody>
-															</table>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-							<!--/span-->
-						</div>
 					</div>
 				</div>
 
 
-				<%
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						out.println(e.getMessage());
-						e.printStackTrace();
-					}
 
-					try {
-						if (stmt != null) {
-							stmt.close();
-							con.close();
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						out.println(e.getMessage());
-						e.printStackTrace();
-					}
-				%>
 
 
 				<!-- content ends -->
@@ -1378,6 +934,38 @@
 		<div
 			style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 	</div>
+	<div id="cboxOverlay" style="display: none;"></div>
+	<div id="colorbox" class="" role="dialog" tabindex="-1"
+		style="display: none;">
+		<div id="cboxWrapper">
+			<div>
+				<div id="cboxTopLeft" style="float: left;"></div>
+				<div id="cboxTopCenter" style="float: left;"></div>
+				<div id="cboxTopRight" style="float: left;"></div>
+			</div>
+			<div style="clear: left;">
+				<div id="cboxMiddleLeft" style="float: left;"></div>
+				<div id="cboxContent" style="float: left;">
+					<div id="cboxTitle" style="float: left;"></div>
+					<div id="cboxCurrent" style="float: left;"></div>
+					<button type="button" id="cboxPrevious"></button>
+					<button type="button" id="cboxNext"></button>
+					<button id="cboxSlideshow"></button>
+					<div id="cboxLoadingOverlay" style="float: left;"></div>
+					<div id="cboxLoadingGraphic" style="float: left;"></div>
+				</div>
+				<div id="cboxMiddleRight" style="float: left;"></div>
+			</div>
+			<div style="clear: left;">
+				<div id="cboxBottomLeft" style="float: left;"></div>
+				<div id="cboxBottomCenter" style="float: left;"></div>
+				<div id="cboxBottomRight" style="float: left;"></div>
+			</div>
+		</div>
+		<div
+			style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
+	</div>
+
 	<div id="cboxOverlay" style="display: none;"></div>
 	<div id="colorbox" class="" role="dialog" tabindex="-1"
 		style="display: none;">
