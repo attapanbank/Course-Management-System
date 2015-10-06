@@ -3,6 +3,9 @@
 
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.io.*,java.util.Locale"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <%
@@ -165,13 +168,39 @@
 				</div>
 
 
+<%         // Check exam survey open 
+			stmt = con.createStatement();
+			String checkExamSurveyOpen = "SELECT * FROM cms.examination_checksurvey where checksurvey = 'ON' ORDER BY year  ;";
+			ResultSet rsCheckOpen = stmt.executeQuery(checkExamSurveyOpen);
+			
+			String checkOn = null ;
+			String year = null ;
+			String semester = null ;
+			
+			
+			while(rsCheckOpen.next()){
+				checkOn = rsCheckOpen.getString("checksurvey");
+				year = rsCheckOpen.getString("year");
+				semester = rsCheckOpen.getString("semester"); 
+						
+				
+			}
+
+			
+			if(checkOn!=null){
+			
+			if(checkOn.equals("ON")){
+				
+%>
+
+
 
 				<div class="row">
 					<div class="box col-md-12">
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-star-empty"></i> Examination
+									<i class="glyphicon glyphicon-star-empty"></i> Examination Year <%=year %> Term <%=semester %>
 								</h2>
 
 								<div class="box-icon">
@@ -187,8 +216,7 @@
 									<%
 										String examCourse = null;
 										stmt = con.createStatement();
-										String QueryStringExamDb = "SELECT * FROM cms.examsurvey where userID = '"
-												+ strUserID + "'";
+										String QueryStringExamDb = "SELECT * FROM cms.examsurvey ";
 										ResultSet rsOut = stmt.executeQuery(QueryStringExamDb);
 
 										while (rsOut.next()) {
@@ -201,12 +229,12 @@
 										stmt = con.createStatement();
 										String QueryStringExam = "SELECT * FROM cms.section inner join cms.candidate inner join cms.currentcourse inner join cms.course where userID = '"
 												+ strUserID
-												+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '2556' and currentcourse.semester = '1'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect';";
+												+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+year+"' and currentcourse.semester = '"+semester+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect';";
 										ResultSet rsExam = stmt.executeQuery(QueryStringExam);
 										String sCosCode = null;
 										String sCosName = null;
-										String year = "2556";
-										String semester = "1";
+										//String year = "2556";
+										//String semester = "1";
 									%>
 
 
@@ -253,7 +281,16 @@
 													value="<%=sCosName%>">
 
 												</td>
-												<td>Teacher Assistance</td>
+												<td><%// TO Get teacher assistance
+												stmt = con.createStatement();
+												String sql = "SELECT * FROM cms.candidate  inner join user inner join currentcourse inner join section on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"+year+"' and currentcourse.semester ='"+semester+"' and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;" ;
+											ResultSet rsta = stmt.executeQuery(sql);
+												// Check form db who is teacher assistance.
+												// Loop only teacher assisstance.
+											while(rsta.next()){
+													String courseTA = rsta.getString("currentcourse.courseCode");
+													if(courseTA.equals(sCosCode)){
+												out.println( " - Ajarn "+rsta.getString("user.firstname")+" "+ rsta.getString("user.lastname")+"<br>");}} %></td>
 
 												<td>
 													<%
@@ -296,6 +333,21 @@
 						</div>
 					</div>
 				</div>
+				
+				
+				<%}else if (checkOn.equals("OFF")){%>
+					
+					<div class="alert alert-info">
+
+ A Course Examination Survey year <%=year%> term <%=semester %> has been already closed.
+										                </div>
+			<% 	}else{%>
+					<div class="alert alert-info">A Course Examination Survey has been already closed.</div>
+				<% }}else{ %>
+				
+				<div class="alert alert-info">A Course Examination Survey is not open.</div>
+				
+				<% }%>
 				<script type="text/javascript">
 					var win = null;
 
@@ -312,12 +364,7 @@
 				</script>
 
 
-				<%
-					stmt = con.createStatement();
-					String qeString = "SELECT * FROM examsurvey INNER JOIN course  WHERE examsurvey.courseCode = course.courseCode AND examsurvey.userID = '"
-							+ strUserID + "' ;";
-					ResultSet rsExamResult = stmt.executeQuery(qeString);
-				%>
+				
 
 				<div class="row">
 					<div class="box col-md-12">
@@ -328,12 +375,11 @@
 								</h2>
 
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+									<a href="#settingforexaminationteacher" class="btn btn-setting btn-round btn-default" data-toggle="modal"><i
+										class="glyphicon glyphicon-cog"></i></a> 
+										<a href="#"
 										class="btn btn-minimize btn-round btn-default"><i
-										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-										class="btn btn-close btn-round btn-default"><i
-										class="glyphicon glyphicon-remove"></i></a>
+										class="glyphicon glyphicon-chevron-up"></i></a> 
 								</div>
 							</div>
 							<div class="box-content">
@@ -354,8 +400,119 @@
 
 											</tr>
 										</thead>
+<%
+												String strdateterm1_1 = "";
+												String strdateterm1_2 = "";
+												String strdateterm2_1 = "";
+												String strdateterm2_2 = "";
 
+												String academicyear = null;
+												String academicterm = null;
+
+												if (null == (String) session.getAttribute("ExaminationYear")) {
+
+													Date td = new Date();
+													String strtd = new String("");
+													SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+													SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+															new Locale("th"));
+													strtd = format.format(td);
+													Date today = format.parse(strtd);
+													//System.out.println(today);
+
+													/* String[] datetd = strtd.split("-", 3);
+													int ydatetd = Integer.parseInt(datetd[0]);
+													int mdatetd = Integer.parseInt(datetd[1]);
+													int ddatetd = Integer.parseInt(datetd[2]); */
+
+													stmt = con.createStatement();
+													String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+													ResultSet rs = stmt.executeQuery(QueryString);
+													if (rs.next()) {
+														strdateterm1_1 = rs.getString("dateterm1_1");
+														strdateterm1_2 = rs.getString("dateterm1_2");
+														strdateterm2_1 = rs.getString("dateterm2_1");
+														strdateterm2_2 = rs.getString("dateterm2_2");
+
+														Date dateterm1_1 = format2.parse(strdateterm1_1);
+														Date dateterm1_2 = format2.parse(strdateterm1_2);
+														Date dateterm2_1 = format2.parse(strdateterm2_1);
+														Date dateterm2_2 = format2.parse(strdateterm2_2);
+
+														String[] term1_1 = strdateterm1_1.split("-", 3);
+														int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+														int mterm1_1 = Integer.parseInt(term1_1[1]);
+														int dterm1_1 = Integer.parseInt(term1_1[2]);
+
+														int intacademicyear = yterm1_1;
+														academicyear = Integer.toString(intacademicyear);
+
+														/* System.out.println(dateterm1_1);
+														System.out.println(dateterm1_2);
+														System.out.println(dateterm2_1);
+														System.out.println(dateterm2_2); */
+
+														if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																&& (today.after(dateterm1_1) || today
+																		.equals(dateterm1_1))) {
+															academicterm = "1";
+														} else if ((today.before(dateterm2_2) || today
+																.equals(dateterm2_2))
+																&& (today.after(dateterm2_1) || today
+																		.equals(dateterm2_1))) {
+															academicterm = "2";
+														} else {
+															academicyear = "";
+															academicterm = "";
+															System.out.println("None");
+														}
+													}
+
+													session.setAttribute("academicyear", academicyear);
+													session.setAttribute("academicterm", academicterm);
+											%>
+											<p>
+												<b><i>Year : <%=academicyear%> Term : <%=academicterm%>
+												</i></b>
+											</p>
+
+											<%
+												} else {
+											%>
+
+											<p>
+												<b><i>Year : <%=(String) session.getAttribute("ExaminationYear")%>
+														Term : <%=(String) session.getAttribute("ExaminationTerm")%></i></b>
+											</p>
+
+											<%
+												}
+											%>
 										<%
+										
+										String Syear = "";
+										String Sterm = "";
+										if (null == (String) session.getAttribute("ExaminationYear")) {
+											Syear = (String) session.getAttribute("academicyear");
+											Sterm = (String) session.getAttribute("academicterm");
+										} else if (null != (String) session.getAttribute("ExaminationYear")) {
+											Syear = (String) session.getAttribute("ExaminationYear");
+											Sterm = (String) session.getAttribute("ExaminationTerm");
+										} else {
+											Syear = null;
+											Sterm = null;
+										}
+									%>
+									
+									<%	
+										if(year.equals(Syear) && Sterm.equals(semester)){
+											%>
+										
+										<%
+										
+										stmt = con.createStatement();
+										String qeString = "SELECT * FROM examsurvey INNER JOIN course  WHERE examsurvey.courseCode = course.courseCode AND examsurvey.year = '"+Syear+"' and examsurvey.semester = '"+Sterm+"' ;";
+										ResultSet rsExamResult = stmt.executeQuery(qeString);
 											String midType = null;
 											String finalType = null;
 											String reasonMid = null;
@@ -383,26 +540,16 @@
 
 
 												<td>
-													<%
-														stmt = con.createStatement();
-															String sql = "SELECT * FROM cms.user INNER JOIN course_survey INNER JOIN examsurvey WHERE usertype = 'Teacher Assistance' AND course_survey.userID = user.userID AND examsurvey.userID = '"
-																	+ strUserID
-																	+ "' AND examsurvey.examSurveyID ='"
-																	+ examID + "';";
-															ResultSet rsta = stmt.executeQuery(sql);
-
-															while (rsta.next()) {
-																String courseTA = rsta
-																		.getString("course_survey.courseCode");
-																if (courseTA.equals(courseCode)
-																		&& rsta.getString("user.userID").equals(
-																				rsta.getString("course_survey.userID"))) {
-																	out.println("- " + rsta.getString("user.firstname")
-																			+ " " + rsta.getString("user.lastname")
-																			+ "<br>");
-																}
-															}
-													%>
+													<%// TO Get teacher assistance
+												stmt = con.createStatement();
+												String sql = "SELECT * FROM cms.candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"+Syear+"' and currentcourse.semester ='"+Sterm+"' and currentcourse.courseCode = examsurvey.courseCode and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;" ;
+											ResultSet rsta = stmt.executeQuery(sql);
+												// Check form db who is teacher assistance.
+												// Loop only teacher assisstance.
+											while(rsta.next()){
+													String courseTA = rsta.getString("currentcourse.courseCode");
+													if(courseTA.equals(courseCode)){
+												out.println( " - Ajarn "+rsta.getString("user.firstname")+" "+ rsta.getString("user.lastname")+"<br>");}} %>
 												</td>
 												<%
 													midType = rsExamResult.getString("midtermType");
@@ -492,8 +639,146 @@
 											</tr>
 
 										</tbody>
-										<%
-											}
+									
+									<% }%>
+											
+										<% }else{%>
+											
+											<%
+										
+										stmt = con.createStatement();
+										String qeString = "SELECT * FROM examsurvey INNER JOIN course  WHERE examsurvey.courseCode = course.courseCode  AND examsurvey.year = '"+Syear+"' and examsurvey.semester = '"+Sterm+"' ;";
+										ResultSet rsExamResult = stmt.executeQuery(qeString);
+											String midType = null;
+											String finalType = null;
+											String reasonMid = null;
+											String reasonFinal = null;
+											String courseCode = null;
+											String userType = null;
+											String examID = null;
+
+											while (rsExamResult.next()) {
+										%>
+										<tbody>
+											<tr>
+												<td>
+													<%
+														examID = rsExamResult.getString("examsurvey.examSurveyID");
+															courseCode = rsExamResult.getString("course.courseCode");
+															out.print(courseCode);
+													%>
+												</td>
+												<td>
+													<%
+														out.print(rsExamResult.getString("course.courseName"));
+													%>
+												</td>
+
+
+												<td>
+													<%// TO Get teacher assistance
+												stmt = con.createStatement();
+												String sql = "SELECT * FROM cms.candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"+Syear+"' and currentcourse.semester ='"+Sterm+"' and currentcourse.courseCode = examsurvey.courseCode and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;" ;
+											ResultSet rsta = stmt.executeQuery(sql);
+												// Check form db who is teacher assistance.
+												// Loop only teacher assisstance.
+											while(rsta.next()){
+													String courseTA = rsta.getString("currentcourse.courseCode");
+													if(courseTA.equals(courseCode)){
+												out.println( " - Ajarn "+rsta.getString("user.firstname")+" "+ rsta.getString("user.lastname")+"<br>");}} %>
+												</td>
+												<%
+													midType = rsExamResult.getString("midtermType");
+														reasonMid = rsExamResult.getString("reasonMid");
+														if (midType != null) {
+												%>
+
+												<%
+													if (midType.equals("Not have")) {
+												%>
+
+												<td>
+													<%
+														out.print("No exam : Reason : " + reasonMid);
+													%>
+												</td>
+												<%
+													} else if (midType.equals("MD")) {
+												%>
+												<td>Multiple choice , Writting</td>
+												<%
+													} else {
+												%>
+
+												<%
+													if (midType.equals("Wriiting")) {
+												%>
+												<td>Wriiting</td>
+												<%
+													} else if (midType.equals("Multiple Choice")) {
+												%>
+												<td>Multiple Choice</td>
+												<%
+													} else if (midType.equals("Off Schedule")) {
+												%>
+												<td>Off Schedule</td>
+												<%
+													}
+															}
+														}
+												%>
+
+
+
+												<%
+													finalType = rsExamResult.getString("finalType");
+														reasonFinal = rsExamResult.getString("reasonFinal");
+														if (finalType != null) {
+												%>
+
+												<%
+													if (finalType.equals("Not have")) {
+												%>
+
+												<td>
+													<%
+														out.print("<b> No exam : Reason :</b> " + reasonFinal);
+													%>
+												</td>
+												<%
+													} else if (finalType.equals("MD")) {
+												%>
+												<td>Multiple choice , Writting</td>
+												<%
+													} else {
+												%>
+
+												<%
+													if (finalType.equals("Wriiting")) {
+												%>
+												<td>Wriiting</td>
+												<%
+													} else if (finalType.equals("Multiple Choice")) {
+												%>
+												<td>Multiple Choice</td>
+												<%
+													} else if (finalType.equals("Off Schedule")) {
+												%>
+												<td>Off Schedule</td>
+												<%
+													}
+															}
+														}
+												%>
+
+
+											</tr>
+
+										</tbody>
+									
+									<% }%>
+												
+										<%	}
 										%>
 									</table>
 								</div>
@@ -514,60 +799,52 @@
 
 			<hr>
 
-			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true">
-
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">Ã</button>
-							<h3>à¸£à¸²à¸¢à¸¥à¸°à¹à¸­à¸µà¸¢à¸</h3>
-						</div>
-						<div class="modal-body">
-							<!--à¹à¸à¹à¹à¸à¸à¸£à¸à¸à¸µà¹-->
-							<table>
-								<tr>
-									<td><p>à¸£à¸«à¸±à¸ªà¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
-									<td><p>1302305</p></td>
-								</tr>
-								<tr>
-									<td><p>à¸à¸·à¹à¸­à¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
-									<td><p>Network Programing</p></td>
-								</tr>
-								<tr>
-									<td><p>à¸«à¸à¹à¸§à¸¢à¸à¸´à¸:</p></td>
-									<td><p>3(2-2-5)</p></td>
-								</tr>
-								<tr>
-									<td><p>Section:</p></td>
-									<td><select>
-											<option>Section 01</option>
-											<option>Section 02</option>
-											<option>Section 03</option>
-											<option>Section 04</option>
-									</select></td>
-								</tr>
-								<tr>
-									<td><p>à¸à¸±à¸à¸¨à¸¶à¸à¸©à¸²à¸ªà¸²à¸à¸²à¸§à¸´à¸à¸²:</p></td>
-									<td><p>CS57</p></td>
-								</tr>
-								<tr>
-									<td><p>Lecture:</p></td>
-									<td><p>2 hour/lec</p></td>
-								</tr>
-								<tr>
-									<td><p>Lab:</p></td>
-									<td><p>2 hour/lab</p></td>
-								</tr>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-							<a href="#" class="btn btn-primary" data-dismiss="modal">Select</a>
+			<div class="modal fade" id="settingforexaminationteacher" tabindex="-1"
+					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">×</button>
+								<h3>Setting Examination Year</h3>
+							</div>
+							<div class="modal-body">
+								<form method="post"
+									action="Teacher_Examination_SetYearSemester.jsp"
+									role="setyeartermform" id="setyeartermform">
+									<label for="Year">Year</label> <select id="examinationyear"
+										name="examinationyear">
+										<script>
+											var myDate = new Date();
+											var year = myDate.getFullYear() + 543;
+											for (var i = year + 1; i > 2540; i--) {
+												document
+														.write('<option value="'+i+'">'
+																+ i
+																+ '</option>');
+											}
+										</script>
+									</select> <label for="Term">Term</label> <select id="examinationterm"
+										name="examinationterm">
+										<option value="1">1</option>
+										<option value="2">2</option>
+									</select> <br> <a href="#" class="btn btn-default"
+										data-dismiss="modal">Close</a> <input type="button"
+										class="btn btn-primary" onClick="sendexaminationsetting()"
+										value="Submit" />
+								</form>
+							</div>
+							<div class="modal-footer"></div>
 						</div>
 					</div>
 				</div>
-			</div>
+				
+				<script type="text/javascript">
+					function sendexaminationsetting() {
+						document.getElementById("setyeartermform")
+								.submit();
+					}
+					
+				</script>
 
 			<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">

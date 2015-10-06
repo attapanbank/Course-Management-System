@@ -1,47 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	import="java.sql.*" pageEncoding="utf-8"%>
-
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.io.*,java.util.Locale"%>
 
 <%
-	// Validate USER
-	String sUserID = null;
-	String sUserType = null;
-	String sFirstname = null;
-	String sLastname = null;
-	String sUserName = null;
-	String sPassword = null;
-	String sMajor = null;
-	sUserID = (String) session.getAttribute("sUserID");
-	sUserType = (String) session.getAttribute("sUserType");
-	sFirstname = (String) session.getAttribute("sFirstname");
-	sLastname = (String) session.getAttribute("sLastname");
-	sUserName = (String) session.getAttribute("sUserName");
-	sPassword = (String) session.getAttribute("sPassword");
-	sMajor = (String) session.getAttribute("sMajor");
-	if (sUserID == null) {
-		response.sendRedirect("Main_Login.jsp");
-	}
-%>
-
-<%
-	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
-	Properties props = new Properties();
-	props.load(stream);
-
-	String readurl = props.getProperty("url");
-	String readdriver = props.getProperty("driver");
-	String readuser = props.getProperty("user");
-	String readpass = props.getProperty("password");
-
 	Statement stmt;
-	Connection con;
-	String url = readurl;
-
-	Class.forName(readdriver);
-	con = DriverManager.getConnection(url, readuser, readpass);
+Connection con;
+InputStream stream = application
+		.getResourceAsStream("/fileUpload/db.properties");
+		Properties props = new Properties();
+		props.load(stream);
+String url = props.getProperty("driver");
+String dbUrl = props.getProperty("url");
+String dbUser = props.getProperty("user");
+String dbPassword = props.getProperty("password");
+con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -91,9 +67,6 @@
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
 
-<script src="dist/sweetalert-dev.js"></script>
-<link rel="stylesheet" href="dist/sweetalert.css">
-
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
 
@@ -126,7 +99,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="Main_Logout.jsp">Logout</a></li>
+					<li><a href="login.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -149,7 +122,7 @@
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
 							<li><a class="ajax-link" href="Admin_News.jsp"><i
-									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
+									class="glyphicon glyphicon-home"></i><span> Dashboard</span></a></li>
 							<li class="nav-header hidden-md">Management</li>
 							<li><a class="ajax-link" href="Admin_Candidate.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
@@ -170,9 +143,6 @@
 							<li><a class="ajax-link" href="Admin_Report.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Report</span></a></li>
-							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Setting</span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -245,13 +215,13 @@
 
 											<%
 												} else {
-													stmt = con.createStatement();
-													String QueryString = "SELECT * FROM examination_checksurvey where year = "
-															+ (String) session.getAttribute("ExamSurveyYear")
-															+ " and semester = "
-															+ (String) session.getAttribute("ExamSurveyTerm");
-													ResultSet rs = stmt.executeQuery(QueryString);
-													if (rs.next()) {
+																						stmt = con.createStatement();
+																						String QueryString = "SELECT * FROM examination_checksurvey where year = "
+																								+ (String) session.getAttribute("ExamSurveyYear")
+																								+ " and semester = "
+																								+ (String) session.getAttribute("ExamSurveyTerm");
+																						ResultSet rs = stmt.executeQuery(QueryString);
+																						if (rs.next()) {
 											%>
 											<input type="hidden" name="checksurveyID" id="checksurveyID"
 												value="<%=rs
@@ -265,7 +235,7 @@
 											<%
 												}
 
-												}
+																					}
 											%>
 										</p>
 									</div>
@@ -299,6 +269,7 @@
 				</div>
 				<!--/row-->
 
+
 				<div class="row">
 					<div class="box col-md-12">
 						<div class="box-inner">
@@ -307,7 +278,8 @@
 									<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;Examination
 								</h2>
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"
+									<a href="#settingforexamination"
+										class="btn btn-setting btn-round btn-default"
 										data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
 									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
@@ -318,12 +290,109 @@
 							<div class="box-content">
 								<table
 									class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+
+
+
+
+									<%
+										String strdateterm1_1 = "";
+																			String strdateterm1_2 = "";
+																			String strdateterm2_1 = "";
+																			String strdateterm2_2 = "";
+
+																			String academicyear = null;
+																			String academicterm = null;
+
+																			if (null == (String) session.getAttribute("ExaminationYear")) {
+
+																				Date td = new Date();
+																				String strtd = new String("");
+																				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+																				SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+																						new Locale("th"));
+																				strtd = format.format(td);
+																				Date today = format.parse(strtd);
+																				//System.out.println(today);
+
+																				/* String[] datetd = strtd.split("-", 3);
+																				int ydatetd = Integer.parseInt(datetd[0]);
+																				int mdatetd = Integer.parseInt(datetd[1]);
+																				int ddatetd = Integer.parseInt(datetd[2]); */
+
+																				stmt = con.createStatement();
+																				String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+																				ResultSet rs = stmt.executeQuery(QueryString);
+																				if (rs.next()) {
+																					strdateterm1_1 = rs.getString("dateterm1_1");
+																					strdateterm1_2 = rs.getString("dateterm1_2");
+																					strdateterm2_1 = rs.getString("dateterm2_1");
+																					strdateterm2_2 = rs.getString("dateterm2_2");
+
+																					Date dateterm1_1 = format2.parse(strdateterm1_1);
+																					Date dateterm1_2 = format2.parse(strdateterm1_2);
+																					Date dateterm2_1 = format2.parse(strdateterm2_1);
+																					Date dateterm2_2 = format2.parse(strdateterm2_2);
+
+																					String[] term1_1 = strdateterm1_1.split("-", 3);
+																					int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+																					int mterm1_1 = Integer.parseInt(term1_1[1]);
+																					int dterm1_1 = Integer.parseInt(term1_1[2]);
+
+																					int intacademicyear = yterm1_1;
+																					academicyear = Integer.toString(intacademicyear);
+
+																					/* System.out.println(dateterm1_1);
+																					System.out.println(dateterm1_2);
+																					System.out.println(dateterm2_1);
+																					System.out.println(dateterm2_2); */
+
+																					if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																							&& (today.after(dateterm1_1) || today
+																									.equals(dateterm1_1))) {
+																						academicterm = "1";
+																					} else if ((today.before(dateterm2_2) || today
+																							.equals(dateterm2_2))
+																							&& (today.after(dateterm2_1) || today
+																									.equals(dateterm2_1))) {
+																						academicterm = "2";
+																					} else {
+																						academicyear = "";
+																						academicterm = "";
+																						System.out.println("None");
+																					}
+																				}
+
+																				session.setAttribute("academicyear", academicyear);
+																				session.setAttribute("academicterm", academicterm);
+									%>
+									<p>
+										<b><i>Year : <%=academicyear%> Term : <%=academicterm%>
+										</i></b>
+									</p>
+
+									<%
+										} else {
+									%>
+
+									<p>
+										<b><i>Year : <%=(String) session.getAttribute("ExaminationYear")%>
+												Term : <%=(String) session.getAttribute("ExaminationTerm")%></i></b>
+									</p>
+
+									<%
+										}
+									%>
+
+
+
+
+
 									<thead>
 										<tr>
 											<th>Course Code</th>
 											<th>Course Name</th>
-											<th>Teacher</th>
-											<th>Teaching assistance</th>
+											<th>Credit</th>
+											
 											<th>Midterm</th>
 											<td>Writting</td>
 											<td>Multiple Choice</td>
@@ -335,35 +404,227 @@
 											<th>Detail</th>
 										</tr>
 									</thead>
+
+									<%
+										String year = "";
+																String term = "";
+																if (null == (String) session.getAttribute("ExaminationYear")) {
+																	year = (String) session.getAttribute("academicyear");
+																	term = (String) session.getAttribute("academicterm");
+																} else if (null != (String) session.getAttribute("ExaminationYear")) {
+																	year = (String) session.getAttribute("ExaminationYear");
+																	term = (String) session.getAttribute("ExaminationTerm");
+																} else {
+																	year = null;
+																	term = null;
+																}
+												stmt = con.createStatement();
+												String qeString = "SELECT * FROM examsurvey inner join course inner join candidate inner join currentcourse inner join section where examsurvey.courseCode = course.courseCode and examsurvey.year = '"+year+"' and examsurvey.semester ='"+term+"'and examsurvey.courseCode = currentcourse.courseCode and section.currentcourseID = currentcourse.currentcourseID and section.sectionID = candidate.sectionID group by course.courseName;";
+												ResultSet rsExamResult = stmt.executeQuery(qeString);
+									%>
+
+									<%
+										// use for check type of exam
+																String midType = null;
+																	String finalType = null;
+																	String reasonMid = null;
+																	String reasonFinal = null;
+																	String courseCode = null ;
+																	String userType= null ;
+																 String examID = null ;
+
+																	while (rsExamResult.next()) {
+									%>
 									<tbody>
 										<tr>
-											<td>1</td>
-											<td>5531305080</td>
-											<td>Attapan</td>
-											<td>Aniroot</td>
+											<td>
+												<%
+													examID = rsExamResult.getString("examsurvey.examSurveyID");
+																						courseCode = rsExamResult.getString("course.courseCode");
+																						out.print(courseCode);
+												%>
+											</td>
+											<td>
+												<%
+													out.print(rsExamResult.getString("course.courseName"));
+												%>
+											</td>
+											<td>
+												<%
+													out.print(rsExamResult.getString("course.Credit"));
+												%>
+											</td>
+											
 
+											
+											<%
+												midType = rsExamResult.getString("midtermType");
+
+																						reasonMid = rsExamResult.getString("reasonMid");
+
+																						if (midType != null) {
+											%>
+
+											<%
+												// Check midterm type
+																			// If midterm is "not have" show reason on table 3 colspan
+																			if(midType.equals("Not have")){
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<td colspan="3">
+												<%
+													out.print(reasonMid);
+												%>
+											</td>
+											<%
+												}else if(midType.equals("MD")){
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}else{
+											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
-
+											<%
+												if (midType.equals("Wriiting")) {
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<%
+												} else {
+											%>
 											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}if (midType.equals("Multiple Choice")) {
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<%
+												} else {
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}if (midType.equals("Off Schedule")) {
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<%
+												} else {
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}
+											%>
+											<%
+												}
+											%>
 
+											<%
+												} else  {
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}
+											%>
+
+
+
+											<%
+												finalType = rsExamResult.getString("finalType");
+
+																						reasonFinal = rsExamResult.getString("reasonFinal");
+
+																						if (finalType != null) {
+											%>
+
+											<%
+												if(finalType.equals("Not have")){
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<td colspan="3">
+												<%
+													out.print(reasonFinal);
+												%>
+											</td>
+											<%
+												}else if(finalType.equals("MD")){
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}else{
+											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
-
+											<%
+												if (finalType.equals("Wriiting")) {
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<%
+												} else {
+											%>
 											<td><input type="checkbox" value="" disabled></td>
-											<td><button onclick="showdetailexam()"
-													class="btn btn btn-success btn-setting">
+											<%
+												}if (finalType.equals("Multiple Choice")) {
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<%
+												} else {
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}if (finalType.equals("Off Schedule")) {
+											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<%
+												} else {
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}
+											%>
+											<%
+												}
+											%>
+
+											<%
+												} else  {
+											%>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}
+											%>
+
+
+
+
+
+											<td><a class="btn btn-success btn-setting"
+												href="Admin_Examination_View_Detail.jsp?examSurveyID=<%out.print(rsExamResult.getString("examsurvey.examSurveyID"));%>&&year=<%=year%>&&term=<%=term%>"
+												data-toggle="modal"
+												onClick="NewWindow(this.href,'name','800','600','yes');return false">
 													<i class="glyphicon glyphicon-zoom-in icon-white"></i> View
-												</button> </a></td>
+											</a></td>
 										</tr>
 
 									</tbody>
+									<%
+										}
+									%>
 								</table>
 							</div>
 						</div>
@@ -385,10 +646,18 @@
 			function sendexamsurveysetting() {
 				document.getElementById("setyeartermformexamsurvey").submit();
 			}
-			function showdetailexam() {
-				$(document).ready(function() {
-					$("#detailforexam").modal('show');
-				});
+		</script>
+
+		<script type="text/javascript">
+			var win = null;
+
+			function NewWindow(mypage, myname, w, h, scroll) {
+				LeftPosition = (screen.width) ? (screen.width - w) / 2 : 0;
+				TopPosition = (screen.height) ? (screen.height - h) / 2 : 0;
+				settings = 'height=' + h + ',width=' + w + ',top='
+						+ TopPosition + ',left=' + LeftPosition
+						+ ',scrollbars=' + scroll + ',resizable'
+				win = window.open(mypage, myname, settings)
 			}
 		</script>
 
@@ -422,7 +691,7 @@
 							</select> <br> <br>
 							<p>Table for all year and semester</p>
 							<table
-								class="table table-striped table-bordered bootstrap-datatable responsive">
+								class="table table-striped table-bordered bootstrap-datatable datatable responsive">
 								<thead>
 									<tr>
 										<th>Year</th>
@@ -433,9 +702,9 @@
 								<tbody>
 									<%
 										stmt = con.createStatement();
-										String QuerySurveyString = "SELECT * FROM examination_checksurvey";
-										ResultSet result = stmt.executeQuery(QuerySurveyString);
-										while (result.next()) {
+																	String QuerySurveyString = "SELECT * FROM examination_checksurvey";
+																	ResultSet result = stmt.executeQuery(QuerySurveyString);
+																	while (result.next()) {
 									%>
 									<tr>
 										<td>
@@ -451,7 +720,7 @@
 										<td class="center">
 											<%
 												out.print(result
-															.getString("examination_checksurvey.checksurvey"));
+																								.getString("examination_checksurvey.checksurvey"));
 											%>
 										</td>
 									</tr>
@@ -472,60 +741,58 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="detailforexam" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="settingforexamination" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>รายละเอียดเพิ่มเติม</h3>
+						<h3>Setting Examination Year</h3>
 					</div>
 					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>Credit</th>
-									<th>Major student</th>
-									<th>Number student</th>
-									<th>Lect</th>
-									<th>Lab</th>
-									<th>Note(Midterm)</th>
-									<th>Note(Final)</th>
-								</tr>
-
-							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td>David R</td>
-									<td>David R</td>
-									<td>David R</td>
-									<td>David R</td>
-									<td>David R</td>
-									<td>David R</td>
-								</tr>
-							</tbody>
-						</table>
+						<form method="post" action="Admin_Examination_SetYearSemester.jsp"
+							role="setyeartermform" id="setyeartermform">
+							<label for="Year">Year</label> <select id="examinationyear"
+								name="examinationyear">
+								<script>
+									var myDate = new Date();
+									var year = myDate.getFullYear() + 543;
+									for (var i = year + 1; i > 2540; i--) {
+										document.write('<option value="'+i+'">'
+												+ i + '</option>');
+									}
+								</script>
+							</select> <label for="Term">Term</label> <select id="examinationterm"
+								name="examinationterm">
+								<option value="1">1</option>
+								<option value="2">2</option>
+							</select> <br> <a href="#" class="btn btn-default"
+								data-dismiss="modal">Close</a> <input type="button"
+								class="btn btn-primary" onClick="sendexaminationsetting()"
+								value="Submit" />
+						</form>
 					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
-					</div>
+					<div class="modal-footer"></div>
 				</div>
 			</div>
 		</div>
+
+		<script type="text/javascript">
+			function sendexaminationsetting() {
+				document.getElementById("setyeartermform").submit();
+			}
+		</script>
+
+		<footer class="row">
+		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
+			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
+			2014
+		</p>
+		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
+			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
+		</p>
+		</footer>
 	</div>
-	<footer class="row">
-	<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-		© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-		2014
-	</p>
-	<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-		Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-	</p>
-	</footer>
 	<!--/.fluid-container-->
 
 	<!-- external javascript -->
