@@ -59,7 +59,7 @@
 		String userAdminType = "Admin";
 		String userTeacherType = "Teacher";
 		String userTAType = "Teacher Assistance";
-		String userCoType = "Coordinator";
+		String userCoType = "Major Coordinator";
 
 		ResultSet rec = stmt.executeQuery(sql);
 		while (rec.next()) {
