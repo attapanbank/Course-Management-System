@@ -42,7 +42,12 @@
 
 	Class.forName(readdriver);
 	con = DriverManager.getConnection(url, readuser, readpass);
+
+	String coursecode = request.getParameter("coursecode");
+	String year = request.getParameter("year");
+	String term = request.getParameter("term");
 %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -61,7 +66,7 @@
         ===
     -->
 <meta charset="utf-8">
-<title>Report</title>
+<title>Candidate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description"
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
@@ -89,6 +94,7 @@
 <link href="css/jquery.iphone.toggle.css" rel="stylesheet">
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
 
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
@@ -100,210 +106,66 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
+
 </head>
-
 <body>
-	<!-- topbar starts -->
-	<div class="navbar navbar-default" role="navigation">
-		<div class="navbar-inner">
-			<button type="button" class="navbar-toggle pull-left animated flip">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="Admin_News.jsp"> <span>IT:CMS</span></a>
-			<!-- user dropdown starts -->
-			<div class="btn-group pull-right">
-				<button class="btn btn-default dropdown-toggle"
-					data-toggle="dropdown">
-					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> admin</span> <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
-					<li class="divider"></li>
-					<li><a href="Main_Logout.jsp">Logout</a></li>
-				</ul>
-			</div>
-			<!-- user dropdown ends -->
+	<%
+		stmt = con.createStatement();
+		String QueryCourse = "SELECT * FROM course WHERE courseCode = '"
+				+ coursecode + "';";
+		ResultSet rscourse = stmt.executeQuery(QueryCourse);
+		if (rscourse.next()) {
+			out.println("<div align=" + "center" + "><font size=" + 6 + ">"
+					+ rscourse.getString("course.courseCode") + "<br>"
+					+ rscourse.getString("course.courseName")
+					+ "</font></div>");
+		}
+	%>
+	<br>
+	<div align="center">
+		<form method="post" action="Admin_Candidate_SaveCourseCo.jsp"
+			id="form">
+			<table border="1">
+				<%
+					stmt = con.createStatement();
+					String Querycandidate = "SELECT candidate.userID, user.firstname, user.lastname FROM candidate INNER JOIN section ON candidate.sectionID = section.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN course ON course.courseCode = currentcourse.courseCode INNER JOIN user ON candidate.userID = user.userID WHERE course.courseCode = '"
+							+ coursecode
+							+ "' AND currentcourse.year = '"
+							+ year
+							+ "' AND currentcourse.semester = '"
+							+ term
+							+ "' AND user.usertype = 'Teacher' GROUP BY candidate.userID";
 
-			<!-- theme selector starts -->
-
-			<!-- theme selector ends -->
-
-		</div>
+					ResultSet rs = stmt.executeQuery(Querycandidate);
+					int count = 1;
+					while (rs.next()) {
+				%>
+				<tr>
+					<td>
+						<%
+							out.println(count);
+						%>
+					</td>
+					<td><div class="radio">
+							<label> <input type="radio" name="teacherid"
+								<%if (count == 1) {%> checked <%}%> id="teacherid"
+								value="<%=rs.getString("candidate.userID")%>"> <%=rs.getString("user.firstname")%>
+								<%=rs.getString("user.lastname")%>
+							</label> <input type="hidden" name="coursecode" value="<%=coursecode%>" />
+							<input type="hidden" name="year" value="<%=year%>" /> <input
+								type="hidden" name="term" value="<%=term%>" />
+						</div></td>
+				</tr>
+				<%
+					count++;
+					}
+				%>
+			</table>
+			<br>
+			<button class="btn btn-danger" onclick="window.close()">Close</button>
+			<input type="submit" class="btn btn-primary" value="Submit" />
+		</form>
 	</div>
-	<!-- topbar ends -->
-	<div class="ch-container">
-		<div class="row">
-
-			<!-- left menu starts -->
-			<div class="col-sm-2 col-lg-2">
-				<div class="sidebar-nav">
-					<div class="nav-canvas">
-						<div class="nav-sm nav nav-stacked"></div>
-						<ul style="" class="nav nav-pills nav-stacked main-menu">
-							<li class="nav-header">Main</li>
-							<li><a class="ajax-link" href="Admin_News.jsp"><i
-									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
-							<li class="nav-header hidden-md">Management</li>
-							<li><a class="ajax-link" href="Admin_Candidate.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Candidate</span></a></li>
-							<li><a class="ajax-link" href="Admin_CoursePlan.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Course Plan</span></a></li>
-							<li><a class="ajax-link" href="Admin_Examination.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Examination</span></a></li>
-							<li><a class="ajax-link" href="Admin_User.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										User</span></a></li>
-							<li><a class="ajax-link" href="Admin_History.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										History</span></a></li>
-							<li class="active"><a class="ajax-link"
-								href="Admin_Report.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Report</span></a></li>
-							<li><a class="ajax-link" href="Admin_Setting.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Setting</span></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!--/span-->
-			<!-- left menu ends -->
-
-			<div id="content" class="col-lg-10 col-sm-10">
-				<!-- content starts -->
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="Admin_News.jsp">Home</a></li>
-						<li><a href="Admin_Report.jsp">Report</a></li>
-					</ul>
-				</div>
-
-				<div class="row">
-					<div class="box col-md-6">
-						<div class="box-inner">
-							<div class="box-header well" data-original-title="">
-								<h2>
-									<i class="glyphicon glyphicon-book"></i> Generate Report
-									(Excel)
-								</h2>
-
-								<div class="box-icon">
-									<a href="#" class="btn btn-minimize btn-round btn-default"><i
-										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-										class="btn btn-close btn-round btn-default"><i
-										class="glyphicon glyphicon-remove"></i></a>
-								</div>
-							</div>
-							<div class="box-content" align="center">
-								<form method="post" action="Admin_Report_ExportExcel.jsp">
-									<label for="Year">Year</label> <select id="year" name="year">
-										<script>
-											var myDate = new Date();
-											var year = myDate.getFullYear() + 543;
-											for (var i = year + 1; i > 2540; i--) {
-												document
-														.write('<option value="'+i+'">'
-																+ i
-																+ '</option>');
-											}
-										</script>
-									</select> <label for="Term">Term</label> <select id="term" name="term">
-										<option value="1">1</option>
-										<option value="2">2</option>
-									</select> <br>
-
-									<div class="control-group">
-										<label class="control-label" for="selectError">Report
-											Type</label>
-
-										<div class="controls">
-											<select name="reporttype">
-												<option value="surveysortbyteacher">Report อาจารย์ที่เลือกสอนในแต่ละรายวิชา
-													(เรียงตามผู้สอน)</option>
-												<option value="surveysortbycourse">Report อาจารย์ที่เลือกสอนในแต่ละรายวิชา
-													(เรียงตามรายวิชา)</option>
-												<option value="candidate+workload">Report รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา +
-													Workload</option>
-												<option value="candidate+exam">Report รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา +
-													วิธีการสอบ</option>
-											</select>
-										</div>
-									</div>
-									<br> <input type="submit" class="btn btn-success" value="Save" /> 
-								</form>
-							</div>
-						</div>
-					</div>
-					<!--/span-->
-
-				</div>
-				<!--/row-->
-
-				<!-- content ends -->
-			</div>
-			<!--/#content.col-md-0-->
-		</div>
-		<!--/fluid-row-->
-
-		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>ประวัติการสอน</h3>
-					</div>
-					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>ปีการศึกษา</th>
-									<th>รหัสวิชา</th>
-									<th>รายวิชา</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>2557</td>
-									<td>1305080</td>
-									<td>Basic Information Technology</td>
-								</tr>
-								<tr>
-									<td>2558</td>
-									<td>1305076</td>
-									<td>Introduction Information Technology</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<footer class="row">
-		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
-		</p>
-		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-		</p>
-		</footer>
-	</div>
-	<!--/.fluid-container-->
 
 	<!-- external javascript -->
 
