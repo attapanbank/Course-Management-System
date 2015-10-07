@@ -455,11 +455,11 @@
 													}
 
 													stmt = con.createStatement();
-													String QueryString = "SELECT * FROM courseplan LEFT JOIN course ON course.courseCode = courseplan.courseCode LEFT JOIN course_survey ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.year = '"
+													String QueryString = "SELECT * FROM courseplan LEFT JOIN course ON course.courseCode = courseplan.courseCode WHERE courseplan.year = '"
 															+ year
 															+ "' AND courseplan.semester = '"
 															+ term
-															+ "' GROUP BY courseplan.courseCode;";
+															+ "' ORDER BY courseplan.courseCode;";
 													ResultSet rs = stmt.executeQuery(QueryString);
 
 													int count = 0;
@@ -875,9 +875,7 @@
 													Course (Candidate)
 												</h2>
 												<div class="box-icon">
-													<a href="#" class="btn btn-setting btn-round btn-default"><i
-														class="glyphicon glyphicon-cog"></i></a> <a href="#"
-														class="btn btn-minimize btn-round btn-default"><i
+													<a href="#" class="btn btn-minimize btn-round btn-default"><i
 														class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 														class="btn btn-close btn-round btn-default"><i
 														class="glyphicon glyphicon-remove"></i></a>
@@ -1028,406 +1026,558 @@
 								</div>
 								<!--/row-->
 
-								<!-- content ends -->
-							</div>
-							<!--/#content.col-md-0-->
-						</div>
-						<!--/fluid-row-->
+								<div class="row">
+									<div class="box col-md-12">
+										<div class="row">
+											<div class="box col-md-12">
+												<div class="box-inner">
+													<div class="box-header well" data-original-title="">
+														<h2>
+															<i class="glyphicon glyphicon-list-alt"></i>&nbsp;&nbsp;Select
+															Course Co-ordinator
+														</h2>
+														<div class="box-icon">
+															<a href="#"
+																class="btn btn-minimize btn-round btn-default"><i
+																class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
+																class="btn btn-close btn-round btn-default"><i
+																class="glyphicon glyphicon-remove"></i></a>
+														</div>
+													</div>
+													<div class="box-content">
+														<table
+															class="table table-striped table-bordered bootstrap-datatable datatable responsive">
 
-						<script type="text/javascript">
-							function sendnotcandidatesetting() {
-								document.getElementById("setnotcandidateform")
-										.submit();
-							}
-						</script>
+															<%
+																if (null == (String) session.getAttribute("NotCandidateYear")) {
+															%>
 
-						<hr>
-						<div class="modal fade" id="settingforworkload" tabindex="-1"
-							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal">×</button>
-										<h3>Settings</h3>
-									</div>
-									<div class="modal-body">
-										<p>Here settings can be configured...</p>
-									</div>
-									<div class="modal-footer">
-										<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-										<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-											changes</a>
-									</div>
-								</div>
-							</div>
-						</div>
+															<p>
+																<b><i>Year : <%=academicyear%> Term : <%=academicterm%></i></b>
+															</p>
+															<%
+																} else {
+															%>
 
-						<div class="modal fade" id="settingfornotcandidate" tabindex="-1"
-							role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal">×</button>
-										<h3>Setting List Course (Not Candidate)</h3>
-									</div>
-									<div class="modal-body">
-										<form method="post"
-											action="Admin_Candidate_SetYearSemester.jsp"
-											role="setnotcandidateform" id="setnotcandidateform">
-											<label for="Year">Year</label> <select id="notcandidateyear"
-												name="notcandidateyear">
-												<script>
-													var myDate = new Date();
-													var year = myDate
-															.getFullYear() + 543;
-													for (var i = year + 1; i > 2540; i--) {
-														document
-																.write('<option value="'+i+'">'
-																		+ i
-																		+ '</option>');
-													}
-												</script>
-											</select> <label for="Term">Term</label> <select id="notcandidateterm"
-												name="notcandidateterm">
-												<option value="1">1</option>
-												<option value="2">2</option>
-											</select> <br> <a href="#" class="btn btn-default"
-												data-dismiss="modal">Close</a> <input type="button"
-												class="btn btn-primary" onClick="sendnotcandidatesetting()"
-												value="Submit" />
-										</form>
-									</div>
-									<div class="modal-footer"></div>
-								</div>
-							</div>
-						</div>
+															<p>
+																<b><i>Year : <%=(String) session.getAttribute("NotCandidateYear")%>
+																		Term : <%=(String) session.getAttribute("NotCandidateTerm")%></i></b>
+															</p>
 
-						<footer class="row">
-						<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-							© <a href="http://usman.it" target="_blank">Muhammad Usman</a>
-							2012 - 2014
-						</p>
-						<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-							Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-						</p>
-						</footer>
-						<!--/.fluid-container-->
+															<%
+																}
+															%>
 
-						<!-- external javascript -->
+															<thead>
+																<tr>
+																	<th>Course Code</th>
+																	<th>Course Name</th>
+																	<th>Credit</th>
+																	<th>Actions</th>
+																</tr>
+															</thead>
+															<tbody>
+																<%
+																	stmt = con.createStatement();
+																	String QueryCurrentcourse = "SELECT * FROM currentcourse INNER JOIN course on currentcourse.courseCode = course.courseCode WHERE currentcourse.year = '"
+																			+ year + "' AND currentcourse.semester = '" + term + "'";
+																	ResultSet rscurrentcourse = stmt.executeQuery(QueryCurrentcourse);
+																	while (rscurrentcourse.next()) {
+																%>
+																<tr>
+																	<td>
+																		<%
+																			out.println(rscurrentcourse
+																						.getString("currentcourse.courseCode"));
+																		%>
+																	</td>
+																	<td>
+																		<%
+																			out.println(rscurrentcourse.getString("course.courseName"));
+																		%>
+																	</td>
+																	<td>
+																		<%
+																			out.println(rscurrentcourse.getString("course.credit"));
+																		%>
+																	</td>
+																	<td><a class="btn btn btn-success btn-setting"
+																		onClick="NewWindowforcoview(this.href,'name','800','300','yes');return false"
+																		href="Admin_Candidate_ViewCourseCo.jsp?year=<%=year%>&term=<%=term%>&coursecode=<%=rscurrentcourse.getString("currentcourse.courseCode")%>"
+																		data-toggle="modal"> <i
+																			class="glyphicon glyphicon-zoom-in icon-white"></i>
+																			View
+																	</a> <a class="btn btn-success"
+																		onClick="NewWindowforcoselect(this.href,'name','600','400','yes');return false"
+																		href="Admin_Candidate_SelectCourseCo.jsp?year=<%=year%>&term=<%=term%>&coursecode=<%=rscurrentcourse.getString("currentcourse.courseCode")%>">
+																			<i class="glyphicon glyphicon-user icon-white"></i>
+																			Select
+																	</a></td>
+																</tr>
+																<%
+																	}
+																%>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+											<!--/span-->
 
-						<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+											<script type="text/javascript">
+												var win = null;
 
-						<!-- library for cookie management -->
-						<script src="js/jquery.cookie.js"></script>
-						<!-- calender plugin -->
-						<script src="bower_components/moment/min/moment.min.js"></script>
-						<script
-							src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-						<!-- data table plugin -->
-						<script src="js/jquery.dataTables.min.js"></script>
+												function NewWindowforcoselect(
+														mypage, myname, w, h,
+														scroll) {
+													LeftPosition = (screen.width) ? (screen.width - w) / 2
+															: 0;
+													TopPosition = (screen.height) ? (screen.height - h) / 2
+															: 0;
+													settings = 'height=' + h
+															+ ',width=' + w
+															+ ',top='
+															+ TopPosition
+															+ ',left='
+															+ LeftPosition
+															+ ',scrollbars='
+															+ scroll
+															+ ',resizable'
+													win = window.open(mypage,
+															myname, settings)
+												}
+											</script>
 
-						<!-- select or dropdown enhancer -->
-						<script src="bower_components/chosen/chosen.jquery.min.js"></script>
-						<!-- plugin for gallery image view -->
-						<script src="bower_components/colorbox/jquery.colorbox-min.js"></script>
-						<!-- notification plugin -->
-						<script src="js/jquery.noty.js"></script>
-						<!-- library for making tables responsive -->
-						<script
-							src="bower_components/responsive-tables/responsive-tables.js"></script>
-						<!-- tour plugin -->
-						<script
-							src="bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
-						<!-- star rating plugin -->
-						<script src="js/jquery.raty.min.js"></script>
-						<!-- for iOS style toggle switch -->
-						<script src="js/jquery.iphone.toggle.js"></script>
-						<!-- autogrowing textarea plugin -->
-						<script src="js/jquery.autogrow-textarea.js"></script>
-						<!-- multiple file upload plugin -->
-						<script src="js/jquery.uploadify-3.1.min.js"></script>
-						<!-- history.js for cross-browser state change on ajax -->
-						<script src="js/jquery.history.js"></script>
-						<!-- application script for Charisma demo -->
-						<script src="js/charisma.js"></script>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+											<script type="text/javascript">
+												var win = null;
+
+												function NewWindowforcoview(
+														mypage, myname, w, h,
+														scroll) {
+													LeftPosition = (screen.width) ? (screen.width - w) / 2
+															: 0;
+													TopPosition = (screen.height) ? (screen.height - h) / 2
+															: 0;
+													settings = 'height=' + h
+															+ ',width=' + w
+															+ ',top='
+															+ TopPosition
+															+ ',left='
+															+ LeftPosition
+															+ ',scrollbars='
+															+ scroll
+															+ ',resizable'
+													win = window.open(mypage,
+															myname, settings)
+												}
+											</script>
+
+										</div>
+										<!--/row-->
+
+										<!-- content ends -->
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
+									<!--/#content.col-md-0-->
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+								<!--/fluid-row-->
+
+								<script type="text/javascript">
+									function sendnotcandidatesetting() {
+										document.getElementById(
+												"setnotcandidateform").submit();
+									}
+								</script>
+
+								<hr>
+								<div class="modal fade" id="settingforworkload" tabindex="-1"
+									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">×</button>
+												<h3>Settings</h3>
+											</div>
+											<div class="modal-body">
+												<p>Here settings can be configured...</p>
+											</div>
+											<div class="modal-footer">
+												<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+												<a href="#" class="btn btn-primary" data-dismiss="modal">Save
+													changes</a>
+											</div>
+										</div>
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+
+								<div class="modal fade" id="settingfornotcandidate"
+									tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+									aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">×</button>
+												<h3>Setting List Course (Not Candidate)</h3>
+											</div>
+											<div class="modal-body">
+												<form method="post"
+													action="Admin_Candidate_SetYearSemester.jsp"
+													role="setnotcandidateform" id="setnotcandidateform">
+													<label for="Year">Year</label> <select
+														id="notcandidateyear" name="notcandidateyear">
+														<script>
+															var myDate = new Date();
+															var year = myDate
+																	.getFullYear() + 543;
+															for (var i = year + 1; i > 2540; i--) {
+																document
+																		.write('<option value="'+i+'">'
+																				+ i
+																				+ '</option>');
+															}
+														</script>
+													</select> <label for="Term">Term</label> <select
+														id="notcandidateterm" name="notcandidateterm">
+														<option value="1">1</option>
+														<option value="2">2</option>
+													</select> <br> <a href="#" class="btn btn-default"
+														data-dismiss="modal">Close</a> <input type="button"
+														class="btn btn-primary"
+														onClick="sendnotcandidatesetting()" value="Submit" />
+												</form>
+											</div>
+											<div class="modal-footer"></div>
+										</div>
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+
+								<footer class="row">
+								<p class="col-md-9 col-sm-9 col-xs-12 copyright">
+									© <a href="http://usman.it" target="_blank">Muhammad Usman</a>
+									2012 - 2014
+								</p>
+								<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
+									Theme by:<a
+										href="http://usman.it/free-responsive-admin-template">Charisma</a>
+								</p>
+								</footer>
+								<!--/.fluid-container-->
+
+								<!-- external javascript -->
+
+								<script
+									src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+								<!-- library for cookie management -->
+								<script src="js/jquery.cookie.js"></script>
+								<!-- calender plugin -->
+								<script src="bower_components/moment/min/moment.min.js"></script>
+								<script
+									src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+								<!-- data table plugin -->
+								<script src="js/jquery.dataTables.min.js"></script>
+
+								<!-- select or dropdown enhancer -->
+								<script src="bower_components/chosen/chosen.jquery.min.js"></script>
+								<!-- plugin for gallery image view -->
+								<script src="bower_components/colorbox/jquery.colorbox-min.js"></script>
+								<!-- notification plugin -->
+								<script src="js/jquery.noty.js"></script>
+								<!-- library for making tables responsive -->
+								<script
+									src="bower_components/responsive-tables/responsive-tables.js"></script>
+								<!-- tour plugin -->
+								<script
+									src="bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
+								<!-- star rating plugin -->
+								<script src="js/jquery.raty.min.js"></script>
+								<!-- for iOS style toggle switch -->
+								<script src="js/jquery.iphone.toggle.js"></script>
+								<!-- autogrowing textarea plugin -->
+								<script src="js/jquery.autogrow-textarea.js"></script>
+								<!-- multiple file upload plugin -->
+								<script src="js/jquery.uploadify-3.1.min.js"></script>
+								<!-- history.js for cross-browser state change on ajax -->
+								<script src="js/jquery.history.js"></script>
+								<!-- application script for Charisma demo -->
+								<script src="js/charisma.js"></script>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div style="display: none;" id="cboxOverlay"></div>
-						<div style="display: none;" tabindex="-1" role="dialog" class=""
-							id="colorbox">
-							<div id="cboxWrapper">
-								<div>
-									<div style="float: left;" id="cboxTopLeft"></div>
-									<div style="float: left;" id="cboxTopCenter"></div>
-									<div style="float: left;" id="cboxTopRight"></div>
-								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxMiddleLeft"></div>
-									<div style="float: left;" id="cboxContent">
-										<div style="float: left;" id="cboxTitle"></div>
-										<div style="float: left;" id="cboxCurrent"></div>
-										<button id="cboxPrevious" type="button"></button>
-										<button id="cboxNext" type="button"></button>
-										<button id="cboxSlideshow"></button>
-										<div style="float: left;" id="cboxLoadingOverlay"></div>
-										<div style="float: left;" id="cboxLoadingGraphic"></div>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
 									</div>
-									<div style="float: left;" id="cboxMiddleRight"></div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-								<div style="clear: left;">
-									<div style="float: left;" id="cboxBottomLeft"></div>
-									<div style="float: left;" id="cboxBottomCenter"></div>
-									<div style="float: left;" id="cboxBottomRight"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div id="cboxOverlay" style="display: none;"></div>
-						<div id="colorbox" class="" role="dialog" tabindex="-1"
-							style="display: none;">
-							<div id="cboxWrapper">
-								<div>
-									<div id="cboxTopLeft" style="float: left;"></div>
-									<div id="cboxTopCenter" style="float: left;"></div>
-									<div id="cboxTopRight" style="float: left;"></div>
-								</div>
-								<div style="clear: left;">
-									<div id="cboxMiddleLeft" style="float: left;"></div>
-									<div id="cboxContent" style="float: left;">
-										<div id="cboxTitle" style="float: left;"></div>
-										<div id="cboxCurrent" style="float: left;"></div>
-										<button type="button" id="cboxPrevious"></button>
-										<button type="button" id="cboxNext"></button>
-										<button id="cboxSlideshow"></button>
-										<div id="cboxLoadingOverlay" style="float: left;"></div>
-										<div id="cboxLoadingGraphic" style="float: left;"></div>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
 									</div>
-									<div id="cboxMiddleRight" style="float: left;"></div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-								<div style="clear: left;">
-									<div id="cboxBottomLeft" style="float: left;"></div>
-									<div id="cboxBottomCenter" style="float: left;"></div>
-									<div id="cboxBottomRight" style="float: left;"></div>
-								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
-						<div id="cboxOverlay" style="display: none;"></div>
-						<div id="colorbox" class="" role="dialog" tabindex="-1"
-							style="display: none;">
-							<div id="cboxWrapper">
-								<div>
-									<div id="cboxTopLeft" style="float: left;"></div>
-									<div id="cboxTopCenter" style="float: left;"></div>
-									<div id="cboxTopRight" style="float: left;"></div>
-								</div>
-								<div style="clear: left;">
-									<div id="cboxMiddleLeft" style="float: left;"></div>
-									<div id="cboxContent" style="float: left;">
-										<div id="cboxTitle" style="float: left;"></div>
-										<div id="cboxCurrent" style="float: left;"></div>
-										<button type="button" id="cboxPrevious"></button>
-										<button type="button" id="cboxNext"></button>
-										<button id="cboxSlideshow"></button>
-										<div id="cboxLoadingOverlay" style="float: left;"></div>
-										<div id="cboxLoadingGraphic" style="float: left;"></div>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
 									</div>
-									<div id="cboxMiddleRight" style="float: left;"></div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-								<div style="clear: left;">
-									<div id="cboxBottomLeft" style="float: left;"></div>
-									<div id="cboxBottomCenter" style="float: left;"></div>
-									<div id="cboxBottomRight" style="float: left;"></div>
+								<div style="display: none;" id="cboxOverlay"></div>
+								<div style="display: none;" tabindex="-1" role="dialog" class=""
+									id="colorbox">
+									<div id="cboxWrapper">
+										<div>
+											<div style="float: left;" id="cboxTopLeft"></div>
+											<div style="float: left;" id="cboxTopCenter"></div>
+											<div style="float: left;" id="cboxTopRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxMiddleLeft"></div>
+											<div style="float: left;" id="cboxContent">
+												<div style="float: left;" id="cboxTitle"></div>
+												<div style="float: left;" id="cboxCurrent"></div>
+												<button id="cboxPrevious" type="button"></button>
+												<button id="cboxNext" type="button"></button>
+												<button id="cboxSlideshow"></button>
+												<div style="float: left;" id="cboxLoadingOverlay"></div>
+												<div style="float: left;" id="cboxLoadingGraphic"></div>
+											</div>
+											<div style="float: left;" id="cboxMiddleRight"></div>
+										</div>
+										<div style="clear: left;">
+											<div style="float: left;" id="cboxBottomLeft"></div>
+											<div style="float: left;" id="cboxBottomCenter"></div>
+											<div style="float: left;" id="cboxBottomRight"></div>
+										</div>
+									</div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
 								</div>
-							</div>
-							<div
-								style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
-						</div>
+								<div id="cboxOverlay" style="display: none;"></div>
+								<div id="colorbox" class="" role="dialog" tabindex="-1"
+									style="display: none;">
+									<div id="cboxWrapper">
+										<div>
+											<div id="cboxTopLeft" style="float: left;"></div>
+											<div id="cboxTopCenter" style="float: left;"></div>
+											<div id="cboxTopRight" style="float: left;"></div>
+										</div>
+										<div style="clear: left;">
+											<div id="cboxMiddleLeft" style="float: left;"></div>
+											<div id="cboxContent" style="float: left;">
+												<div id="cboxTitle" style="float: left;"></div>
+												<div id="cboxCurrent" style="float: left;"></div>
+												<button type="button" id="cboxPrevious"></button>
+												<button type="button" id="cboxNext"></button>
+												<button id="cboxSlideshow"></button>
+												<div id="cboxLoadingOverlay" style="float: left;"></div>
+												<div id="cboxLoadingGraphic" style="float: left;"></div>
+											</div>
+											<div id="cboxMiddleRight" style="float: left;"></div>
+										</div>
+										<div style="clear: left;">
+											<div id="cboxBottomLeft" style="float: left;"></div>
+											<div id="cboxBottomCenter" style="float: left;"></div>
+											<div id="cboxBottomRight" style="float: left;"></div>
+										</div>
+									</div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
+								</div>
+								<div id="cboxOverlay" style="display: none;"></div>
+								<div id="colorbox" class="" role="dialog" tabindex="-1"
+									style="display: none;">
+									<div id="cboxWrapper">
+										<div>
+											<div id="cboxTopLeft" style="float: left;"></div>
+											<div id="cboxTopCenter" style="float: left;"></div>
+											<div id="cboxTopRight" style="float: left;"></div>
+										</div>
+										<div style="clear: left;">
+											<div id="cboxMiddleLeft" style="float: left;"></div>
+											<div id="cboxContent" style="float: left;">
+												<div id="cboxTitle" style="float: left;"></div>
+												<div id="cboxCurrent" style="float: left;"></div>
+												<button type="button" id="cboxPrevious"></button>
+												<button type="button" id="cboxNext"></button>
+												<button id="cboxSlideshow"></button>
+												<div id="cboxLoadingOverlay" style="float: left;"></div>
+												<div id="cboxLoadingGraphic" style="float: left;"></div>
+											</div>
+											<div id="cboxMiddleRight" style="float: left;"></div>
+										</div>
+										<div style="clear: left;">
+											<div id="cboxBottomLeft" style="float: left;"></div>
+											<div id="cboxBottomCenter" style="float: left;"></div>
+											<div id="cboxBottomRight" style="float: left;"></div>
+										</div>
+									</div>
+									<div
+										style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div>
+								</div>
 </body>
 </html>

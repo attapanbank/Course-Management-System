@@ -240,7 +240,7 @@
 
 										stmt = connect.createStatement();
 
-										String sql = "SELECT * FROM cmsit.news;";
+										String sql = "SELECT * FROM news;";
 										ResultSet rec = null;
 										rec = stmt.executeQuery(sql);
 								%>
