@@ -115,9 +115,6 @@
 
 
 </head>
-<%
-	String studyplanId = request.getParameter("studyplanId");
-%>
 <body>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
@@ -136,11 +133,11 @@
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> <%=sUserName %></span> <span
+						class="hidden-sm hidden-xs"> Coordinator</span> <span
 						class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="Coordinator_FormUserInfo.jsp">Profile</a></li>
+					<li><a href="#">Profile</a></li>
 					<li class="divider"></li>
 					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
@@ -166,7 +163,7 @@
 						<div class="nav-sm nav nav-stacked"></div>
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
-							<li><a class="ajax-link" href="Coordinator.jsp"><i
+							<li class="active"><a class="ajax-link" href="Coordinator.jsp"><i
 									class="glyphicon glyphicon-home"></i><span> Dashboard</span></a></li>
 
 
@@ -174,7 +171,7 @@
 
 
 							<li class="nav-header hidden-md">Management</li>
-							<li class="active"><a class="ajax-link"
+							<li ><a class="ajax-link"
 								href="Coordinator_StudyPlan.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Study Plan</span></a></li>
@@ -207,25 +204,13 @@
 				site.&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/p&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 			</noscript>
-			<%
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
 
-					stmt = connect.createStatement();
-
-					String sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where studyPlanId ='"
-							+ studyplanId + "';";
-					//SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode) where studyplan.year like
-					ResultSet rec = stmt.executeQuery(sql);
-					rec.first();
-			%>
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="Coordinator_StudyPlan.jsp">Study Plan
-								Management</a></li>
+						<li><a href="Coordinator_FormUserInfo.jsp">Edit User Information</a></li>
 					</ul>
 				</div>
 
@@ -239,8 +224,7 @@
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
 										<h2>
-											<i class="glyphicon glyphicon-user"></i> Study Plan
-											Management
+											<i class="glyphicon glyphicon-user"></i> Edit User Information
 										</h2>
 
 										<div class="box-icon">
@@ -254,17 +238,31 @@
 									<div class="box-content">
 										<script type="text/javascript">
 											function checkForm() {
-											    var ay = document.getElementById("acayear").value;
-											    var sy = document.getElementById("stuyear").value;
-											    var ss = document.getElementById("stusemester").value;
-											    var m = document.getElementById("major").value;
-											    var cd = document.getElementById("courseCode").value;
-											    
-											    if (!ay||!sy||!ss||!m||!cd){
-											    	alert("Please fill all of information.");
-											    } else {
-											    	document.getElementById("editForm").submit();
-											    }
+												var fn = document
+														.getElementById("firstname").value;
+												var ln = document
+														.getElementById("lastname").value;
+												var mj = document
+														.getElementById("major").value;
+												var un = document
+														.getElementById("username").value;
+												var np = document
+														.getElementById("newPass").value;
+												var cp = document
+														.getElementById("confirmPass").value;
+
+												if (!fn || !ln || !mj || !un
+														|| !np || !cp) {
+													alert("Please fill all of information.");
+												}
+												else if (np != cp){
+													alert("Please confirm new password not match.");
+												}
+												else {
+													document.getElementById(
+															"editForm")
+															.submit();
+												}
 											}
 										</script>
 										<div id="DataTables_Table_0_wrapper"
@@ -275,29 +273,22 @@
 													class="dataTables_wrapper" role="grid">
 													<div id="DataTables_Table_0_wrapper"
 														class="dataTables_wrapper" role="grid">
-														<form method="get" action="Coordinator_EditStudyPlan.jsp" id="editForm">
+														<form method="get" action="Coordinator_EditInfo.jsp"
+															id="editForm">
 															<table border="0">
+
 																<tr>
-																	<td><p>Academic Year :</td>
-																	<td><input type="text" name="acayear" id="acayear"
-																		value="<%=rec.getString("academicYear")%>">
+																	<td>
+																		<p>First name :
+																	</td>
+																	<td><input type="text" name="firstname"
+																		id="firstname" value="<%=sFirstname%>">
 																		</p></td>
 																</tr>
 																<tr>
-																	<td>
-																		<p>Study year :
-																	</td>
-																	<td><input type="text" name="stuyear" id="stuyear"
-																		value="<%=rec.getString("studyYear")%>">
-																		</p></td>
-																</tr>
-																<tr>
-																	<td>
-																		<p>Study semester :
-																	</td>
-																	<td><input type="text" name="stusemester"
-																		id="stusemester"
-																		value="<%=rec.getString("studySemester")%>">
+																	<td><p>Lastname :</td>
+																	<td><input type="text" name="lastname"
+																		id="lastname" value="<%=sLastname%>">
 																		</p></td>
 																</tr>
 																<tr>
@@ -305,24 +296,38 @@
 																		<p>Major :
 																	</td>
 																	<td><input type="text" name="major" id="major"
-																		value="<%=rec.getString("major")%>">
+																		value="<%=sMajor%>">
 																		</p></td>
 																</tr>
 																<tr>
 																	<td>
-																		<p>Course code :
+																		<p>Username :
 																	</td>
-																	<td><input type="text" name="courseCode"
-																		id="courseCode"
-																		value="<%=rec.getString("courseCode")%>">
+																	<td><input type="text" name="username"
+																		id="username" value="<%=sUserName%>">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>New Password :
+																	</td>
+																	<td><input type="password" name="newPass" id="newPass">
+																		</p></td>
+																</tr>
+																<tr>
+																	<td>
+																		<p>Confirm New Password :
+																	</td>
+																	<td><input type="password" name="confirmPass"
+																		id="confirmPass">
 																		</p></td>
 																</tr>
 																<tr>
 																	<td>
 																		<p>
-																			<input type="hidden" name="studyplanId"
-																				value="<%=studyplanId%>"> <input
-																				type="button" value="Edit" onclick="checkForm()">
+																			<input type="hidden" name="userID"
+																				value="<%=sUserID%>"> <input type="button"
+																				value="Edit" onclick="checkForm()">
 
 																		</p>
 																	</td>
@@ -347,24 +352,7 @@
 				</div>
 
 
-				<%
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						out.println(e.getMessage());
-						e.printStackTrace();
-					}
 
-					try {
-						if (stmt != null) {
-							stmt.close();
-							connect.close();
-						}
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						out.println(e.getMessage());
-						e.printStackTrace();
-					}
-				%>
 
 
 				<!-- content ends -->

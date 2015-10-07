@@ -228,7 +228,7 @@
 										<div class="form-group">
 											<form method="get" action="Coordinator_DuplicateStudyPlan.jsp"
 												id="formsetsession">
-												<label for="Year">Form&nbsp&nbsp</label> <select
+												<label for="Year">From&nbsp&nbsp</label> <select
 													id="academicyear" name="fromacademicyear" form="formsetsession">
 													<script type="text/javascript">
 														var myDate = new Date();
