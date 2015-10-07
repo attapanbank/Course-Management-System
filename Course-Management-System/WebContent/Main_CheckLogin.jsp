@@ -61,6 +61,7 @@
 		String userTAType = "Teacher Assistance";
 		String userCoType = "Major Coordinator";
 
+		
 		ResultSet rec = stmt.executeQuery(sql);
 		while (rec.next()) {
 
