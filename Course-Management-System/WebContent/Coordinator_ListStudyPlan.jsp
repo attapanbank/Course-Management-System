@@ -313,7 +313,7 @@
 												<td class="center"><a class="btn btn-info btn-sm"
 													href="Coordinator_FormStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>">
 														<i class="glyphicon glyphicon-edit icon-white"></i> Edit
-												</a> <a class="btn btn-danger btn-sm"
+												</a> <a class="btn btn-danger btn-sm confirmation"
 													href="Coordinator_DeleteStudyPlan.jsp?studyplanId=<%=rec.getString("studyPlanId")%>&acayear=<%=rec.getString("academicyear")%>&major=<%=rec.getString("major")%>">
 														<i class="glyphicon glyphicon-trash icon-white"></i>
 														Delete
@@ -347,7 +347,18 @@
 						</div>
 					</div>
 					<!--/span-->
-
+					<script type="text/javascript">
+						var elems = document
+								.getElementsByClassName('confirmation');
+						var confirmIt = function(e) {
+							if (!confirm('Are you sure to delete?'))
+								e.preventDefault();
+						};
+						for (var i = 0, l = elems.length; i < l; i++) {
+							elems[i]
+									.addEventListener('click', confirmIt, false);
+						}
+					</script>
 				</div>
 
 				<!-- content ends -->
