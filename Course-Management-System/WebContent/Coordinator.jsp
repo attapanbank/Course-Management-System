@@ -129,11 +129,11 @@
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> Coordinator</span> <span
+						class="hidden-sm hidden-xs"> <%=sUserName %></span> <span
 						class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
+					<li><a href="Coordinator_FormUserInfo.jsp">Profile</a></li>
 					<li class="divider"></li>
 					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
