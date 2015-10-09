@@ -133,8 +133,7 @@
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> Admin</span> <span
-						class="caret"></span>
+						class="hidden-sm hidden-xs"> Admin</span> <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
 					<li><a href="Admin_FormUserInfo.jsp">Profile</a></li>
@@ -222,7 +221,8 @@
 				<div>
 					<ul class="breadcrumb">
 						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="Coordinator_FormUserInfo.jsp">Edit User Information</a></li>
+						<li><a href="Coordinator_FormUserInfo.jsp">Edit User
+								Information</a></li>
 					</ul>
 				</div>
 
@@ -236,7 +236,8 @@
 								<div class="box-inner">
 									<div class="box-header well" data-original-title="">
 										<h2>
-											<i class="glyphicon glyphicon-user"></i> Edit User Information
+											<i class="glyphicon glyphicon-user"></i> Edit User
+											Information
 										</h2>
 
 										<div class="box-icon">
@@ -254,8 +255,6 @@
 														.getElementById("firstname").value;
 												var ln = document
 														.getElementById("lastname").value;
-												var mj = document
-														.getElementById("major").value;
 												var un = document
 														.getElementById("username").value;
 												var np = document
@@ -263,14 +262,12 @@
 												var cp = document
 														.getElementById("confirmPass").value;
 
-												if (!fn || !ln || !mj || !un
-														|| !np || !cp) {
+												if (!fn || !ln || !un || !np
+														|| !cp) {
 													alert("Please fill all of information.");
-												}
-												else if (np != cp){
+												} else if (np != cp) {
 													alert("Please confirm new password not match.");
-												}
-												else {
+												} else {
 													document.getElementById(
 															"editForm")
 															.submit();
@@ -307,9 +304,84 @@
 																	<td>
 																		<p>Major :
 																	</td>
-																	<td><input type="text" name="major" id="major"
-																		value="<%=sMajor%>">
-																		</p></td>
+																	<td>
+																	<%
+																	System.out.println(sMajor);
+																	if (sMajor.equalsIgnoreCase("Information Technology")){
+																		%>
+																		<select id="major" name="major"
+																				data-rel="chosen">
+																					<option selected style="text-align: left;">Information Technology</option>
+																					<option style="text-align: left;">Computer Science</option>
+																					<option style="text-align: left;">Software Engineering</option>
+																					<option style="text-align: left;">Multimedia Technology and Animation</option>
+																					<option style="text-align: left;">Computer Engineering</option>
+																					<option style="text-align: left;">Information and Communication Engineering</option>
+																		</select>
+																		<%
+																	} else if (sMajor.equalsIgnoreCase("Computer Science")) {
+																		%>
+																		<select id="major" name="major"
+																				data-rel="chosen">
+																					<option style="text-align: left;">Information Technology</option>
+																					<option selected style="text-align: left;">Computer Science</option>
+																					<option style="text-align: left;">Software Engineering</option>
+																					<option style="text-align: left;">Multimedia Technology and Animation</option>
+																					<option style="text-align: left;">Computer Engineering</option>
+																					<option style="text-align: left;">Information and Communication Engineering</option>
+																		</select>
+																		<%
+																	} else if (sMajor.equalsIgnoreCase("Software Engineering")) {
+																		%>
+																		<select id="major" name="major"
+																				data-rel="chosen">
+																					<option style="text-align: left;">Information Technology</option>
+																					<option style="text-align: left;">Computer Science</option>
+																					<option selected style="text-align: left;">Software Engineering</option>
+																					<option style="text-align: left;">Multimedia Technology and Animation</option>
+																					<option style="text-align: left;">Computer Engineering</option>
+																					<option style="text-align: left;">Information and Communication Engineering</option>
+																		</select>
+																		<%
+																	}else if (sMajor.equalsIgnoreCase("Multimedia Technology and Animation")) {
+																		%>
+																		<select id="major" name="major"
+																				data-rel="chosen">
+																					<option style="text-align: left;">Information Technology</option>
+																					<option style="text-align: left;">Computer Science</option>
+																					<option style="text-align: left;">Software Engineering</option>
+																					<option selected style="text-align: left;">Multimedia Technology and Animation</option>
+																					<option style="text-align: left;">Computer Engineering</option>
+																					<option style="text-align: left;">Information and Communication Engineering</option>
+																		</select>
+																		<%
+																	}else if (sMajor.equalsIgnoreCase("Computer Engineering")) {
+																		%>
+																		<select id="major" name="major"
+																				data-rel="chosen">
+																					<option style="text-align: left;">Information Technology</option>
+																					<option style="text-align: left;">Computer Science</option>
+																					<option style="text-align: left;">Software Engineering</option>
+																					<option style="text-align: left;">Multimedia Technology and Animation</option>
+																					<option selected style="text-align: left;">Computer Engineering</option>
+																					<option style="text-align: left;">Information and Communication Engineering</option>
+																		</select>
+																		<%
+																	}else if (sMajor.equalsIgnoreCase("Information and Communication Engineering")) {
+																		%>
+																		<select id="major" name="major"
+																				data-rel="chosen">
+																					<option style="text-align: left;">Information Technology</option>
+																					<option style="text-align: left;">Computer Science</option>
+																					<option style="text-align: left;">Software Engineering</option>
+																					<option style="text-align: left;">Multimedia Technology and Animation</option>
+																					<option style="text-align: left;">Computer Engineering</option>
+																					<option selected style="text-align: left;">Information and Communication Engineering</option>
+																		</select>
+																		<%
+																	}
+																	%>
+																	</td>
 																</tr>
 																<tr>
 																	<td>
@@ -323,7 +395,8 @@
 																	<td>
 																		<p>New Password :
 																	</td>
-																	<td><input type="password" name="newPass" id="newPass">
+																	<td><input type="password" name="newPass"
+																		id="newPass">
 																		</p></td>
 																</tr>
 																<tr>
