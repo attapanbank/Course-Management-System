@@ -297,10 +297,18 @@
 										</tr>
 										<%
 											}
-												}
 										%>
+										
 									</tbody>
 								</table>
+								
+										<div align="center" ><a class="btn btn-danger confirmation" href="Admin_ClearNews.jsp">
+															<i class="glyphicon glyphicon-trash icon-white"></i>
+															Clear News
+													</a></div>
+								<%
+										}
+										%>
 								<%
 									} catch (Exception e) {
 										// TODO Auto-generated catch block

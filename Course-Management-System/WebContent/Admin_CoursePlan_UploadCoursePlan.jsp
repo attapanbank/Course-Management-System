@@ -19,6 +19,7 @@
 
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
+<%@page import="org.apache.poi.ss.usermodel.Cell"%>
 
 <%
 	// Validate USER
@@ -143,13 +144,28 @@
 				.getAttribute("UploadCoursePlanYear");
 		String semester = (String) session
 				.getAttribute("UploadCoursePlanTerm");
+		
+		int lastCourseCode = 0;
 
-		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+		for (int i = 3; i <= sheet.getLastRowNum(); i++) {
+			int coursecode = 0;
+			String major = null;
+			int numberofstudent = 0;
+			
 			row = sheet.getRow(i);
-			int coursecode = (int) row.getCell(0).getNumericCellValue();
-			String major = row.getCell(3).toString();
-			int numberofstudent = (int) row.getCell(4)
-					.getNumericCellValue();
+			
+			// check cell is empty
+			Cell c = row.getCell(0);
+			if (c == null || c.getCellType() == Cell.CELL_TYPE_BLANK) {
+				coursecode = lastCourseCode;
+			} else {
+				coursecode = (int) row.getCell(0).getNumericCellValue();
+				lastCourseCode = coursecode;
+			}
+			
+			major = row.getCell(2).toString();
+			numberofstudent = (int) row.getCell(3).getNumericCellValue();
+			
 			String sql = " INSERT INTO `courseplan` (year, semester, courseCode, major, numberofstudent) VALUES ('"
 					+ year
 					+ "', '"
@@ -163,8 +179,9 @@
 					+ "'); ";
 			pstm = (PreparedStatement) con.prepareStatement(sql);
 			pstm.execute();
-			System.out.println("Import rows " + i);
+			
 		}
+		System.out.println("Import success ");
 		con.commit();
 		wb.close();
 		pstm.close();
@@ -185,6 +202,7 @@
 		request.setAttribute("errorupload",
 				"Something wrong please check your file.");
 		System.out.println("Exception e");
+		e.printStackTrace();
 	}
 
 	// end Part take file to the database
