@@ -139,7 +139,7 @@
 						class="hidden-sm hidden-xs"> admin</span> <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
+					<li><a href="Admin_FormUserInfo.jsp">Profile</a></li>
 					<li class="divider"></li>
 					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
@@ -274,8 +274,9 @@
 											name="year" value="<%=Year%>" /><input type="hidden"
 											name="term" value="<%=Term%>" /> <input type="hidden"
 											name="selectcourse"
-											value="<%=rs.getString("courseplan.courseCode") + " " + rs.getString("course.courseName")%>" /> <input
-											type="button" onclick="checkeditcourseplanform()"
+											value="<%=rs.getString("courseplan.courseCode") + " "
+					+ rs.getString("course.courseName")%>" />
+										<input type="button" onclick="checkeditcourseplanform()"
 											class="btn btn-success" value="Submit" />
 									</form>
 								</div>

@@ -225,18 +225,19 @@
 
 										<div class="controls">
 											<select name="reporttype">
-												<option value="surveysortbyteacher">Report อาจารย์ที่เลือกสอนในแต่ละรายวิชา
-													(เรียงตามผู้สอน)</option>
-												<option value="surveysortbycourse">Report อาจารย์ที่เลือกสอนในแต่ละรายวิชา
-													(เรียงตามรายวิชา)</option>
-												<option value="candidate+workload">Report รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา +
-													Workload</option>
-												<option value="candidate+exam">Report รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา +
-													วิธีการสอบ</option>
+												<option value="surveysortbyteacher">Report
+													อาจารย์ที่เลือกสอนในแต่ละรายวิชา (เรียงตามผู้สอน)</option>
+												<option value="surveysortbycourse">Report
+													อาจารย์ที่เลือกสอนในแต่ละรายวิชา (เรียงตามรายวิชา)</option>
+												<option value="candidate+workload">Report
+													รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา + Workload</option>
+												<option value="candidate+exam">Report
+													รายชื่ออาจารย์ที่ได้สอนในแต่ละวิชา + วิธีการสอบ</option>
 											</select>
 										</div>
 									</div>
-									<br> <input type="submit" class="btn btn-success" value="Save" /> 
+									<br> <input type="submit" class="btn btn-success"
+										value="Save" />
 								</form>
 							</div>
 						</div>
