@@ -56,8 +56,8 @@
 
 	if (reporttype.equals("surveysortbyteacher")) {
 		System.out.println(1);
-		String filename = "C:/Users/MahaloBankupu/Desktop/candidate "
-				+ year + " " + term + ".xlsx";
+		/* String filename = "C:/Users/MahaloBankupu/Desktop/candidate "
+				+ year + " " + term + ".xlsx"; */
 
 		try {
 			Class.forName(readdriver);
@@ -183,10 +183,24 @@
 				countrow++;
 			}
 
-			// Write the output to a file
+			/* // Write the output to a file
 			FileOutputStream fileOut = new FileOutputStream(filename);
 			wb.write(fileOut);
-			fileOut.close();
+			fileOut.close(); */
+
+			// write it as an excel attachment
+			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			wb.write(outByteStream);
+			byte[] outArray = outByteStream.toByteArray();
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); // eliminates browser caching
+			response.setHeader("Content-Disposition",
+					"attachment; filename=candidate " + year + " "
+							+ term + ".xlsx");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -200,8 +214,8 @@
 		int intyear = Integer.parseInt(year);
 		int intterm = Integer.parseInt(term);
 
-		String filename = "C:/Users/MahaloBankupu/Desktop/course "
-				+ year + " " + term + ".xlsx";
+		/* String filename = "C:/Users/MahaloBankupu/Desktop/course "
+				+ year + " " + term + ".xlsx"; */
 
 		try {
 			Class.forName(readdriver);
@@ -462,10 +476,24 @@
 				countrow++;
 			}
 
-			// Write the output to a file
+			/* // Write the output to a file
 			FileOutputStream fileOut = new FileOutputStream(filename);
 			wb.write(fileOut);
-			fileOut.close();
+			fileOut.close(); */
+
+			// write it as an excel attachment
+			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			wb.write(outByteStream);
+			byte[] outArray = outByteStream.toByteArray();
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); // eliminates browser caching
+			response.setHeader("Content-Disposition",
+					"attachment; filename=course " + year + " " + term
+							+ ".xlsx");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -476,11 +504,616 @@
 		}
 	} else if (reporttype.equals("candidate+workload")) {
 		System.out.println(3);
-		
+
+		/* String filename = "C:/Users/MahaloBankupu/Desktop/workload " + year + " "
+				+ term + ".xls"; */
+
+		try {
+
+			Class.forName(readdriver);
+			con = DriverManager.getConnection(url, readuser, readpass);
+
+			HSSFWorkbook wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet("new sheet");
+
+			// Set Style
+			CellStyle style = wb.createCellStyle();
+			style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+			CellStyle stylecoursename = wb.createCellStyle();
+			stylecoursename
+					.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			stylecoursename.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+
+			CellStyle styledata = wb.createCellStyle();
+			styledata.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
+			styledata.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+			//style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			//style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			//style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			//style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+			// Set ColumnWidth
+			sheet.setColumnWidth(1, 10000);
+			sheet.setColumnWidth(2, 3000);
+			sheet.setColumnWidth(3, 15000);
+			sheet.setColumnWidth(5, 3000);
+			sheet.setColumnWidth(14, 3000);
+
+			// Create Row
+			HSSFRow row0 = sheet.createRow(0);
+			HSSFRow row1 = sheet.createRow(1);
+			HSSFRow row2 = sheet.createRow(2);
+			HSSFRow row3 = sheet.createRow(3);
+
+			// Create cell
+			HSSFCell cell0_0 = row0.createCell(0);
+
+			HSSFCell cell1_5 = row1.createCell(5);
+			HSSFCell cell1_8 = row1.createCell(8);
+			HSSFCell cell1_11 = row1.createCell(11);
+			HSSFCell cell1_13 = row1.createCell(13);
+
+			HSSFCell cell2_0 = row2.createCell(0);
+			HSSFCell cell2_1 = row2.createCell(1);
+			HSSFCell cell2_2 = row2.createCell(2);
+			HSSFCell cell2_5 = row2.createCell(5);
+			HSSFCell cell2_6 = row2.createCell(6);
+			HSSFCell cell2_7 = row2.createCell(7);
+			HSSFCell cell2_8 = row2.createCell(8);
+			HSSFCell cell2_9 = row2.createCell(9);
+			HSSFCell cell2_10 = row2.createCell(10);
+			HSSFCell cell2_11 = row2.createCell(11);
+			HSSFCell cell2_12 = row2.createCell(12);
+			HSSFCell cell2_13 = row2.createCell(13);
+			HSSFCell cell2_14 = row2.createCell(14);
+
+			HSSFCell cell3_2 = row3.createCell(2);
+			HSSFCell cell3_3 = row3.createCell(3);
+			HSSFCell cell3_4 = row3.createCell(4);
+
+			// Add Header Text
+			cell0_0.setCellValue("Teaching Workload Semester " + term
+					+ "/" + year);
+			cell1_5.setCellValue("Lecture");
+			cell1_8.setCellValue("Lab");
+			cell1_11.setCellValue("(Lec+Lab)/Week");
+			cell1_13.setCellValue("Total");
+			cell2_0.setCellValue("No.");
+			cell2_1.setCellValue("Lecturer");
+			cell2_2.setCellValue("Course");
+			cell2_5.setCellValue("#of\nLec");
+			cell2_6.setCellValue("#of\nLecturer");
+			cell2_7.setCellValue("hour /\nLec sec");
+			cell2_8.setCellValue("#of\nLab");
+			cell2_9.setCellValue("#of\nLecturer");
+			cell2_10.setCellValue("hour /\nLab");
+			cell2_11.setCellValue("hours");
+			cell2_12.setCellValue("workload");
+			cell2_13.setCellValue("Hours /\nweek");
+			cell2_14.setCellValue("Workload /\nweek");
+			cell3_2.setCellValue("Code");
+			cell3_3.setCellValue("Name");
+			cell3_4.setCellValue("Credit");
+
+			// Add Vertical Align
+			cell0_0.setCellStyle(stylecoursename);
+			cell1_5.setCellStyle(style);
+			cell1_8.setCellStyle(style);
+			cell1_11.setCellStyle(style);
+			cell1_13.setCellStyle(style);
+			cell2_0.setCellStyle(stylecoursename);
+			cell2_1.setCellStyle(stylecoursename);
+			cell2_2.setCellStyle(style);
+			cell2_5.setCellStyle(style);
+			cell2_6.setCellStyle(style);
+			cell2_7.setCellStyle(style);
+			cell2_8.setCellStyle(style);
+			cell2_9.setCellStyle(style);
+			cell2_10.setCellStyle(style);
+			cell2_11.setCellStyle(style);
+			cell2_12.setCellStyle(style);
+			cell2_13.setCellStyle(style);
+			cell2_14.setCellStyle(style);
+			cell3_2.setCellStyle(style);
+			cell3_3.setCellStyle(style);
+			cell3_4.setCellStyle(style);
+
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 14));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 4));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 5, 7));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 8, 10));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 11, 12));
+			sheet.addMergedRegion(new CellRangeAddress(1, 1, 13, 14));
+			sheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 4));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 1, 1));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 5, 5));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 6, 6));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 7, 7));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 8, 8));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 9, 9));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 10, 10));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 11, 11));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 12, 12));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 13, 13));
+			sheet.addMergedRegion(new CellRangeAddress(2, 3, 14, 14));
+
+			// End Header
+
+			// Get Data
+
+			int countno = 1;
+			int countrow = 4;
+
+			// Get teacher and teachera assistance
+			stmt = con.createStatement();
+			String Query = "SELECT * FROM candidate inner  join section on candidate.sectionID = section.sectionID inner join currentcourse on section.currentcourseID = currentcourse.currentcourseID inner join user on candidate.userID = user.userID where currentcourse.year = '"
+					+ year
+					+ "' and currentcourse.semester = '"
+					+ term
+					+ "'and (user.usertype = 'Teacher Assistance' or user.usertype = 'Teacher') group by candidate.userID ;";
+			ResultSet rstecher = stmt.executeQuery(Query);
+
+			while (rstecher.next()) {
+
+				// for the calculate the workload
+				int of_lec = 0;
+				int of_lecturers = 0;
+				int of_lab = 0;
+				int of_lablecturers = 0;
+				double wlLect = 0;
+				double wlLab = 0;
+
+				int hourAll = 0;
+				double result = 0;
+
+				int totalHourPerWeek = 0;
+				double totalWorkload = 0;
+
+				HSSFRow rowdata = sheet.createRow(countrow);
+				HSSFCell cell0 = rowdata.createCell(0);
+				HSSFCell cell1 = rowdata.createCell(1);
+
+				// for check user id in the row
+				String userID = rstecher.getString("userID");
+
+				cell0.setCellValue(countno);
+				cell1.setCellValue(rstecher.getString("user.firstname")
+						+ " " + rstecher.getString("user.lastname"));
+
+				cell0.setCellStyle(stylecoursename);
+				cell1.setCellStyle(stylecoursename);
+
+				// Loop course and credit with user id to check the course
+				String qCourse = "SELECT * FROM section inner join candidate inner join currentcourse inner join course on userID = '"
+						+ userID
+						+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+						+ year
+						+ "' and currentcourse.semester = '"
+						+ term
+						+ "'  and  section.sectionID = candidate.sectionID  group by currentcourse.courseCode;";
+
+				stmt = con.createStatement();
+				ResultSet rscourselength = stmt.executeQuery(qCourse);
+				rscourselength.last();
+				int courselength = rscourselength.getRow();
+
+				// count the loop in each calculate
+				int counthourperweek = 0;
+				int countworkload = 0;
+				int hourperweek[] = new int[courselength];
+				double workload[] = new double[courselength];
+
+				sheet.addMergedRegion(new CellRangeAddress(countrow,
+						(courselength + countrow) - 1, 0, 0));
+				sheet.addMergedRegion(new CellRangeAddress(countrow,
+						(courselength + countrow) - 1, 1, 1));
+
+				// merge cell at hour/week and workload/week
+				sheet.addMergedRegion(new CellRangeAddress(countrow,
+						(courselength + countrow) - 1, 13, 13));
+				sheet.addMergedRegion(new CellRangeAddress(countrow,
+						(courselength + countrow) - 1, 14, 14));
+
+				int countcourse = countrow;
+				ResultSet rscourse = stmt.executeQuery(qCourse);
+				while (rscourse.next()) {
+					HSSFCell cell2 = rowdata.createCell(2);
+					HSSFCell cell3 = rowdata.createCell(3);
+					HSSFCell cell4 = rowdata.createCell(4);
+
+					cell2.setCellValue(rscourse
+							.getString("course.courseCode"));
+					cell3.setCellValue(rscourse
+							.getString("course.courseName"));
+					cell4.setCellValue(rscourse
+							.getString("course.credit"));
+
+					cell2.setCellStyle(style);
+					cell3.setCellStyle(stylecoursename);
+					cell4.setCellStyle(style);
+
+					String credit = rscourse.getString("course.credit");
+					String courseCode = rscourse
+							.getString("course.courseCode");
+					String courseName = rscourse
+							.getString("course.courseName");
+
+					// Spilte credit for the calculated
+
+					String[] parts = credit.split("[\\s()]", 4);
+
+					String creditSplit = parts[0];
+					String splitnext = parts[2];
+
+					String[] partstwo = splitnext.split("-", 3);
+					String lect = partstwo[0];
+					String lab = partstwo[1];
+					String self = partstwo[2];
+
+					// change string to int
+					int lect_of_hour = Integer.parseInt(lect);
+					int lab_of_hour = Integer.parseInt(lab);
+
+					// Skip of_lec calculate the course
+					if (courseName.equalsIgnoreCase("Senior Project 2")
+							|| courseName
+									.equalsIgnoreCase("Co-operative Education")
+							|| courseName
+									.equalsIgnoreCase("Senior Project 1")) {
+
+					} else {
+						if (lect_of_hour == 0) {
+							HSSFCell cell5 = rowdata.createCell(5);
+							cell5.setCellValue(" ");
+							cell5.setCellStyle(style);
+
+						} else {
+
+							// Count of lec
+							stmt = con.createStatement();
+							String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+									+ userID
+									+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+									+ year
+									+ "' and currentcourse.semester = '"
+									+ term
+									+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+									+ courseCode + "'  ";
+							ResultSet rsOfLec = stmt
+									.executeQuery(qOfLec);
+							rsOfLec.last();
+							of_lec = rsOfLec.getInt("rowcount");
+
+							HSSFCell cell5 = rowdata.createCell(5);
+							cell5.setCellValue(of_lec);
+							cell5.setCellStyle(style);
+
+						}
+					}
+
+					// Find number of lectuers in course
+					stmt = con.createStatement();
+					String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+							+ year
+							+ "' and currentcourse.semester = '"
+							+ term
+							+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+							+ courseCode
+							+ "' group by candidate.userID ";
+					ResultSet rsOfLectures = stmt
+							.executeQuery(qOfLectures);
+
+					rsOfLectures.last();
+					of_lecturers = rsOfLectures.getInt("rowcount");
+					HSSFCell cell6 = rowdata.createCell(6);
+					cell6.setCellValue(of_lecturers);
+					cell6.setCellStyle(style);
+
+					// skip lec of hour 
+					if (courseName.equalsIgnoreCase("Senior Project 2")
+							|| courseName
+									.equalsIgnoreCase("Co-operative Education")
+							|| courseName
+									.equalsIgnoreCase("Senior Project 1")) {
+						HSSFCell cell7 = rowdata.createCell(7);
+						cell7.setCellValue(" ");
+
+					} else {
+
+						HSSFCell cell7 = rowdata.createCell(7);
+						cell7.setCellValue(lect_of_hour);
+						cell7.setCellStyle(style);
+
+					}
+
+					// skip the course
+					if (courseName.equalsIgnoreCase("Senior Project 2")
+							|| courseName
+									.equalsIgnoreCase("Co-operative Education")
+							|| courseName
+									.equalsIgnoreCase("Senior Project 1")) {
+
+					} else {
+
+						if (lab_of_hour == 0) {
+							HSSFCell cell8 = rowdata.createCell(8);
+							cell8.setCellValue(" ");
+							cell8.setCellStyle(style);
+						} else {
+
+							// find of the lab
+							stmt = con.createStatement();
+							String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+									+ userID
+									+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+									+ year
+									+ "' and currentcourse.semester = '"
+									+ term
+									+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+									+ courseCode + "'  ";
+							ResultSet rsOfLec = stmt
+									.executeQuery(qOfLec);
+
+							rsOfLec.next();
+							of_lab = rsOfLec.getInt("rowcount");
+							HSSFCell cell8 = rowdata.createCell(8);
+							cell8.setCellValue(of_lab);
+							cell8.setCellStyle(style);
+
+						}
+					}
+
+					stmt = con.createStatement();
+					String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+							+ year
+							+ "' and currentcourse.semester = '"
+							+ term
+							+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+							+ courseCode
+							+ "' group by candidate.userID;  ";
+					ResultSet rsOfLec2 = stmt
+							.executeQuery(qOfLecturesLab);
+					rsOfLec2.last();
+					of_lablecturers = rsOfLec2.getRow();
+					while (rsOfLec2.next()) {
+						String a = rsOfLec2
+								.getString("currentcourse.courseCode");
+
+					}
+
+					HSSFCell cell9 = rowdata.createCell(9);
+					cell9.setCellValue(of_lablecturers);
+					cell9.setCellStyle(style);
+
+					if (courseName.equalsIgnoreCase("Senior Project 2")
+							|| courseName
+									.equalsIgnoreCase("Co-operative Education")
+							|| courseName
+									.equalsIgnoreCase("Senior Project 1")) {
+
+						HSSFCell cell10 = rowdata.createCell(10);
+						cell10.setCellValue(" ");
+
+					} else {
+
+						HSSFCell cell10 = rowdata.createCell(10);
+						cell10.setCellValue(lab_of_hour);
+						cell10.setCellStyle(style);
+
+					}
+
+					if (courseName.equalsIgnoreCase("Senior Project 2")
+							|| courseName
+									.equalsIgnoreCase("Co-operative Education")
+							|| courseName
+									.equalsIgnoreCase("Senior Project 1")) {
+
+						HSSFCell cell11 = rowdata.createCell(11);
+						cell11.setCellValue("0");
+						cell11.setCellStyle(style);
+						counthourperweek++;
+
+					} else {
+
+						hourAll = lect_of_hour + lab_of_hour;
+
+						hourperweek[counthourperweek] = hourAll;
+						counthourperweek++;
+
+						HSSFCell cell11 = rowdata.createCell(11);
+
+						cell11.setCellValue(hourAll);
+						cell11.setCellStyle(style);
+					}
+
+					// calculate the workload
+					try {
+
+						// ignore some course
+						if (courseName
+								.equalsIgnoreCase("Senior Project 2")
+								|| courseName
+										.equalsIgnoreCase("Co-operative Education")
+								|| courseName
+										.equalsIgnoreCase("Senior Project 1")) {
+
+							HSSFCell cell12 = rowdata.createCell(12);
+
+							cell12.setCellValue("0");
+							cell12.setCellStyle(style);
+							countworkload++;
+
+						} else {
+
+							// 
+							if (of_lecturers != 0
+									&& of_lablecturers != 0) {
+
+								// calculate the teacher teach in same corse more the 1 section
+								if (of_lecturers >= 2) {
+									// for lecture
+									wlLect = (of_lec * lect_of_hour * 0.5)
+											/ of_lecturers;
+									// one section
+								} else {
+									wlLect = (of_lec * lect_of_hour)
+											/ of_lecturers;
+
+								}
+
+								// for lab
+
+								wlLab = (of_lab * lab_of_hour * 0.5)
+										/ of_lablecturers;
+
+								result = wlLab + wlLect;
+								String finalResult = String.format(
+										"%.2f", result);
+								workload[countworkload] = result;
+
+								HSSFCell cell12 = rowdata
+										.createCell(12);
+								cell12.setCellValue(finalResult);
+								cell12.setCellStyle(style);
+
+							} else if (of_lecturers == 0
+									&& of_lablecturers != 0) {
+								// for lab
+								wlLab = (of_lab * lab_of_hour * 0.5)
+										/ of_lablecturers;
+
+								result = wlLab + wlLect;
+								String finalResult = String.format(
+										"%.2f", result);
+
+								workload[countworkload] = result;
+
+								HSSFCell cell12 = rowdata
+										.createCell(12);
+								cell12.setCellValue(finalResult);
+								cell12.setCellStyle(style);
+
+							} else if (of_lecturers != 0
+									&& of_lablecturers == 0) {
+								if (of_lecturers >= 2) {
+									// for lecture
+									wlLect = (of_lec * lect_of_hour * 0.5)
+											/ of_lecturers;
+								} else {
+									wlLect = (of_lec * lect_of_hour)
+											/ of_lecturers;
+								}
+
+								result = wlLab + wlLect;
+								String finalResult = String.format(
+										"%.2f", result);
+								workload[countworkload] = result;
+								HSSFCell cell12 = rowdata
+										.createCell(12);
+								cell12.setCellValue(finalResult);
+								cell12.setCellStyle(style);
+							} else if (of_lecturers == 0
+									&& of_lablecturers == 0) {
+								// no calculate
+								result = wlLab + wlLect;
+								String finalResult = String.format(
+										"%.2f", result);
+								workload[countworkload] = result;
+								HSSFCell cell12 = rowdata
+										.createCell(12);
+								cell12.setCellValue(finalResult);
+								cell12.setCellStyle(style);
+							}
+
+							countworkload++;
+
+						}
+					} catch (ArithmeticException e) {
+						System.out.print(e);
+					} catch (NumberFormatException e) {
+						System.out.print(e);
+					} catch (Exception e) {
+						System.out.print(e);
+					}
+
+					// some hour per week
+					if (hourperweek.length == counthourperweek) {
+
+						for (int i = 0; i < hourperweek.length; i++) {
+							totalHourPerWeek = hourperweek[i]
+									+ totalHourPerWeek;
+						}
+
+						//sheet.getRow(countcourse-counthourperweek+1).createCell(13).setCellValue(totalHourPerWeek);
+						HSSFRow row = sheet.getRow(countcourse
+								- counthourperweek + 1);
+						HSSFCell cell = row.createCell(13);
+						cell.setCellValue(totalHourPerWeek);
+						cell.setCellStyle(style);
+
+					}
+
+					// sum workload per week
+					if (workload.length == countworkload) {
+						for (int i = 0; i < workload.length; i++) {
+							totalWorkload = workload[i] + totalWorkload;
+						}
+						String finalResult = String.format("%.2f",
+								totalWorkload);
+
+						//sheet.getRow(countcourse-counthourperweek+1).createCell(14).setCellValue(finalResult);
+						HSSFRow row = sheet.getRow(countcourse
+								- counthourperweek + 1);
+						HSSFCell cell = row.createCell(14);
+						cell.setCellValue(finalResult);
+						cell.setCellStyle(style);
+
+					}
+
+					countcourse++;
+					rowdata = sheet.createRow(countcourse);
+				}
+
+				countrow = (courselength + countrow) - 1;
+				countno++;
+				countrow++;
+			}
+
+			/* // Write the output to a file
+			FileOutputStream fileOut = new FileOutputStream(filename);
+			wb.write(fileOut);
+			fileOut.close(); */
+
+			// write it as an excel attachment
+			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			wb.write(outByteStream);
+			byte[] outArray = outByteStream.toByteArray();
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); // eliminates browser caching
+			response.setHeader("Content-Disposition",
+					"attachment; filename=workload " + year + " " + term
+							+ ".xlsx");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
+
+		} catch (SQLException e) {
+
+		} catch (ClassNotFoundException e) {
+
+		} catch (Exception e) {
+			
+		}
+
 	} else if (reporttype.equals("candidate+exam")) {
 		System.out.println(4);
-		String filename = "C:/Users/MahaloBankupu/Desktop/ExamReport "
-				+ year + " " + term + ".xlsx";
+		/* String filename = "C:/Users/MahaloBankupu/Desktop/ExamReport "
+				+ year + " " + term + ".xlsx"; */
 
 		try {
 			Class.forName(readdriver);
@@ -511,9 +1144,9 @@
 			// Set ColumnWidth
 			sheet.setColumnWidth(1, 3000);
 			sheet.setColumnWidth(2, 15000);
-			sheet.setColumnWidth(8, 8000);
-			sheet.setColumnWidth(9, 8000);
-			sheet.setColumnWidth(10, 8000);
+			sheet.setColumnWidth(8, 10000);
+			sheet.setColumnWidth(9, 10000);
+			sheet.setColumnWidth(10, 10000);
 
 			// Create Row
 			HSSFRow row0 = sheet.createRow(0);
@@ -863,10 +1496,24 @@
 				countrow++;
 			}
 
-			// Write the output to a file
+			/* // Write the output to a file
 			FileOutputStream fileOut = new FileOutputStream(filename);
 			wb.write(fileOut);
-			fileOut.close();
+			fileOut.close(); */
+
+			// write it as an excel attachment
+			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			wb.write(outByteStream);
+			byte[] outArray = outByteStream.toByteArray();
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); // eliminates browser caching
+			response.setHeader("Content-Disposition",
+					"attachment; filename=ExamReport " + year + " "
+							+ term + ".xlsx");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -877,8 +1524,262 @@
 		}
 	} else if (reporttype.equals("off/noexam")) {
 		System.out.println(5);
-		
+		/* String filename = "C:/Users/MahaloBankupu/Desktop/offschedulenoexam "
+				+ year + " " + term + ".xlsx"; */
+
+		try {
+
+			Class.forName(readdriver);
+			con = DriverManager.getConnection(url, readuser, readpass);
+
+			HSSFWorkbook wb = new HSSFWorkbook();
+			HSSFSheet sheet = wb.createSheet("new sheet");
+
+			// Set Style
+			CellStyle style = wb.createCellStyle();
+			style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+			CellStyle stylecoursename = wb.createCellStyle();
+			stylecoursename
+					.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			stylecoursename.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+
+			CellStyle styledata = wb.createCellStyle();
+			styledata.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
+			styledata.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+			// Set ColumnWidth
+			sheet.setColumnWidth(0, 3000);
+			sheet.setColumnWidth(1, 15000);
+			sheet.setColumnWidth(2, 9000);
+			sheet.setColumnWidth(3, 9000);
+			sheet.setColumnWidth(4, 6000);
+			sheet.setColumnWidth(5, 9000);
+			sheet.setColumnWidth(6, 6000);
+			sheet.setColumnWidth(7, 9000);
+
+			// Create Row
+			HSSFRow row0 = sheet.createRow(0);
+
+			row0.setHeightInPoints((2 * sheet
+					.getDefaultRowHeightInPoints()));
+
+			// Create cell
+			HSSFCell cell0_0 = row0.createCell(0);
+			HSSFCell cell0_1 = row0.createCell(1);
+			HSSFCell cell0_2 = row0.createCell(2);
+			HSSFCell cell0_3 = row0.createCell(3);
+			HSSFCell cell0_4 = row0.createCell(4);
+			HSSFCell cell0_5 = row0.createCell(5);
+			HSSFCell cell0_6 = row0.createCell(6);
+			HSSFCell cell0_7 = row0.createCell(7);
+
+			// Add Header Text
+			cell0_0.setCellValue("รหัส\nรายวิชา");
+			cell0_1.setCellValue("ชื่อรายวิชา");
+			cell0_2.setCellValue("อาจารย์ผู้สอน");
+			cell0_3.setCellValue("อาจารย์ผู้ประสานงานรายวิชา");
+			cell0_4.setCellValue("กลางภาค");
+			cell0_5.setCellValue("เหตุผล (กลางภาค)");
+			cell0_6.setCellValue("ปลายภาค");
+			cell0_7.setCellValue("เหตุผล (ปลายภาค)");
+
+			// Add Vertical Align
+			cell0_0.setCellStyle(style);
+			cell0_1.setCellStyle(stylecoursename);
+			cell0_2.setCellStyle(style);
+			cell0_3.setCellStyle(style);
+			cell0_4.setCellStyle(style);
+			cell0_5.setCellStyle(style);
+			cell0_6.setCellStyle(style);
+			cell0_7.setCellStyle(style);
+
+			// End Header
+
+			// Get Data
+			stmt = con.createStatement();
+			String QueryExamSurvey = "SELECT * FROM examsurvey INNER JOIN course ON examsurvey.courseCode = course.courseCode WHERE examsurvey.year = '"
+					+ year
+					+ "' AND examsurvey.semester = '"
+					+ term
+					+ "' AND ((examsurvey.midtermType = 'Not have' OR examsurvey.midtermType = 'Off Schedule') OR (examsurvey.finalType = 'Not have' OR examsurvey.finalType = 'Off Schedule'))";
+			ResultSet rsexamsurvey = stmt.executeQuery(QueryExamSurvey);
+			int countrow = 1;
+			while (rsexamsurvey.next()) {
+
+				HSSFRow rowdata = sheet.createRow(countrow);
+
+				HSSFCell cell0 = rowdata.createCell(0);
+				HSSFCell cell1 = rowdata.createCell(1);
+				HSSFCell cell2 = rowdata.createCell(2);
+				HSSFCell cell3 = rowdata.createCell(3);
+				HSSFCell cell4 = rowdata.createCell(4);
+				HSSFCell cell5 = rowdata.createCell(5);
+				HSSFCell cell6 = rowdata.createCell(6);
+				HSSFCell cell7 = rowdata.createCell(7);
+
+				cell0.setCellValue(rsexamsurvey
+						.getString("examsurvey.courseCode"));
+				cell1.setCellValue(rsexamsurvey
+						.getString("course.courseName"));
+
+				// Get Candidate
+				stmt = con.createStatement();
+				String QueryCandidate = "SELECT * FROM candidate INNER JOIN section ON candidate.sectionID = section.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN user ON user.userID = candidate.userID WHERE currentcourse.courseCode = '"
+						+ rsexamsurvey
+								.getString("examsurvey.courseCode")
+						+ "' AND currentcourse.year = '"
+						+ year
+						+ "' AND currentcourse.semester = '"
+						+ term
+						+ "' GROUP BY candidate.userID ORDER BY user.usertype";
+				StringBuilder sb = new StringBuilder();
+				ResultSet rscountcandidate = stmt
+						.executeQuery(QueryCandidate);
+				rscountcandidate.last();
+				int countcandidate = rscountcandidate.getRow();
+				String str[] = new String[countcandidate];
+				ResultSet rscandidate = stmt
+						.executeQuery(QueryCandidate);
+				int countcandidate2 = 0;
+				while (rscandidate.next()) {
+					str[countcandidate2] = rscandidate
+							.getString("user.firstname")
+							+ " "
+							+ rscandidate.getString("user.lastname")
+							+ " "
+							+ "("
+							+ rscandidate.getString("user.usertype")
+							+ ")";
+					countcandidate2++;
+				}
+				rowdata.setHeightInPoints((countcandidate2 * sheet
+						.getDefaultRowHeightInPoints()));
+				for (int i = 0; i < str.length; i++) {
+					sb.append(str[i] + "\n");
+				}
+				cell2.setCellValue(sb.toString());
+
+				// Select Course Co
+				String userid = "";
+				stmt = con.createStatement();
+				String Querycourseco = "SELECT * FROM currentcourse WHERE year = '"
+						+ year
+						+ "' AND semester = '"
+						+ term
+						+ "' AND courseCode = '"
+						+ rsexamsurvey
+								.getString("examsurvey.courseCode")
+						+ "'";
+				ResultSet rsco = stmt.executeQuery(Querycourseco);
+				if (rsco.next()) {
+					userid = rsco
+							.getString("currentcourse.courseco_userID");
+				}
+				String Queryname = "SELECT * FROM user where userID = '"
+						+ userid + "'";
+				ResultSet rsname = stmt.executeQuery(Queryname);
+				if (rsname.next()) {
+					cell3.setCellValue(rsname
+							.getString("user.firstname")
+							+ " "
+							+ rsname.getString("user.lastname"));
+				}
+				// End Course Co
+
+				// Mid And Final Off/NoExam
+				stmt = con.createStatement();
+				String QueryExam = "SELECT * FROM examsurvey WHERE examsurvey.year = '"
+						+ year
+						+ "' AND examsurvey.semester = '"
+						+ term
+						+ "' AND examsurvey.courseCode = '"
+						+ rsexamsurvey
+								.getString("examsurvey.courseCode")
+						+ "' AND ((examsurvey.midtermType = 'Not have' OR examsurvey.midtermType = 'Off Schedule') OR (examsurvey.finalType = 'Not have' OR examsurvey.finalType = 'Off Schedule'))";
+				ResultSet rsexam = stmt.executeQuery(QueryExam);
+				if (rsexam.next()) {
+
+					String midtermtype = rsexam
+							.getString("examsurvey.midtermType");
+
+					if (midtermtype.equals("Multiple Choice")) {
+						cell4.setCellValue("จัดสอบโดยส่วนกลาง");
+						cell5.setCellValue("");
+					} else if (midtermtype.equals("Writing")) {
+						cell4.setCellValue("จัดสอบโดยส่วนกลาง");
+						cell5.setCellValue("");
+					} else if (midtermtype.equals("MD")) {
+						cell4.setCellValue("จัดสอบโดยส่วนกลาง");
+						cell5.setCellValue("");
+					} else if (midtermtype.equals("Off Schedule")) {
+						cell4.setCellValue("นอกตาราง");
+						cell5.setCellValue(rsexam
+								.getString("reasonMid"));
+					} else if (midtermtype.equals("Not have")) {
+						cell4.setCellValue("ไม่มีสอบ");
+						cell5.setCellValue(rsexam
+								.getString("reasonMid"));
+					}
+
+					String finaltype = rsexam
+							.getString("examsurvey.finalType");
+
+					if (finaltype.equals("Multiple Choice")) {
+						cell6.setCellValue("จัดสอบโดยส่วนกลาง");
+						cell7.setCellValue("");
+					} else if (finaltype.equals("Writing")) {
+						cell6.setCellValue("จัดสอบโดยส่วนกลาง");
+						cell7.setCellValue("");
+					} else if (finaltype.equals("MD")) {
+						cell6.setCellValue("จัดสอบโดยส่วนกลาง");
+						cell7.setCellValue("");
+					} else if (finaltype.equals("Off Schedule")) {
+						cell6.setCellValue("นอกตาราง");
+						cell7.setCellValue(rsexam
+								.getString("reasonFinal"));
+					} else if (finaltype.equals("Not have")) {
+						cell6.setCellValue("ไม่มีสอบ");
+						cell7.setCellValue(rsexam
+								.getString("reasonFinal"));
+					}
+
+					cell4.setCellStyle(styledata);
+					cell6.setCellStyle(styledata);
+
+				}
+
+				countrow++;
+			}
+
+			// Write the output to a file
+			/* FileOutputStream fileOut = new FileOutputStream(filename);
+			wb.write(fileOut);
+			fileOut.close(); */
+
+			// write it as an excel attachment
+			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
+			wb.write(outByteStream);
+			byte[] outArray = outByteStream.toByteArray();
+			response.setContentType("application/ms-excel");
+			response.setContentLength(outArray.length);
+			response.setHeader("Expires:", "0"); // eliminates browser caching
+			response.setHeader("Content-Disposition",
+					"attachment; filename=offschedulenoexam " + year
+							+ " " + term + ".xlsx.xls");
+			OutputStream outStream = response.getOutputStream();
+			outStream.write(outArray);
+			outStream.flush();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+
+		}
 	}
-	
+
 	response.sendRedirect("Admin_Report.jsp");
 %>
