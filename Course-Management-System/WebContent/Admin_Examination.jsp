@@ -7,17 +7,38 @@
 <%@ page import="java.io.*,java.util.Locale"%>
 
 <%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
+
+<%
 	Statement stmt;
-Connection con;
-InputStream stream = application
-		.getResourceAsStream("/fileUpload/db.properties");
-		Properties props = new Properties();
-		props.load(stream);
-String url = props.getProperty("driver");
-String dbUrl = props.getProperty("url");
-String dbUser = props.getProperty("user");
-String dbPassword = props.getProperty("password");
-con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+	Connection con;
+	InputStream stream = application
+			.getResourceAsStream("/fileUpload/db.properties");
+	Properties props = new Properties();
+	props.load(stream);
+	String url = props.getProperty("driver");
+	String dbUrl = props.getProperty("url");
+	String dbUser = props.getProperty("user");
+	String dbPassword = props.getProperty("password");
+	con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -97,9 +118,9 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 						class="hidden-sm hidden-xs"> admin</span> <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
+					<li><a href="Admin_FormUserInfo.jsp">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.jsp">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -215,13 +236,13 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
 											<%
 												} else {
-																						stmt = con.createStatement();
-																						String QueryString = "SELECT * FROM examination_checksurvey where year = "
-																								+ (String) session.getAttribute("ExamSurveyYear")
-																								+ " and semester = "
-																								+ (String) session.getAttribute("ExamSurveyTerm");
-																						ResultSet rs = stmt.executeQuery(QueryString);
-																						if (rs.next()) {
+													stmt = con.createStatement();
+													String QueryString = "SELECT * FROM examination_checksurvey where year = "
+															+ (String) session.getAttribute("ExamSurveyYear")
+															+ " and semester = "
+															+ (String) session.getAttribute("ExamSurveyTerm");
+													ResultSet rs = stmt.executeQuery(QueryString);
+													if (rs.next()) {
 											%>
 											<input type="hidden" name="checksurveyID" id="checksurveyID"
 												value="<%=rs
@@ -235,7 +256,7 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 											<%
 												}
 
-																					}
+												}
 											%>
 										</p>
 									</div>
@@ -296,74 +317,74 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
 									<%
 										String strdateterm1_1 = "";
-																			String strdateterm1_2 = "";
-																			String strdateterm2_1 = "";
-																			String strdateterm2_2 = "";
+										String strdateterm1_2 = "";
+										String strdateterm2_1 = "";
+										String strdateterm2_2 = "";
 
-																			String academicyear = null;
-																			String academicterm = null;
+										String academicyear = null;
+										String academicterm = null;
 
-																			if (null == (String) session.getAttribute("ExaminationYear")) {
+										if (null == (String) session.getAttribute("ExaminationYear")) {
 
-																				Date td = new Date();
-																				String strtd = new String("");
-																				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-																				SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
-																						new Locale("th"));
-																				strtd = format.format(td);
-																				Date today = format.parse(strtd);
-																				//System.out.println(today);
+											Date td = new Date();
+											String strtd = new String("");
+											SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+											SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+													new Locale("th"));
+											strtd = format.format(td);
+											Date today = format.parse(strtd);
+											//System.out.println(today);
 
-																				/* String[] datetd = strtd.split("-", 3);
-																				int ydatetd = Integer.parseInt(datetd[0]);
-																				int mdatetd = Integer.parseInt(datetd[1]);
-																				int ddatetd = Integer.parseInt(datetd[2]); */
+											/* String[] datetd = strtd.split("-", 3);
+											int ydatetd = Integer.parseInt(datetd[0]);
+											int mdatetd = Integer.parseInt(datetd[1]);
+											int ddatetd = Integer.parseInt(datetd[2]); */
 
-																				stmt = con.createStatement();
-																				String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
-																				ResultSet rs = stmt.executeQuery(QueryString);
-																				if (rs.next()) {
-																					strdateterm1_1 = rs.getString("dateterm1_1");
-																					strdateterm1_2 = rs.getString("dateterm1_2");
-																					strdateterm2_1 = rs.getString("dateterm2_1");
-																					strdateterm2_2 = rs.getString("dateterm2_2");
+											stmt = con.createStatement();
+											String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+											ResultSet rs = stmt.executeQuery(QueryString);
+											if (rs.next()) {
+												strdateterm1_1 = rs.getString("dateterm1_1");
+												strdateterm1_2 = rs.getString("dateterm1_2");
+												strdateterm2_1 = rs.getString("dateterm2_1");
+												strdateterm2_2 = rs.getString("dateterm2_2");
 
-																					Date dateterm1_1 = format2.parse(strdateterm1_1);
-																					Date dateterm1_2 = format2.parse(strdateterm1_2);
-																					Date dateterm2_1 = format2.parse(strdateterm2_1);
-																					Date dateterm2_2 = format2.parse(strdateterm2_2);
+												Date dateterm1_1 = format2.parse(strdateterm1_1);
+												Date dateterm1_2 = format2.parse(strdateterm1_2);
+												Date dateterm2_1 = format2.parse(strdateterm2_1);
+												Date dateterm2_2 = format2.parse(strdateterm2_2);
 
-																					String[] term1_1 = strdateterm1_1.split("-", 3);
-																					int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
-																					int mterm1_1 = Integer.parseInt(term1_1[1]);
-																					int dterm1_1 = Integer.parseInt(term1_1[2]);
+												String[] term1_1 = strdateterm1_1.split("-", 3);
+												int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+												int mterm1_1 = Integer.parseInt(term1_1[1]);
+												int dterm1_1 = Integer.parseInt(term1_1[2]);
 
-																					int intacademicyear = yterm1_1;
-																					academicyear = Integer.toString(intacademicyear);
+												int intacademicyear = yterm1_1;
+												academicyear = Integer.toString(intacademicyear);
 
-																					/* System.out.println(dateterm1_1);
-																					System.out.println(dateterm1_2);
-																					System.out.println(dateterm2_1);
-																					System.out.println(dateterm2_2); */
+												/* System.out.println(dateterm1_1);
+												System.out.println(dateterm1_2);
+												System.out.println(dateterm2_1);
+												System.out.println(dateterm2_2); */
 
-																					if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
-																							&& (today.after(dateterm1_1) || today
-																									.equals(dateterm1_1))) {
-																						academicterm = "1";
-																					} else if ((today.before(dateterm2_2) || today
-																							.equals(dateterm2_2))
-																							&& (today.after(dateterm2_1) || today
-																									.equals(dateterm2_1))) {
-																						academicterm = "2";
-																					} else {
-																						academicyear = "";
-																						academicterm = "";
-																						System.out.println("None");
-																					}
-																				}
+												if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+														&& (today.after(dateterm1_1) || today
+																.equals(dateterm1_1))) {
+													academicterm = "1";
+												} else if ((today.before(dateterm2_2) || today
+														.equals(dateterm2_2))
+														&& (today.after(dateterm2_1) || today
+																.equals(dateterm2_1))) {
+													academicterm = "2";
+												} else {
+													academicyear = "";
+													academicterm = "";
+													System.out.println("None");
+												}
+											}
 
-																				session.setAttribute("academicyear", academicyear);
-																				session.setAttribute("academicterm", academicterm);
+											session.setAttribute("academicyear", academicyear);
+											session.setAttribute("academicterm", academicterm);
 									%>
 									<p>
 										<b><i>Year : <%=academicyear%> Term : <%=academicterm%>
@@ -391,57 +412,63 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 										<tr>
 											<th>Course Code</th>
 											<th>Course Name</th>
-											<th>Credit</th>
-											
+
+
 											<th>Midterm</th>
 											<td>Writting</td>
 											<td>Multiple Choice</td>
 											<td>Off Schedule</td>
+											<td>No-Exam</td>
 											<th>Final</th>
 											<td>Writting</td>
 											<td>Multiple Choice</td>
 											<td>Off Schedule</td>
+											<td>No-Exam</td>
 											<th>Detail</th>
 										</tr>
 									</thead>
 
 									<%
 										String year = "";
-																String term = "";
-																if (null == (String) session.getAttribute("ExaminationYear")) {
-																	year = (String) session.getAttribute("academicyear");
-																	term = (String) session.getAttribute("academicterm");
-																} else if (null != (String) session.getAttribute("ExaminationYear")) {
-																	year = (String) session.getAttribute("ExaminationYear");
-																	term = (String) session.getAttribute("ExaminationTerm");
-																} else {
-																	year = null;
-																	term = null;
-																}
-												stmt = con.createStatement();
-												String qeString = "SELECT * FROM examsurvey inner join course inner join candidate inner join currentcourse inner join section where examsurvey.courseCode = course.courseCode and examsurvey.year = '"+year+"' and examsurvey.semester ='"+term+"'and examsurvey.courseCode = currentcourse.courseCode and section.currentcourseID = currentcourse.currentcourseID and section.sectionID = candidate.sectionID group by course.courseName;";
-												ResultSet rsExamResult = stmt.executeQuery(qeString);
+										String term = "";
+										if (null == (String) session.getAttribute("ExaminationYear")) {
+											year = (String) session.getAttribute("academicyear");
+											term = (String) session.getAttribute("academicterm");
+										} else if (null != (String) session.getAttribute("ExaminationYear")) {
+											year = (String) session.getAttribute("ExaminationYear");
+											term = (String) session.getAttribute("ExaminationTerm");
+										} else {
+											year = null;
+											term = null;
+										}
+										stmt = con.createStatement();
+										String qeString = "SELECT * FROM examsurvey inner join course inner join candidate inner join currentcourse inner join section where examsurvey.courseCode = course.courseCode and examsurvey.year = '"
+												+ year
+												+ "' and examsurvey.semester ='"
+												+ term
+												+ "'and examsurvey.courseCode = currentcourse.courseCode and section.currentcourseID = currentcourse.currentcourseID and section.sectionID = candidate.sectionID group by course.courseName;";
+										ResultSet rsExamResult = stmt.executeQuery(qeString);
 									%>
 
 									<%
 										// use for check type of exam
-																String midType = null;
-																	String finalType = null;
-																	String reasonMid = null;
-																	String reasonFinal = null;
-																	String courseCode = null ;
-																	String userType= null ;
-																 String examID = null ;
+										String midType = null;
+										String finalType = null;
+										String reasonMid = null;
+										String reasonFinal = null;
+										String courseCode = null;
+										String userType = null;
+										String examID = null;
 
-																	while (rsExamResult.next()) {
+										while (rsExamResult.next()) {
 									%>
 									<tbody>
 										<tr>
 											<td>
 												<%
 													examID = rsExamResult.getString("examsurvey.examSurveyID");
-																						courseCode = rsExamResult.getString("course.courseCode");
-																						out.print(courseCode);
+														courseCode = rsExamResult.getString("course.courseCode");
+														out.print(courseCode);
 												%>
 											</td>
 											<td>
@@ -449,35 +476,31 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 													out.print(rsExamResult.getString("course.courseName"));
 												%>
 											</td>
-											<td>
-												<%
-													out.print(rsExamResult.getString("course.Credit"));
-												%>
-											</td>
-											
 
-											
+
+
+
 											<%
 												midType = rsExamResult.getString("midtermType");
 
-																						reasonMid = rsExamResult.getString("reasonMid");
+													reasonMid = rsExamResult.getString("reasonMid");
 
-																						if (midType != null) {
+													if (midType != null) {
 											%>
 
 											<%
 												// Check midterm type
-																			// If midterm is "not have" show reason on table 3 colspan
-																			if(midType.equals("Not have")){
+														
+														if (midType.equals("Not have")) {
 											%>
 											<td><input type="checkbox" value="" disabled></td>
-											<td colspan="3">
-												<%
-													out.print(reasonMid);
-												%>
-											</td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled
+												checked="checked"></td>
 											<%
-												}else if(midType.equals("MD")){
+												} else if (midType.equals("MD")) {
 											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
@@ -486,47 +509,42 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
-											<%
-												}else{
-											%>
-											<td><input type="checkbox" checked="checked" value=""
-												disabled></td>
-											<%
-												if (midType.equals("Wriiting")) {
-											%>
-											<td><input type="checkbox" checked="checked" value=""
-												disabled></td>
-											<%
-												} else {
-											%>
 											<td><input type="checkbox" value="" disabled></td>
 											<%
-												}if (midType.equals("Multiple Choice")) {
+												} else if (midType.equals("Writing")) {
 											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
-											<%
-												} else {
-											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
 											<%
-												}if (midType.equals("Off Schedule")) {
+												} else if (midType.equals("Multiple Choice")) {
 											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
 											<%
-												} else {
+												} else if (midType.equals("Off Schedule")) {
 											%>
+											<td><input type="checkbox"  value=""
+												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox"  value=""
+												disabled></td>
+											<td><input type="checkbox" checked="checked" value="" disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
 											<%
 												}
 											%>
 											<%
-												}
-											%>
-
-											<%
-												} else  {
+												} else {
 											%>
 											<td><input type="checkbox" value="" disabled></td>
 											<%
@@ -535,25 +553,27 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
 
 
-											<%
+										<%
 												finalType = rsExamResult.getString("finalType");
 
-																						reasonFinal = rsExamResult.getString("reasonFinal");
+													reasonFinal = rsExamResult.getString("reasonFinal");
 
-																						if (finalType != null) {
+													if (finalType != null) {
 											%>
 
 											<%
-												if(finalType.equals("Not have")){
+												// Check final type
+														
+														if (finalType.equals("Not have")) {
 											%>
 											<td><input type="checkbox" value="" disabled></td>
-											<td colspan="3">
-												<%
-													out.print(reasonFinal);
-												%>
-											</td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled
+												checked="checked"></td>
 											<%
-												}else if(finalType.equals("MD")){
+												} else if (finalType.equals("MD")) {
 											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
@@ -562,34 +582,40 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
-											<%
-												}else{
-											%>
-											<td><input type="checkbox" checked="checked" value=""
-												disabled></td>
-											<%
-												if (finalType.equals("Wriiting")) {
-											%>
-											<td><input type="checkbox" checked="checked" value=""
-												disabled></td>
-											<%
-												} else {
-											%>
 											<td><input type="checkbox" value="" disabled></td>
 											<%
-												}if (finalType.equals("Multiple Choice")) {
+												} else if (finalType.equals("Writing")) {
 											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
-											<%
-												} else {
-											%>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
 											<td><input type="checkbox" value="" disabled></td>
 											<%
-												}if (finalType.equals("Off Schedule")) {
+												} else if (finalType.equals("Multiple Choice")) {
 											%>
 											<td><input type="checkbox" checked="checked" value=""
 												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" checked="checked" value=""
+												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												} else if (finalType.equals("Off Schedule")) {
+											%>
+											<td><input type="checkbox"  value=""
+												disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<td><input type="checkbox"  value=""
+												disabled></td>
+											<td><input type="checkbox" checked="checked" value="" disabled></td>
+											<td><input type="checkbox" value="" disabled></td>
+											<%
+												}
+											%>
 											<%
 												} else {
 											%>
@@ -597,18 +623,6 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 											<%
 												}
 											%>
-											<%
-												}
-											%>
-
-											<%
-												} else  {
-											%>
-											<td><input type="checkbox" value="" disabled></td>
-											<%
-												}
-											%>
-
 
 
 
@@ -702,9 +716,9 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 								<tbody>
 									<%
 										stmt = con.createStatement();
-																	String QuerySurveyString = "SELECT * FROM examination_checksurvey";
-																	ResultSet result = stmt.executeQuery(QuerySurveyString);
-																	while (result.next()) {
+										String QuerySurveyString = "SELECT * FROM examination_checksurvey";
+										ResultSet result = stmt.executeQuery(QuerySurveyString);
+										while (result.next()) {
 									%>
 									<tr>
 										<td>
@@ -720,7 +734,7 @@ con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 										<td class="center">
 											<%
 												out.print(result
-																								.getString("examination_checksurvey.checksurvey"));
+															.getString("examination_checksurvey.checksurvey"));
 											%>
 										</td>
 									</tr>

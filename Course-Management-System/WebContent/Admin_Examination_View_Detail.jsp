@@ -90,7 +90,7 @@
 		String term = request.getParameter("term");
 		String courseCode = null;
 		stmt = con.createStatement();
-		String QueryName = "SELECT * FROM cms.examsurvey inner join cms.course WHERE examSurveyID = '"
+		String QueryName = "SELECT * FROM examsurvey inner join course WHERE examSurveyID = '"
 				+ examid
 				+ "' and examsurvey.courseCode = course.courseCode and examsurvey.year = '"
 				+ year + "' and examsurvey.semester = '" + term + "';";
@@ -122,7 +122,7 @@
 		<tbody>
 			<%
 				stmt = con.createStatement();
-				String qDetail = "SELECT * FROM cms.examsurvey inner join candidate inner join section inner join currentcourse where examsurvey.courseCode = currentcourse.courseCode and candidate.teachtype = 'Lect' and examsurvey.courseCode = '"
+				String qDetail = "SELECT * FROM examsurvey inner join candidate inner join section inner join currentcourse where examsurvey.courseCode = currentcourse.courseCode and candidate.teachtype = 'Lect' and examsurvey.courseCode = '"
 						+ courseCode
 						+ "' and section.sectionID = candidate.sectionID and currentcourse.currentcourseID = section.currentcourseID and examsurvey.year = '"
 						+ year + "' and examsurvey.semester = '" + term + "' ;";
@@ -135,7 +135,7 @@
 					<%
 						String teacherID =  rsDetail.getString("candidate.userID");
 					stmt = con.createStatement();
-					String qName = "SELECT * FROM cms.user where userID = '"+teacherID+"'";
+					String qName = "SELECT * FROM user where userID = '"+teacherID+"'";
 					ResultSet rst = stmt.executeQuery(qName);
 					while(rst.next()){
 					out.print("-"+rst.getString("user.firstname")+" "+rst.getString("user.lastname"));}
@@ -144,13 +144,22 @@
 
 
 				<td>
+				<% //Teacher Co-Course  
+				stmt = con.createStatement();
+				String QueryStringCoCourse = "SELECT * FROM section inner join examsurvey inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+ year+"' and currentcourse.semester = '"+term+"'  and  section.sectionID = candidate.sectionID and currentcourse.courseco_userID = user.userID and examsurvey.examSurveyID = '"+examid+"'and user.userID = candidate.userID and currentcourse.courseCode = '"+courseCode+"' group by currentcourse.courseCode ;";
+				ResultSet rsCoCourse = stmt.executeQuery(QueryStringCoCourse);
+				while(rsCoCourse.next()){
+					out.print("-"+rsCoCourse.getString("user.firstname")+" "+rsCoCourse.getString("user.lastname"));
 					
+				}
+				
+				%>
 				</td>
 				<td>
 					<%
 						// TO Get teacher assistance
 							stmt = con.createStatement();
-							String sql = "SELECT * FROM cms.candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
+							String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
 									+ year
 									+ "' and currentcourse.semester ='"
 									+ term
