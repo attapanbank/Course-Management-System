@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"
+	import="java.sql.*"%>
+	
+	
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.io.*,java.util.Locale"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -62,6 +70,25 @@
 </head>
 
 <body>
+
+<%// Validate USER
+String sUserID = null;
+String sUserType = null;
+String sFirstname = null;
+String sLastname = null;
+String sUserName = null;
+String sPassword = null;
+String sMajor = null;
+sUserID = (String) session.getAttribute("sUserID");
+sUserType = (String) session.getAttribute("sUserType");
+sFirstname = (String) session.getAttribute("sFirstname");
+sLastname = (String) session.getAttribute("sLastname");
+sUserName = (String) session.getAttribute("sUserName");
+sPassword = (String) session.getAttribute("sPassword");
+sMajor = (String) session.getAttribute("sMajor");
+if (sUserID == null) {
+	response.sendRedirect("Main_Login.jsp");
+} %>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
 		<div class="navbar-inner">
@@ -75,13 +102,14 @@
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
+					
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> Teacher</span> <span class="caret"></span>
+						class="hidden-sm hidden-xs"><% out.print(sFirstname); %></span> <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="#">Profile</a></li>
+					<li><a href="Profile.jsp">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.html">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -147,6 +175,40 @@
 				</div>
 
 
+				<%
+					Statement stmt;
+					Connection con;
+
+					InputStream stream = application
+							.getResourceAsStream("/fileUpload/db.properties");
+					Properties props = new Properties();
+					props.load(stream);
+					String url = props.getProperty("driver");
+					String dbUrl = props.getProperty("url");
+					String dbUser = props.getProperty("user");
+					String dbPassword = props.getProperty("password");
+					con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+					stmt = con.createStatement();
+
+					String QueryString = "select * from courseplan_checksurvey where checksurvey = 'ON' order by semester";
+					ResultSet rsCheck = stmt.executeQuery(QueryString);
+
+					String on = null;
+					int year = 0;
+					int semester = 0;
+
+					while (rsCheck.next()) {
+						on = rsCheck.getString("checksurvey");
+						year = rsCheck.getInt("year");
+						semester = rsCheck.getInt("semester");
+
+						session.setAttribute("sYear", year);
+						session.setAttribute("sSemester", semester);
+					}
+				%>
+
+
+
 
 				<div class="row">
 					<div class="box col-md-6">
@@ -154,6 +216,19 @@
 							<div class="box-header well" data-original-title="">
 								<h2>
 									<i class="glyphicon glyphicon-star-empty"></i> Course Select
+
+									<%
+										if (year != 0 && semester != 0) {
+									%>
+									Year :
+									<%
+										out.print(year);
+									%>
+									Term :
+									<%
+										out.print(semester);
+										}
+									%>
 								</h2>
 
 								<div class="box-icon">
@@ -167,48 +242,179 @@
 							</div>
 							<div class="box-content" style="display: block;">
 								<!-- put your content here -->
-								<div class="control-group">
-									<label class="control-label" for="selectError2">Select
-										course</label>
-									<div class="controls">
-										<select
-											data-placeholder="Select course that your need to teach"
-											id="selectError2" data-rel="chosen">
-											<option value=""></option>
-											<option>Dallas Cowboys</option>
-											<option>New York Giants</option>
-											<option>Philadelphia Eagles hahahahhahahhahaa</option>
-											<option>Washington Redskins</option>
-											<option>Chicago Bears</option>
-											<option>Detroit Lions</option>
-											<option>Green Bay Packers</option>
-											<option>Minnesota Vikings</option>
-											<option>Atlanta Falcons</option>
-											<option>Carolina Panthers</option>
-											<option>New Orleans Saints</option>
-											<option>Tampa Bay Buccaneers</option>
-											<option>Arizona Cardinals</option>
-											<option>St. Louis Rams</option>
-											<option>San Francisco 49ers</option>
-											<option>Seattle Seahawks</option>
-											<option>Buffalo Bills</option>
-											<option>Miami Dolphins</option>
-											<option>New England Patriots</option>
-											<option>New York Jets</option>
-											<option>Baltimore Ravens</option>
-											<option>Cincinnati Bengals</option>
-											</optgroup>
-										</select> <a align="right" class="btn btn-success" href="#"> <i
-											class="glyphicon glyphicon glyphicon-check"></i> Select
-										</a>
-									</div>
 
+
+								<%
+									String QueryString1301 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1301%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1302 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1302%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1305 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1305%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1306 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1306%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1501 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1501%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+									String QueryString1502 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1502%' AND courseplan.year='"
+											+ year + "' and courseplan.semester='" + semester + "';";
+								%>
+
+								<%
+									if (on != null) {
+										if (on.equals("ON")) {
+								%>
+
+								<form action="Teacher_Save_Survey.jsp" method="post" id="myform">
+									<div class="center">
+										<div class="control-group">
+											<label class="control-label" for="selectError2">Select
+												course <%
+												out.print(on);
+											%>
+											</label>
+											<div class="controls">
+												<select name="courseSelect"
+													data-placeholder="Select course that your need to teach"
+													id="selectError2" data-rel="chosen">
+													<optgroup label="Information Technology">
+														<%
+															ResultSet rs1301 = stmt.executeQuery(QueryString1301);
+																	while (rs1301.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1301.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Computer Science">
+														<%
+															ResultSet rs1302 = stmt.executeQuery(QueryString1302);
+																	while (rs1302.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1302.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Software Engineering">
+														<%
+															ResultSet rs1305 = stmt.executeQuery(QueryString1305);
+																	while (rs1305.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1305.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+
+													<optgroup label="Multimedia Technology and Animation">
+														<%
+															ResultSet rs1306 = stmt.executeQuery(QueryString1306);
+																	while (rs1306.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1306.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Computer Engineering">
+														<%
+															ResultSet rs1501 = stmt.executeQuery(QueryString1501);
+																	while (rs1501.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1501.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+													<optgroup label="Information and Communication Engineering">
+														<%
+															ResultSet rs1502 = stmt.executeQuery(QueryString1502);
+																	while (rs1502.next()) {
+														%>
+														<option>
+															<%
+																out.print(rs1502.getString("course.courseName"));
+															%>
+														</option>
+														<%
+															}
+														%>
+													</optgroup>
+
+												</select><br> <br>
+												<div class="center">
+													<input type="submit" class="btn btn-success"
+														onclick="submitRunAjax();"
+														class="glyphicon glyphicon glyphicon-check" value="Select">
+												</div>
+
+
+											</div>
+
+
+										</div>
+									</div>
+								</form>
+
+
+
+								<%
+									} else if (on.equals("OFF")) {
+								%>
+								<div class="alert alert-info">
+									<button type="button" class="close" data-dismiss="alert">&times;</button>
+
+									<strong> Course survey has been close. !</strong> Please wait
+									openning course survey.
+								</div>
+								<%
+									}
+								%>
+								<%
+									} else {
+								%>
+								<div class="alert alert-info">
+									<button type="button" class="close" data-dismiss="alert">&times;</button>
+									<strong> Course survey is not open !</strong> Please wait
+									openning course survey.<%
+										
+									%>
 
 								</div>
+								<%
+									}
+								%>
 
 							</div>
 						</div>
 					</div>
+
+
+					<%
+						if (on != null) {
+							if (on.equals("ON")) {
+					%>
 
 					<div class="box col-md-6">
 						<div class="box-inner">
@@ -257,34 +463,59 @@
 																			role="columnheader" class="sorting"
 																			aria-label="Role: activate to sort column ascending">Course
 																			Name</th>
+
+
 																		<th style="width: 150px;" colspan="1" rowspan="1"
 																			aria-controls="DataTables_Table_0" tabindex="0"
 																			role="columnheader" class="sorting"
-																			aria-label="Status: activate to sort column ascending">Credit
+																			aria-label="Status: activate to sort column ascending">Action
 																		</th>
 
 
 																	</tr>
 																</thead>
+																<%
+																	String cos = null;
+																			String cosCo = null;
+																			String cosCe = null;
 
+																			String QueryString_selectCourse = "SELECT * FROM course_survey where userID = '"
+																					+ sUserID + "';";
+
+																			ResultSet rsSelectCourse = stmt
+																					.executeQuery(QueryString_selectCourse);
+																%>
+																<%
+																	if (sUserID != null) {
+																				while (rsSelectCourse.next()) {
+																%>
 																<tbody aria-relevant="all" aria-live="polite"
 																	role="alert">
-																	<tr class="odd">
-																		<td class="">1302305</td>
+																	<tr>
+																		<td>
+																			<%
+																				cosCo = rsSelectCourse.getString("courseCode");
+																								out.print(cosCo);
+																			%>
+																		</td>
+																		<td>
+																			<%
+																				cos = rsSelectCourse.getString("courseName");
+																								out.print(cos);
+																			%>
+																		</td>
 
-																		<td class="center">Network Programing</td>
-
-																		<td class="center">3(2-0-2)</td>
-
-
+																		<td><a class="btn btn-danger"
+																			href="Teacher_Delete_Course_Session.jsp?coursesurveyID=<%out.print(rsSelectCourse
+									.getString("coursesurveyID"));%>">
+																				<i class="glyphicon glyphicon-trash icon-white"></i>
+																				Delete
+																		</a></td>
 																	</tr>
-																	<tr class="even">
-																		<td class="">1302312</td>
-																		<td class="center">Data Storage</td>
-																		<td class="center">3(1-1-1)</td>
-
-																	</tr>
-
+																	<%
+																		}
+																				}
+																	%>
 
 
 																</tbody>
@@ -296,22 +527,452 @@
 										</div>
 									</div>
 									<!-- put your content here -->
-									<div align="center">
-										<a class="btn btn-success" href="#"> <i
-											class="glyphicon glyphicon glyphicon-check"></i> Confirm
-										</a>
-									</div>
+									<div align="center"></div>
+
 
 								</div>
 							</div>
 						</div>
 					</div>
+
+					<%
+						} else {}%>
+
+		<%}else{%>
+		
+		
+					<div class="box col-md-6">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-star-empty"></i> Your select
+									Course
+								</h2>
+
+								<div class="box-icon">
+									<a href="#" class="btn btn-setting btn-round btn-default"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a>
+								</div>
+							</div>
+							<div class="box-content" style="display: block;">
+								<div class="box-content" style="display: block;">
+									<!-- put your content here -->
+									<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
+										role="grid">
+										<div id="DataTables_Table_0_wrapper"
+											class="dataTables_wrapper" role="grid">
+											<div id="DataTables_Table_0_wrapper"
+												class="dataTables_wrapper" role="grid">
+												<div id="DataTables_Table_0_wrapper"
+													class="dataTables_wrapper" role="grid">
+													<div id="DataTables_Table_0_wrapper"
+														class="dataTables_wrapper" role="grid">
+														<div id="DataTables_Table_0_wrapper"
+															class="dataTables_wrapper" role="grid">
+															<table aria-describedby="DataTables_Table_0_info"
+																id="DataTables_Table_0"
+																class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
+																<thead>
+																	<tr role="row">
+																		<th style="width: 100px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Role: activate to sort column ascending">Course
+																			Code</th>
+																		<th style="width: 150px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Role: activate to sort column ascending">Course
+																			Name</th>
+
+
+																		<th style="width: 150px;" colspan="1" rowspan="1"
+																			aria-controls="DataTables_Table_0" tabindex="0"
+																			role="columnheader" class="sorting"
+																			aria-label="Status: activate to sort column ascending">Action
+																		</th>
+
+
+																	</tr>
+																</thead>
+																<%
+																	String cos = null;
+																			String cosCo = null;
+																			String cosCe = null;
+
+																			String QueryString_selectCourse = "SELECT * FROM course_survey where userID = '"
+																					+ sUserID + "';";
+
+																			ResultSet rsSelectCourse = stmt
+																					.executeQuery(QueryString_selectCourse);
+																%>
+																<%
+																	if (sUserID != null) {
+																				while (rsSelectCourse.next()) {
+																%>
+																<tbody aria-relevant="all" aria-live="polite"
+																	role="alert">
+																	<tr>
+																		<td>
+																			<%
+																				cosCo = rsSelectCourse.getString("courseCode");
+																								out.print(cosCo);
+																			%>
+																		</td>
+																		<td>
+																			<%
+																				cos = rsSelectCourse.getString("courseName");
+																								out.print(cos);
+																			%>
+																		</td>
+
+																		<td>Waitting for comfirm</td>
+																	</tr>
+																	<%
+																		}
+																				}
+																	%>
+
+
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- put your content here -->
+									<div align="center"></div>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+					<div class="box col-md-12">
+						<div class="box-inner">
+							<div class="box-header well" data-original-title="">
+								<h2>
+									<i class="glyphicon glyphicon-star-empty"></i>Course that you
+									teach in this term
+
+								</h2>
+
+								<div class="box-icon">
+									<a href="#settingforcourseteacher" class="btn btn-setting btn-round btn-default" data-toggle="modal"><i
+										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+										class="btn btn-minimize btn-round btn-default"><i
+										class="glyphicon glyphicon-chevron-up"></i></a>
+								</div>
+							</div>
+							<div class="box-content" style="display: block;">
+								<!-- put your content here -->
+								<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
+									role="grid">
+
+
+									
+
+
+									<table aria-describedby="DataTables_Table_0_info"
+										id="DataTables_Table_0"
+										class="table table-striped table-bordered bootstrap-datatable datatable responsive dataTable">
+										<thead>
+											<tr role="row">
+												<th style="width: 100px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Role: activate to sort column ascending">Course
+													Code</th>
+												<th style="width: 150px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Role: activate to sort column ascending">Course
+													Name</th>
+
+
+												<th style="width: 150px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Teaching
+													assistance</th>
+
+
+												<th style="width: 150px;" colspan="2" rowspan="1"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Section
+												</th>
+
+
+
+											</tr>
+
+											<tr>
+
+												<td style="width: 150px;" colspan="1" rowspan="1"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Lect
+												</td>
+												<td style="width: 150px;" colspan="1" rowspan="1"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Lab
+												</td>
+											</tr>
+
+										</thead>
+<%
+												String strdateterm1_1 = "";
+												String strdateterm1_2 = "";
+												String strdateterm2_1 = "";
+												String strdateterm2_2 = "";
+
+												String academicyear = null;
+												String academicterm = null;
+
+												if (null == (String) session.getAttribute("TeacherCourseYear")) {
+
+													Date td = new Date();
+													String strtd = new String("");
+													SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+													SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+															new Locale("th"));
+													strtd = format.format(td);
+													Date today = format.parse(strtd);
+													//System.out.println(today);
+
+													/* String[] datetd = strtd.split("-", 3);
+													int ydatetd = Integer.parseInt(datetd[0]);
+													int mdatetd = Integer.parseInt(datetd[1]);
+													int ddatetd = Integer.parseInt(datetd[2]); */
+
+													stmt = con.createStatement();
+													String QueryString2 = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+													ResultSet rs = stmt.executeQuery(QueryString2);
+													if (rs.next()) {
+														strdateterm1_1 = rs.getString("dateterm1_1");
+														strdateterm1_2 = rs.getString("dateterm1_2");
+														strdateterm2_1 = rs.getString("dateterm2_1");
+														strdateterm2_2 = rs.getString("dateterm2_2");
+
+														Date dateterm1_1 = format2.parse(strdateterm1_1);
+														Date dateterm1_2 = format2.parse(strdateterm1_2);
+														Date dateterm2_1 = format2.parse(strdateterm2_1);
+														Date dateterm2_2 = format2.parse(strdateterm2_2);
+
+														String[] term1_1 = strdateterm1_1.split("-", 3);
+														int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+														int mterm1_1 = Integer.parseInt(term1_1[1]);
+														int dterm1_1 = Integer.parseInt(term1_1[2]);
+
+														int intacademicyear = yterm1_1;
+														academicyear = Integer.toString(intacademicyear);
+
+														/* System.out.println(dateterm1_1);
+														System.out.println(dateterm1_2);
+														System.out.println(dateterm2_1);
+														System.out.println(dateterm2_2); */
+
+														if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																&& (today.after(dateterm1_1) || today
+																		.equals(dateterm1_1))) {
+															academicterm = "1";
+														} else if ((today.before(dateterm2_2) || today
+																.equals(dateterm2_2))
+																&& (today.after(dateterm2_1) || today
+																		.equals(dateterm2_1))) {
+															academicterm = "2";
+														} else {
+															academicyear = "";
+															academicterm = "";
+															System.out.println("None");
+														}
+													}
+
+													session.setAttribute("academicyear", academicyear);
+													session.setAttribute("academicterm", academicterm);
+											%>
+											<p>
+												<b><i>Year : <%=academicyear%> Term : <%=academicterm%>
+												</i></b>
+											</p>
+
+											<%
+												} else {
+											%>
+
+											<p>
+												<b><i>Year : <%=(String) session.getAttribute("TeacherCourseYear")%>
+														Term : <%=(String) session.getAttribute("TeacherCourseTerm")%></i></b>
+											</p>
+
+											<%
+												}
+											%>
+										<%
+										
+										String Syear = "";
+										String Sterm = "";
+										if (null == (String) session.getAttribute("TeacherCourseYear")) {
+											Syear = (String) session.getAttribute("academicyear");
+											Sterm = (String) session.getAttribute("academicterm");
+										} else if (null != (String) session.getAttribute("TeacherCourseYear")) {
+											Syear = (String) session.getAttribute("TeacherCourseYear");
+											Sterm = (String) session.getAttribute("TeacherCourseTerm");
+										} else {
+											Syear = null;
+											Sterm = null;
+										}
+									%>
+
+										<%
+										String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"+sUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID ;";
+												ResultSet rsFinal = stmt.executeQuery(courseFinal);
+												stmt = con.createStatement();
+												
+												String sCosCode = null;
+									%>
+										
+										<%
+											while (rsFinal.next()) {
+										%>
+										<tbody aria-relevant="all" aria-live="polite" role="alert">
+											<tr>
+												<td>
+													<%
+														sCosCode = rsFinal.getString("course.courseCode");
+													out.print(sCosCode);
+													%>
+												</td>
+												<td>
+													<%
+														out.print(rsFinal.getString("course.courseName"));
+													%>
+												</td>
+
+												<td><%// TO Get teacher assistance
+												stmt = con.createStatement();
+												String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"+Syear+"' and currentcourse.semester ='"+Sterm+"' and currentcourse.courseCode = examsurvey.courseCode and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;" ;
+											ResultSet rsta = stmt.executeQuery(sql);
+												// Check form db who is teacher assistance.
+												// Loop only teacher assisstance.
+											while(rsta.next()){
+													String courseTA = rsta.getString("currentcourse.courseCode");
+													if(courseTA.equals(sCosCode)){
+												out.println( " - Ajarn "+rsta.getString("user.firstname")+" "+ rsta.getString("user.lastname")+"<br>");}} %></td>
+
+												<td>
+													<%
+														out.print(rsFinal.getString("section.sectionlect"));
+													%>
+												</td>
+												<td>
+													<%
+													String courseFinal2 = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"+sUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab';";
+													ResultSet rsFinal2 = stmt.executeQuery(courseFinal2);
+													stmt = con.createStatement();
+													
+													while(rsFinal2.next()){
+														
+														String courseLab = rsFinal2.getString("currentcourse.courseCode");
+														
+														if(courseLab.equals(sCosCode)){
+														out.print(rsFinal2.getString("section.sectionlab"));
+														}
+													}
+													%>
+												</td>
+											</tr>
+
+											<%
+												}
+											%>
+
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+							<!-- put your content here -->
+							<div align="center"></div>
+
+
+						</div>
+					</div>
+					
 				</div>
+			</div>
+		
+		<%} %>
+		
+		
+		</div>
+	</div>
+	<!--/fluid-row-->
 
+	<!-- Ad, you can remove it -->
 
+	<!-- Ad ends -->
 
+	<hr>
 
-
+	<div class="modal fade" id="settingforcourseteacher" tabindex="-1"
+					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">×</button>
+								<h3>Setting Examination Year</h3>
+							</div>
+							<div class="modal-body">
+								<form method="post"
+									action="Teacher_Assistance_Course_Setting_Year.jsp"
+									role="setyeartermform" id="setyeartermform">
+									<label for="Year">Year</label> <select id="teachercourseyear"
+										name="teachercourseyear">
+										<script>
+											var myDate = new Date();
+											var year = myDate.getFullYear() + 543;
+											for (var i = year + 1; i > 2540; i--) {
+												document
+														.write('<option value="'+i+'">'
+																+ i
+																+ '</option>');
+											}
+										</script>
+									</select> <label for="Term">Term</label> <select id="teachercourseterm"
+										name="teachercourseterm">
+										<option value="1">1</option>
+										<option value="2">2</option>
+									</select> <br> <a href="#" class="btn btn-default"
+										data-dismiss="modal">Close</a> <input type="button"
+										class="btn btn-primary" onClick="sendexaminationsetting()"
+										value="Submit" />
+								</form>
+							</div>
+							<div class="modal-footer"></div>
+						</div>
+					</div>
+				</div>
+				
+				<script type="text/javascript">
+					function sendexaminationsetting() {
+						document.getElementById("setyeartermform")
+								.submit();
+					}
+					
+				</script>
+				
 
 			</div>
 			<!--/fluid-row-->
@@ -322,64 +983,11 @@
 
 			<hr>
 
-			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true">
-
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">×</button>
-							<h3>รายละเอียด</h3>
-						</div>
-						<div class="modal-body">
-							<!--แก้ไขตรงนี้-->
-							<table>
-								<tr>
-									<td><p>รหัสรายวิขา:</p></td>
-									<td><p>1302305</p></td>
-								</tr>
-								<tr>
-									<td><p>ชื่อรายวิชา:</p></td>
-									<td><p>Network Programing</p></td>
-								</tr>
-								<tr>
-									<td><p>หน่วยกิต:</p></td>
-									<td><p>3(2-2-5)</p></td>
-								</tr>
-								<tr>
-									<td><p>Section:</p></td>
-									<td><select>
-											<option>Section 01</option>
-											<option>Section 02</option>
-											<option>Section 03</option>
-											<option>Section 04</option>
-									</select></td>
-								</tr>
-								<tr>
-									<td><p>นักศึกษาสาขาวิชา:</p></td>
-									<td><p>CS57</p></td>
-								</tr>
-								<tr>
-									<td><p>Lecture:</p></td>
-									<td><p>2 hour/lec</p></td>
-								</tr>
-								<tr>
-									<td><p>Lab:</p></td>
-									<td><p>2 hour/lab</p></td>
-								</tr>
-							</table>
-						</div>
-						<div class="modal-footer">
-							<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-							<a href="#" class="btn btn-primary" data-dismiss="modal">Select</a>
-						</div>
-					</div>
-				</div>
-			</div>
+			
 
 			<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
+				Â© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
 				- 2014
 			</p>
 
