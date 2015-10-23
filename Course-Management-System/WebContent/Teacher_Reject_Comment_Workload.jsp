@@ -1,14 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	import="java.sql.*" pageEncoding="utf-8"%>
-	<%@page import="java.io.InputStream"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1" import="java.sql.*"%>
+<%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en">
+<html>
 <head>
-
-<meta charset="utf-8">
-<title>User Form</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description"
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
@@ -36,6 +34,7 @@
 <link href="css/jquery.iphone.toggle.css" rel="stylesheet">
 <link href="css/uploadify.css" rel="stylesheet">
 <link href="css/animate.min.css" rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
 
 <!-- jQuery -->
 <script src="bower_components/jquery/jquery.min.js"></script>
@@ -47,369 +46,71 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="img/favicon.ico">
-<script src="dist/sweetalert-dev.js"></script>
-<link rel="stylesheet" href="dist/sweetalert.css">
-<link rel="stylesheet" href="dist/semantic.css">
-<link rel="stylesheet" href="dist/semantic.js">
-<link rel="stylesheet" href="dist/semantic.min.css">
-<link rel="stylesheet" href="dist/semantic.min.js">
-<link rel="stylesheet" href="dist/sweetalert-dev.js">
-<link rel="stylesheet" href="dist/components/dropdown.css">
-<link rel="stylesheet" href="dist/components/dropdown.js">
-<script type="text/javascript">
-
-	function bustOut() {
-		alert("This username is already taken.");
-	}
-	
-	<%if ((String) request.getAttribute("Error username") != null) {
-				out.print("bustOut();");
-				request.removeAttribute("Error username");
-			}%>
-
-			
-			
-			
-	function checkadduserform() {
-		var username = document.getElementById("username").value;
-		var oldpassword = document.getElementById("oldpassword").value;
-		var newpassword = document.getElementById("newpassword").value;
-		var confirmpassword = document.getElementById("confirmpassword").value;
-		var firstname = document.getElementById("firstname").value;
-		var lastname = document.getElementById("lastname").value;
-		
-		var checkusernamelength = username.length;
-		var checkpasswordlength = newpassword.length;
-
-		if (!username || !oldpassword || !confirmpassword || !firstname || !lastname || !newpassword) {
-			swal("Warning","Input cannot be empty.");
-		} else if(/[^a-zA-Z0-9]/.test(username)){
-			swal("Warning","Username is not allow special characters.");
-		} else if(/[^a-zA-Z0-9]/.test(newpassword)){
-			swal("Warning","Password is not allow special characters.");
-		} else if(newpassword!=confirmpassword){
-			swal("Warning","New Password and Confirm Password must be the same.");
-		} else if(checkusernamelength < 8 || checkusernamelength > 12){
-			swal("Warning","Username must between 8-12 Characters");
-		} else if(checkpasswordlength < 8 || checkpasswordlength > 12){
-			swal("Warning","Password must between 8-12 Characters");
-		} else if (/\s/.test(username) || /\s/.test(newpassword)) {
-			swal("Warning","Input cannot use white spaces");
-		} else {
-			
-			swal({
-				title: "Are you sure?",
-				text: "You want to change!",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonColor: '#1DBFBF',
-				confirmButtonText: 'Yes, Save it!',
-				closeOnConfirm: false
-			},
-			function(){
-				swal("Save!", "Your profile has been save!", document.getElementById("AdduserForm").submit());
-			});
-			
-		}
-	}
-	
-	
-
-	
-	
-	
-</script>
-
 </head>
-
 <body>
-
-
-
 
 	<%
 		Object strUserID = session.getAttribute("sUserID");
-	// Validate USER
-	String sUserID = null;
-	String sUserType = null;
-	String sFirstname = null;
-	String sLastname = null;
-	String sUserName = null;
-	String sPassword = null;
-	String sMajor = null;
-	sUserID = (String) session.getAttribute("sUserID");
-	sUserType = (String) session.getAttribute("sUserType");
-	sFirstname = (String) session.getAttribute("sFirstname");
-	sLastname = (String) session.getAttribute("sLastname");
-	sUserName = (String) session.getAttribute("sUserName");
-	sPassword = (String) session.getAttribute("sPassword");
-	sMajor = (String) session.getAttribute("sMajor");
-	if (sUserID == null) {
-		response.sendRedirect("Main_Login.jsp");
-	} 
-
-		Statement stmt;
-		Connection con;
-		InputStream stream = application
-				.getResourceAsStream("/fileUpload/db.properties");
-				Properties props = new Properties();
-				props.load(stream);
-		String url = props.getProperty("driver");
-		String dbUrl = props.getProperty("url");
-		String dbUser = props.getProperty("user");
-		String dbPassword = props.getProperty("password");
-		con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-
-		stmt = con.createStatement();
-		String QueryString = "select * from user where userID like "
-				+ strUserID;
-
-		ResultSet rs = stmt.executeQuery(QueryString);
+		// Validate USER
+		String sUserID = null;
+		String sUserType = null;
+		String sFirstname = null;
+		String sLastname = null;
+		String sUserName = null;
+		String sPassword = null;
+		String sMajor = null;
+		sUserID = (String) session.getAttribute("sUserID");
+		sUserType = (String) session.getAttribute("sUserType");
+		sFirstname = (String) session.getAttribute("sFirstname");
+		sLastname = (String) session.getAttribute("sLastname");
+		sUserName = (String) session.getAttribute("sUserName");
+		sPassword = (String) session.getAttribute("sPassword");
+		sMajor = (String) session.getAttribute("sMajor");
+		if (sUserID == null) {
+			response.sendRedirect("Main_Login.jsp");
+		}
+		
+		String userID = request.getParameter("userID");
+		String year = request.getParameter("year");
+		String term = request.getParameter("term");
 	%>
-
-
-
-	<!-- topbar starts -->
-	<div class="navbar navbar-default" role="navigation">
-		<div class="navbar-inner">
-			<button type="button" class="navbar-toggle pull-left animated flip">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="Admin_News.jsp"> <span>IT:CMS</span></a>
-			<!-- user dropdown starts -->
-			<div class="btn-group pull-right">
-				<button class="btn btn-default dropdown-toggle"
-					data-toggle="dropdown">
-
-					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> <%
- 	out.print(sFirstname);
- %>
-					</span> <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu">
-					<li><a href="Teacher_Profile.jsp">Profile</a></li>
-					<li class="divider"></li>
-					<li><a href="Main_Logout.jsp">Logout</a></li>
-				</ul>
-			</div>
-			<!-- user dropdown ends -->
-
-			<!-- theme selector starts -->
-
-			<!-- theme selector ends -->
-
+	<form action="Teacher_Save_Reject_Workload.jsp" method="post" id="commentBox"
+							name="commentBox">
+		<div class="form-group">
+			<label for="exampleInputEmail1">Comment reason reject
+				workload</label> <input type="text" class="form-control"
+				id="comment" name = "comment">
+				<input type="hidden" name = "userID" value="<%=userID %>">
+				<input type="hidden" name = "year" value="<%=year %>">
+				<input type="hidden" name = "term" value="<%=term %>">
+				<input type="hidden" name = "status" value="reject">
 		</div>
-	</div>
-	<!-- topbar ends -->
-	<div class="ch-container">
-		<div class="row">
 
-			<!-- left menu starts -->
-			<div class="col-sm-2 col-lg-2">
-				<div class="sidebar-nav">
-					<div class="nav-canvas">
-						<div class="nav-sm nav nav-stacked"></div>
-						<ul style="" class="nav nav-pills nav-stacked main-menu">
-							<li class="nav-header">Main</li>
-							<li class="active"><a class="ajax-link"
-								href="Teacher_News.jsp"><i class="glyphicon glyphicon-home"></i><span>
-										News</span></a></li>
-							<li class="nav-header hidden-md">Management</li>
-							<li><a class="ajax-link" href="Teacher_Workload.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Workload</span></a></li>
-							<li><a class="ajax-link" href="Teacher_Course.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Course</span></a></li>
-							<li><a class="ajax-link" href="Teacher_Exam.jsp"><i
-									class="glyphicon glyphicon-align-justify"></i><span>
-										Examination</span></a></li>
 
-							
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!--/span-->
-			<!-- left menu ends -->
-
-			<div id="content" class="col-lg-10 col-sm-10">
-				<!-- content starts -->
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="Teacher_News.jsp">Home</a></li>
-						<li><a href="Profile.jsp">Profile</a></li>
-
-					</ul>
-				</div>
-
-				<div class="row">
-					<div class="box col-md-6">
-						<div class="box-inner">
-							<div class="box-header well" data-original-title="">
-								<h2>
-									<i class="glyphicon glyphicon-edit"></i> Profile
-									<%
-										out.print(sFirstname + "  " + sLastname);
-									%>
-								</h2>
-
-								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
-										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-										class="btn btn-close btn-round btn-default"><i
-										class="glyphicon glyphicon-remove"></i></a>
-								</div>
-							</div>
-							<div class="box-content" align="center">
-								<form method="post" action="processChangePWD.jsp"
-									id="AdduserForm" autocomplete="off">
-									<%
-										if (rs.next()) {
-									%>
-									<div class="input-group col-md-6">
-										<span class="input-group-addon"><i
-											class="glyphicon glyphicon-user red"></i></span> <input type="text"
-											id="username" name="username" class="form-control"
-											value="<%=rs.getString("username")%>"
-											placeholder="Username %>">
-									</div>
-									<br>
-									<div class="input-group col-md-6">
-										<span class="input-group-addon"><i
-											class="glyphicon glyphicon-lock red"></i></span> <input
-											type="password" id="oldpassword" name="oldpassword"
-											class="form-control" placeholder="Old password">
-									</div>
-									<br>
-									<div class="input-group col-md-6">
-										<span class="input-group-addon"><i
-											class="glyphicon glyphicon-lock red"></i></span> <input
-											type="password" id="newpassword" name="newpassword"
-											class="form-control" placeholder="New Password">
-									</div>
-									<br>
-									<div class="input-group col-md-6">
-										<span class="input-group-addon"><i
-											class="glyphicon glyphicon-lock red"></i></span> <input
-											type="password" id="confirmpassword" name="confirmpassword"
-											class="form-control" placeholder="Confirm Password">
-									</div>
-									<br>
-									<div class="input-group col-md-6">
-										<span class="input-group-addon"><i
-											class="glyphicon glyphicon-pencil red"></i></span> <input
-											type="text" id="firstname" name="firstname"
-											value="<%=rs.getString("firstname")%>" class="form-control"
-											placeholder="ชื่อ">
-									</div>
-									<br>
-									<div class="input-group col-md-6">
-										<span class="input-group-addon"><i
-											class="glyphicon glyphicon-pencil red"></i></span> <input
-											type="text" id="lastname" name="lastname"
-											value="<%=rs.getString("lastname")%>" class="form-control"
-											placeholder="นามสกุล">
-									</div>
-									<br> <br>
-									<div class="control-group">
-										<label class="control-label" for="selectError">Major</label>
-
-										<div class="controls">
-											<select id="selectmajor" name="selectmajor" data-rel="chosen">
-												<option style="text-align: left;">Information
-													Technology</option>
-												<option style="text-align: left;">Software
-													Engineering</option>
-												<option style="text-align: left;">Computer Science</option>
-												<option style="text-align: left;">Multimedia
-													Technology and Animation</option>
-												<option style="text-align: left;">Computer
-													Engineering</option>
-												<option style="text-align: left;">Information and
-													Communication Engineering</option>
-											</select>
-											
-										</div>
-									</div>
-									<%
-										}
-									%>
-									<br> <input type="button" onclick="checkadduserform()"
-										class="btn btn-success" value="&emsp;Save&emsp;" />
-
-								</form>
-							</div>
-						</div>
-					</div>
-					<!--/span-->
-
-				</div>
-				<!--/row-->
-
-				<!-- content ends -->
-			</div>
-			<!--/#content.col-md-0-->
+		<div align="center">
+			<button class="btn btn-primary" onClick="check();">Save</button>
 		</div>
-		<!--/fluid-row-->
 
-		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>ประวัติการสอน</h3>
-					</div>
-					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>ปีการศึกษา</th>
-									<th>รหัสวิชา</th>
-									<th>รายวิชา</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>2557</td>
-									<td>1305080</td>
-									<td>Basic Information Technology</td>
-								</tr>
-								<tr>
-									<td>2558</td>
-									<td>1305076</td>
-									<td>Introduction Information Technology</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<footer class="row">
-		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
-		</p>
-		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-		</p>
-		</footer>
-	</div>
-	<!--/.fluid-container-->
+	</form>
+
+
+<script type="text/javascript">
+function check(){
+	if(document.getElementById("comment").valueOf()==null || document.getElementById("comment")==""){
+		alert("Please input reason.");
+		document.getElementById("comment").focus();
+	}else{
+		document.forms['commentBox'].submit();
+		
+	}
+}
+</script>
+
+
+
+
+
+
 
 	<!-- external javascript -->
 

@@ -60,7 +60,24 @@
 <link rel="shortcut icon" href="img/favicon.ico">
 
 </head>
-
+<%// Validate USER
+String sUserID = null;
+String sUserType = null;
+String sFirstname = null;
+String sLastname = null;
+String sUserName = null;
+String sPassword = null;
+String sMajor = null;
+sUserID = (String) session.getAttribute("sUserID");
+sUserType = (String) session.getAttribute("sUserType");
+sFirstname = (String) session.getAttribute("sFirstname");
+sLastname = (String) session.getAttribute("sLastname");
+sUserName = (String) session.getAttribute("sUserName");
+sPassword = (String) session.getAttribute("sPassword");
+sMajor = (String) session.getAttribute("sMajor");
+if (sUserID == null) {
+	response.sendRedirect("Main_Login.jsp");
+} %>
 <body>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
@@ -78,12 +95,7 @@
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
-					<%
-						String sFirstname = String.valueOf(session
-								.getAttribute("sFirstname"));
-						String sLastname = String
-								.valueOf(session.getAttribute("sLastname"));
-					%>
+					
 					<i class="glyphicon glyphicon-user"></i><span
 						class="hidden-sm hidden-xs"> <%
  	out.print(sFirstname);
@@ -93,7 +105,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="Teacher_Profile.jsp">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.html">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -193,7 +205,7 @@
 
 									stmt = con.createStatement();
 
-									String QueryString = "select * from cms.courseplan_checksurvey where checksurvey ='ON' ";
+									String QueryString = "select * from courseplan_checksurvey where checksurvey ='ON' ";
 
 									ResultSet rs = stmt.executeQuery(QueryString);
 

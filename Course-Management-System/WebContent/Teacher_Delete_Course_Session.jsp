@@ -3,6 +3,8 @@
 <%@page import="java.util.Properties"%>
 <%
 
+
+
 	Statement stmt;
 	Connection con;
 	

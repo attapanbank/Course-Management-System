@@ -3,6 +3,9 @@
 
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.io.*,java.util.Locale"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -67,10 +70,24 @@
 					data-toggle="dropdown">
 					<%
 						Object strUserID = session.getAttribute("sUserID");
-						String sFirstname = String.valueOf(session
-								.getAttribute("sFirstname"));
-						String sLastname = String
-								.valueOf(session.getAttribute("sLastname"));
+					// Validate USER
+					String sUserID = null;
+					String sUserType = null;
+					String sFirstname = null;
+					String sLastname = null;
+					String sUserName = null;
+					String sPassword = null;
+					String sMajor = null;
+					sUserID = (String) session.getAttribute("sUserID");
+					sUserType = (String) session.getAttribute("sUserType");
+					sFirstname = (String) session.getAttribute("sFirstname");
+					sLastname = (String) session.getAttribute("sLastname");
+					sUserName = (String) session.getAttribute("sUserName");
+					sPassword = (String) session.getAttribute("sPassword");
+					sMajor = (String) session.getAttribute("sMajor");
+					if (strUserID == null) {
+						response.sendRedirect("Main_Login.jsp");
+					}
 					%>
 					<i class="glyphicon glyphicon-user"></i><span
 						class="hidden-sm hidden-xs"> <%
@@ -81,7 +98,7 @@
 				<ul class="dropdown-menu">
 					<li><a href="Teacher_Profile.jsp">Profile</a></li>
 					<li class="divider"></li>
-					<li><a href="login.html">Logout</a></li>
+					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
 			</div>
 			<!-- user dropdown ends -->
@@ -145,6 +162,7 @@
 					</ul>
 				</div>
 
+
 				<%
 					Statement stmt;
 					Connection con;
@@ -160,17 +178,17 @@
 					con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 					stmt = con.createStatement();
 
-					String QueryString = "select * from cms.courseplan_checksurvey ";
-					ResultSet rs = stmt.executeQuery(QueryString);
+					String QueryString = "select * from courseplan_checksurvey where checksurvey = 'ON' order by semester";
+					ResultSet rsCheck = stmt.executeQuery(QueryString);
 
 					String on = null;
 					int year = 0;
 					int semester = 0;
 
-					while (rs.next()) {
-						on = rs.getString("checksurvey");
-						year = rs.getInt("year");
-						semester = rs.getInt("semester");
+					while (rsCheck.next()) {
+						on = rsCheck.getString("checksurvey");
+						year = rsCheck.getInt("year");
+						semester = rsCheck.getInt("semester");
 
 						session.setAttribute("sYear", year);
 						session.setAttribute("sSemester", semester);
@@ -368,7 +386,7 @@
 									<button type="button" class="close" data-dismiss="alert">&times;</button>
 									<strong> Course survey is not open !</strong> Please wait
 									openning course survey.<%
-										out.print(on);
+										
 									%>
 
 								</div>
@@ -449,7 +467,7 @@
 																			String cosCo = null;
 																			String cosCe = null;
 
-																			String QueryString_selectCourse = "SELECT * FROM cms.course_survey where userID = '"
+																			String QueryString_selectCourse = "SELECT * FROM course_survey where userID = '"
 																					+ strUserID + "';";
 
 																			ResultSet rsSelectCourse = stmt
@@ -506,9 +524,11 @@
 					</div>
 
 					<%
-						} else {
-					%>
+						} else {}%>
 
+		<%}else{%>
+		
+		
 					<div class="box col-md-6">
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
@@ -570,7 +590,7 @@
 																			String cosCo = null;
 																			String cosCe = null;
 
-																			String QueryString_selectCourse = "SELECT * FROM cms.course_survey where userID = '"
+																			String QueryString_selectCourse = "SELECT * FROM course_survey where userID = '"
 																					+ strUserID + "';";
 
 																			ResultSet rsSelectCourse = stmt
@@ -635,7 +655,7 @@
 								</h2>
 
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
+									<a href="#settingforcourseteacher" class="btn btn-setting btn-round btn-default" data-toggle="modal"><i
 										class="glyphicon glyphicon-cog"></i></a> <a href="#"
 										class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a>
@@ -647,11 +667,7 @@
 									role="grid">
 
 
-									<%
-										String courseFinal = "SELECT * FROM cms.section inner join cms.candidate inner join cms.currentcourse inner join cms.course where userID = '"+strUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '2556' and currentcourse.semester = '1' and candidate.teachtype = 'Lect' and  section.sectionID = candidate.sectionID;";
-												ResultSet rsFinal = stmt.executeQuery(courseFinal);
-												stmt = con.createStatement();
-									%>
+									
 
 
 									<table aria-describedby="DataTables_Table_0_info"
@@ -703,8 +719,118 @@
 											</tr>
 
 										</thead>
+<%
+												String strdateterm1_1 = "";
+												String strdateterm1_2 = "";
+												String strdateterm2_1 = "";
+												String strdateterm2_2 = "";
 
+												String academicyear = null;
+												String academicterm = null;
 
+												if (null == (String) session.getAttribute("TeacherCourseYear")) {
+
+													Date td = new Date();
+													String strtd = new String("");
+													SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+													SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+															new Locale("th"));
+													strtd = format.format(td);
+													Date today = format.parse(strtd);
+													//System.out.println(today);
+
+													/* String[] datetd = strtd.split("-", 3);
+													int ydatetd = Integer.parseInt(datetd[0]);
+													int mdatetd = Integer.parseInt(datetd[1]);
+													int ddatetd = Integer.parseInt(datetd[2]); */
+
+													stmt = con.createStatement();
+													String QueryString2 = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+													ResultSet rs = stmt.executeQuery(QueryString2);
+													if (rs.next()) {
+														strdateterm1_1 = rs.getString("dateterm1_1");
+														strdateterm1_2 = rs.getString("dateterm1_2");
+														strdateterm2_1 = rs.getString("dateterm2_1");
+														strdateterm2_2 = rs.getString("dateterm2_2");
+
+														Date dateterm1_1 = format2.parse(strdateterm1_1);
+														Date dateterm1_2 = format2.parse(strdateterm1_2);
+														Date dateterm2_1 = format2.parse(strdateterm2_1);
+														Date dateterm2_2 = format2.parse(strdateterm2_2);
+
+														String[] term1_1 = strdateterm1_1.split("-", 3);
+														int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+														int mterm1_1 = Integer.parseInt(term1_1[1]);
+														int dterm1_1 = Integer.parseInt(term1_1[2]);
+
+														int intacademicyear = yterm1_1;
+														academicyear = Integer.toString(intacademicyear);
+
+														/* System.out.println(dateterm1_1);
+														System.out.println(dateterm1_2);
+														System.out.println(dateterm2_1);
+														System.out.println(dateterm2_2); */
+
+														if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																&& (today.after(dateterm1_1) || today
+																		.equals(dateterm1_1))) {
+															academicterm = "1";
+														} else if ((today.before(dateterm2_2) || today
+																.equals(dateterm2_2))
+																&& (today.after(dateterm2_1) || today
+																		.equals(dateterm2_1))) {
+															academicterm = "2";
+														} else {
+															academicyear = "";
+															academicterm = "";
+															System.out.println("None");
+														}
+													}
+
+													session.setAttribute("academicyear", academicyear);
+													session.setAttribute("academicterm", academicterm);
+											%>
+											<p>
+												<b><i>Year : <%=academicyear%> Term : <%=academicterm%>
+												</i></b>
+											</p>
+
+											<%
+												} else {
+											%>
+
+											<p>
+												<b><i>Year : <%=(String) session.getAttribute("TeacherCourseYear")%>
+														Term : <%=(String) session.getAttribute("TeacherCourseTerm")%></i></b>
+											</p>
+
+											<%
+												}
+											%>
+										<%
+										
+										String Syear = "";
+										String Sterm = "";
+										if (null == (String) session.getAttribute("TeacherCourseYear")) {
+											Syear = (String) session.getAttribute("academicyear");
+											Sterm = (String) session.getAttribute("academicterm");
+										} else if (null != (String) session.getAttribute("TeacherCourseYear")) {
+											Syear = (String) session.getAttribute("TeacherCourseYear");
+											Sterm = (String) session.getAttribute("TeacherCourseTerm");
+										} else {
+											Syear = null;
+											Sterm = null;
+										}
+									%>
+
+										<%
+										String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"+strUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect';";
+												ResultSet rsFinal = stmt.executeQuery(courseFinal);
+												stmt = con.createStatement();
+												
+												String sCosCode = null;
+									%>
+										
 										<%
 											while (rsFinal.next()) {
 										%>
@@ -712,7 +838,8 @@
 											<tr>
 												<td>
 													<%
-														out.print(rsFinal.getString("course.courseCode"));
+														sCosCode = rsFinal.getString("course.courseCode");
+													out.print(sCosCode);
 													%>
 												</td>
 												<td>
@@ -721,7 +848,16 @@
 													%>
 												</td>
 
-												<td>Teacher assitance</td>
+												<td><%// TO Get teacher assistance
+												stmt = con.createStatement();
+												String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"+Syear+"' and currentcourse.semester ='"+Sterm+"' and currentcourse.courseCode = examsurvey.courseCode and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;" ;
+											ResultSet rsta = stmt.executeQuery(sql);
+												// Check form db who is teacher assistance.
+												// Loop only teacher assisstance.
+											while(rsta.next()){
+													String courseTA = rsta.getString("currentcourse.courseCode");
+													if(courseTA.equals(sCosCode)){
+												out.println( " - Ajarn "+rsta.getString("user.firstname")+" "+ rsta.getString("user.lastname")+"<br>");}} %></td>
 
 												<td>
 													<%
@@ -730,11 +866,17 @@
 												</td>
 												<td>
 													<%
-														String secLab = rsFinal.getString("section.sectionlab");
-													if(secLab ==null){
-														out.print("-");
-													}else{
-														rsFinal.getString("section.sectionlab");
+													String courseFinal2 = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"+strUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab';";
+													ResultSet rsFinal2 = stmt.executeQuery(courseFinal2);
+													stmt = con.createStatement();
+													
+													while(rsFinal2.next()){
+														
+														String courseLab = rsFinal2.getString("currentcourse.courseCode");
+														
+														if(courseLab.equals(sCosCode)){
+														out.print(rsFinal2.getString("section.sectionlab"));
+														}
 													}
 													%>
 												</td>
@@ -758,14 +900,10 @@
 					
 				</div>
 			</div>
-
-
-
-			<%
-				}
-
-				}
-			%>
+		
+		<%} %>
+		
+		
 		</div>
 	</div>
 	<!--/fluid-row-->
@@ -776,60 +914,52 @@
 
 	<hr>
 
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">Ã</button>
-					<h3>à¸£à¸²à¸¢à¸¥à¸°à¹à¸­à¸µà¸¢à¸</h3>
+	<div class="modal fade" id="settingforcourseteacher" tabindex="-1"
+					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">×</button>
+								<h3>Setting Examination Year</h3>
+							</div>
+							<div class="modal-body">
+								<form method="post"
+									action="Teacher_Course_Setting_Year.jsp"
+									role="setyeartermform" id="setyeartermform">
+									<label for="Year">Year</label> <select id="teachercourseyear"
+										name="teachercourseyear">
+										<script>
+											var myDate = new Date();
+											var year = myDate.getFullYear() + 543;
+											for (var i = year + 1; i > 2540; i--) {
+												document
+														.write('<option value="'+i+'">'
+																+ i
+																+ '</option>');
+											}
+										</script>
+									</select> <label for="Term">Term</label> <select id="teachercourseterm"
+										name="teachercourseterm">
+										<option value="1">1</option>
+										<option value="2">2</option>
+									</select> <br> <a href="#" class="btn btn-default"
+										data-dismiss="modal">Close</a> <input type="button"
+										class="btn btn-primary" onClick="sendexaminationsetting()"
+										value="Submit" />
+								</form>
+							</div>
+							<div class="modal-footer"></div>
+						</div>
+					</div>
 				</div>
-				<div class="modal-body">
-					<!--à¹à¸à¹à¹à¸à¸à¸£à¸à¸à¸µà¹-->
-					<table>
-						<tr>
-							<td><p>à¸£à¸«à¸±à¸ªà¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
-							<td><p>1302305</p></td>
-						</tr>
-						<tr>
-							<td><p>à¸à¸·à¹à¸­à¸£à¸²à¸¢à¸§à¸´à¸à¸²:</p></td>
-							<td><p>Network Programing</p></td>
-						</tr>
-						<tr>
-							<td><p>à¸«à¸à¹à¸§à¸¢à¸à¸´à¸:</p></td>
-							<td><p>3(2-2-5)</p></td>
-						</tr>
-						<tr>
-							<td><p>Section:</p></td>
-							<td><select>
-									<option>Section 01</option>
-									<option>Section 02</option>
-									<option>Section 03</option>
-									<option>Section 04</option>
-							</select></td>
-						</tr>
-						<tr>
-							<td><p>à¸à¸±à¸à¸¨à¸¶à¸à¸©à¸²à¸ªà¸²à¸à¸²à¸§à¸´à¸à¸²:</p></td>
-							<td><p>CS57</p></td>
-						</tr>
-						<tr>
-							<td><p>Lecture:</p></td>
-							<td><p>2 hour/lec</p></td>
-						</tr>
-						<tr>
-							<td><p>Lab:</p></td>
-							<td><p>2 hour/lab</p></td>
-						</tr>
-					</table>
-				</div>
-				<div class="modal-footer">
-					<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-					<a href="#" class="btn btn-primary" data-dismiss="modal">Select</a>
-				</div>
-			</div>
-		</div>
-	</div>
+				
+				<script type="text/javascript">
+					function sendexaminationsetting() {
+						document.getElementById("setyeartermform")
+								.submit();
+					}
+					
+				</script>
 
 	<footer class="row">
 	<p class="col-md-9 col-sm-9 col-xs-12 copyright">

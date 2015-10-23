@@ -77,18 +77,18 @@
 					<div id="DataTables_Table_0_wrapper" class="dataTables_wrapper"
 						role="grid">
 
-					<%Object strUserID = session.getAttribute("sUserID"); 
-					String courseCode = request.getParameter("courseCode");
-					String courseName = request.getParameter("courseName");
-					String year = request.getParameter("year");
-					String semester = request.getParameter("semester");
-					
-					%>
+						<%
+							Object strUserID = session.getAttribute("sUserID");
+							String courseCode = request.getParameter("courseCode");
+							String courseName = request.getParameter("courseName");
+							String year = request.getParameter("year");
+							String semester = request.getParameter("semester");
+						%>
 
 
 
 
-						<form action="save_exam.jsp" method="post" id="examSurvyBox"
+						<form action="Teacher_Examination_Save.jsp" method="post" id="examSurvyBox"
 							name="examSurvyBox">
 
 							<table aria-describedby="DataTables_Table_0_info"
@@ -100,15 +100,15 @@
 										<th colspan="1" rowspan="2">Course Code</th>
 										<th colspan="1" rowspan="2">Course Name</th>
 										<th colspan="3" rowspan="1">Midterm</th>
-										<th colspan="1" rowspan="2">Reason</th>
+										<th colspan="1" rowspan="2">Reason Off Schedule/No-Exam</th>
 										<th colspan="3" rowspan="1">Final</th>
-										<th colspan="1" rowspan="2">Reason</th>
+										<th colspan="1" rowspan="2">Reason Off Schedule/No-Exam</th>
 										<th colspan="1" rowspan="2">Action</th>
 									<tr>
-										<td rowspan="2" colspan="1">Wriiting</td>
+										<td rowspan="2" colspan="1">Writing</td>
 										<td rowspan="1" colspan="1">Multiple Choice</td>
 										<td rowspan="1" colspan="1">Off Schedule</td>
-										<td rowspan="2" colspan="1">Wriiting</td>
+										<td rowspan="2" colspan="1">Writing</td>
 										<td rowspan="1" colspan="1">Multiple Choice</td>
 										<td rowspan="1" colspan="1">Off Schedule</td>
 									</tr>
@@ -123,40 +123,59 @@
 
 
 									<tr>
-										<td>
-										<input type="hidden" name ="courseCode" value="<%=courseCode%>">
-										<input type="hidden" name="semester"value="<%=semester%>">
-										<input type="hidden" name="year" value="<%=year%>">
-										<%out.print(courseCode); %></td>
-										<td>
-										<input type="hidden" name ="courseCode" value="<%=courseName%>">
-										<%out.print(courseName);%></td>
+										<td><input type="hidden" name="courseCode"
+											value="<%=courseCode%>"> <input type="hidden"
+											name="semester" value="<%=semester%>"> <input
+											type="hidden" name="year" value="<%=year%>"> <%
+ 	out.print(courseCode);
+ %></td>
+										<td><input type="hidden" name="courseCode"
+											value="<%=courseName%>"> <%
+ 	out.print(courseName);
+ %></td>
 
 
 
 
-										<td><input type="checkbox" value="Wriiting"
+										<td><input type="checkbox" value="Writing"
 											name="chkBoxWrittingMid" id="chkBoxWrittingMid"></td>
 										<td><input type="checkbox" value="Multiple Choice"
 											name="chkBoxMultiMid" id="chkBoxMultiMid"></td>
-										<td><input type="checkbox" value="Off Schedule"
-											name="chkBoxOffMid" id="chkBoxOffMid"></td>
+										<td><div class="radio">
+												<label> <input type="radio" name="chkBoxOffMidNoMid"
+													id="chkBoxOffMidNoMid" value="Off Schedule" > Off
+													Schedule
+												</label>
+											</div>
+											<div class="radio">
+												<label> <input type="radio" name="chkBoxOffMidNoMid"
+													id="chkBoxOffMidNoMid" value="Not have"> No-Exam
+												</label>
+											</div></td>
 										<td class="center"><input type="text" name="reasonMid"
 											id="reasonMid"></td>
 
-										<td><input type="checkbox" value="Wriiting"
+										<td><input type="checkbox" value="Writing"
 											name="chkBoxWrittingFinal" id="chkBoxWrittingFinal"></td>
 										<td><input type="checkbox" value="Multiple Choice"
 											name="chkBoxMultiFinal" id="chkBoxMultiFinal"></td>
-										<td><input type="checkbox" value="Off Schedule"
-											name="chkBoxOffFinal" id="chkBoxOffFinal"></td>
+										<td><div class="radio">
+												<label> <input type="radio" name="chkBoxOffFinalNoFinal"
+													id="chkBoxOffFinalNoFinal" value="Off Schedule"> Off
+													Schedule
+												</label>
+											</div>
+											<div class="radio">
+												<label> <input type="radio" name="chkBoxOffFinalNoFinal"
+													id="chkBoxOffFinalNoFinal" value="Not have"> No-Exam
+												</label>
+											</div></td>
 										<td><input type="text" name="reasonFinal"
 											id="reasonFinal"></td>
 
 										<td><a class="btn btn-success examSurveybtn"
-										
-											onClick="check();">
-												<i class="glyphicon glyphicon glyphicon-check"></i> Confirm
+											onClick="check();"> <i
+												class="glyphicon glyphicon glyphicon-check"></i> Confirm
 										</a></td>
 									</tr>
 
@@ -175,152 +194,146 @@
 			</div>
 		</div>
 	</div>
-	
-	
+
+
 	<script type="text/javascript">
+function check() {
+		
+		if (document.getElementById("chkBoxWrittingMid").checked == false
+				&& document.getElementById("chkBoxMultiMid").checked == false
+				&& document.getElementById("chkBoxOffMidNoMid").checked == false
+				&& document.getElementById("reasonMid").value == "") {
+			swal("If you don't want to have exam of midterm. Please give the reason.");
+			document.getElementById("chkBoxWrittingMid").focus();
+			return false;
+		}
+		if (document.getElementById("chkBoxWrittingFinal").checked == false
+				&& document.getElementById("chkBoxMultiFinal").checked == false
+				&& document.getElementById("chkBoxOffFinalNoFinal").checked == false
+				&& document.getElementById("reasonFinal").value == "") {
+			swal("If you don't want to have exam of final. Please give the reason.");
+			document.getElementById("chkBoxWrittingFinal").focus();
+			return false;
+		}
 
-					function check() {
+		if (document.getElementById("chkBoxWrittingMid").checked == false
+				&& document.getElementById("chkBoxMultiMid").checked == false
+				&& document.getElementById("chkBoxOffMidNoMid").checked == false
+				&& document.getElementById("reasonMid").value == ""
+				&& document.getElementById("chkBoxWrittingFinal").checked == false
+				&& document.getElementById("chkBoxMultiFinal").checked == false
+				&& document.getElementById("chkBoxOffFinalNoFinal").checked == false
+				&& document.getElementById("reasonFinal").value == "") {
+			swal("If you don't want to have exam of midterm and final. Please give the reason.");
+			document.getElementById("chkBoxWrittingFinal").focus();
+			return false;
 
-						if (document.getElementById("chkBoxWrittingMid").checked == false
-								&& document.getElementById("chkBoxMultiMid").checked == false
-								&& document.getElementById("chkBoxOffMid").checked == false
-								&& document.getElementById("reasonMid").value == "") {
-							alert("If you don't want to have exam of midterm. Please give the reason.");
-							document.getElementById("chkBoxWrittingMid")
-									.focus();
-							return false;
-						}
-						if (document.getElementById("chkBoxWrittingFinal").checked == false
-								&& document.getElementById("chkBoxMultiFinal").checked == false
-								&& document.getElementById("chkBoxOffFinal").checked == false
-								&& document.getElementById("reasonFinal").value == "") {
-							alert("If you don't want to have exam of final. Please give the reason.");
-							document.getElementById("chkBoxWrittingFinal")
-									.focus();
-							return false;
-						}
+		}
 
-						if (document.getElementById("chkBoxWrittingMid").checked == false
-								&& document.getElementById("chkBoxMultiMid").checked == false
-								&& document.getElementById("chkBoxOffMid").checked == false
-								&& document.getElementById("reasonMid").value == ""
-								&& document
-										.getElementById("chkBoxWrittingFinal").checked == false
-								&& document.getElementById("chkBoxMultiFinal").checked == false
-								&& document.getElementById("chkBoxOffFinal").checked == false
-								&& document.getElementById("reasonFinal").value == "") {
-							alert("If you don't want to have exam of midterm and final. Please give the reason.");
-							document.getElementById("chkBoxWrittingFinal")
-									.focus();
-							return false;
+		if (document.getElementById("chkBoxOffMidNoMid").checked == true
+				&& document.getElementById("chkBoxWrittingMid").checked == true
 
-						}
+		//|| document.getElementById("chkBoxWrittingFinal").checked != true
+		//|| document.getElementById("chkBoxMultiFinal").checked != true
+		//|| document.getElementById("chkBoxOffFinal").checked != true
+		) {
+			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
+			document.getElementById("chkBoxOffMidNoMid");
+			return false;
 
-						if (document.getElementById("chkBoxOffMid").checked == true
-								&& document.getElementById("chkBoxWrittingMid").checked == true
+		}
 
-						//|| document.getElementById("chkBoxWrittingFinal").checked != true
-						//|| document.getElementById("chkBoxMultiFinal").checked != true
-						//|| document.getElementById("chkBoxOffFinal").checked != true
-						) {
-							alert("If you selecting Multple choice or writing you can't select Off Schedule ");
-							document.getElementById("chkBoxOffMid");
-							return false;
+		if (document.getElementById("chkBoxOffMidNoMid").checked == true
+				&& document.getElementById("chkBoxMultiMid").checked == true
+		//|| document.getElementById("chkBoxWrittingFinal").checked != true
+		//|| document.getElementById("chkBoxMultiFinal").checked != true
+		//|| document.getElementById("chkBoxOffFinal").checked != true
+		) {
+			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
+			document.getElementById("chkBoxOffMidNoMid");
+			return false;
 
-						}
+		}
 
-						if (document.getElementById("chkBoxOffMid").checked == true
-								&& document.getElementById("chkBoxMultiMid").checked == true
-						//|| document.getElementById("chkBoxWrittingFinal").checked != true
-						//|| document.getElementById("chkBoxMultiFinal").checked != true
-						//|| document.getElementById("chkBoxOffFinal").checked != true
-						) {
-							alert("If you selecting Multple choice or writing you can't select Off Schedule ");
-							document.getElementById("chkBoxOffMid");
-							return false;
+		if (document.getElementById("chkBoxOffFinalNoFinal").checked == true
+				&& document.getElementById("chkBoxWrittingFinal").checked == true) {
+			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
+			document.getElementById("chkBoxOffFinal");
+			return false;
 
-						}
+		}
 
-						if (document.getElementById("chkBoxOffFinal").checked == true
-								&& document
-										.getElementById("chkBoxWrittingFinal").checked == true) {
-							alert("If you selecting Multple choice or writing you can't select Off Schedule ");
-							document.getElementById("chkBoxOffFinal");
-							return false;
+		if (document.getElementById("chkBoxOffFinalNoFinal").checked == true
+				&& document.getElementById("chkBoxMultiFinal").checked == true) {
+			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
+			document.getElementById("chkBoxOffFinal");
+			return false;
 
-						}
+		}
 
-						if (document.getElementById("chkBoxOffFinal").checked == true
-								&& document.getElementById("chkBoxMultiFinal").checked == true) {
-							alert("If you selecting Multple choice or writing you can't select Off Schedule ");
-							document.getElementById("chkBoxOffFinal");
-							return false;
+		
+		if (document.getElementById("chkBoxWrittingMid").checked == false
+				&& document.getElementById("chkBoxMultiMid").checked == false
+				&& document.getElementById("chkBoxOffMidNoMid").checked == false
+				&& document.getElementById("chkBoxWrittingFinal").checked == false
+				&& document.getElementById("chkBoxMultiFinal").checked == false
+				&& document.getElementById("chkBoxOffFinalNoFinal").checked == false
+				&& document.getElementById("reasonMid").value != ""
+				&& document.getElementById("reasonFinal").value != "") {
 
-						}
-
-						if (document.getElementById("chkBoxWrittingMid").checked == false
-								&& document.getElementById("chkBoxMultiMid").checked == false
-								&& document.getElementById("chkBoxOffMid").checked == false
-								&& document
-										.getElementById("chkBoxWrittingFinal").checked == false
-								&& document.getElementById("chkBoxMultiFinal").checked == false
-								&& document.getElementById("chkBoxOffFinal").checked == false
-								&& document.getElementById("reasonMid").value != ""
-								&& document.getElementById("reasonFinal").value != "") {
-
-							document.forms['examSurvyBox'].submit();
-
-						}
-
-						if (document.getElementById("chkBoxWrittingMid").checked == true
-								|| document.getElementById("chkBoxMultiMid").checked == true
-								|| document.getElementById("chkBoxOffMid").checked == true
-								|| document
-										.getElementById("chkBoxWrittingFinal").checked == true
-								|| document.getElementById("chkBoxMultiFinal").checked == true
-								|| document.getElementById("chkBoxOffFinal").checked == true) {
-
-							document.forms['examSurvyBox'].submit();
-
-						}
-
-					}
-				</script>
-	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js">
+			document.forms['examSurvyBox'].submit();
 			
-		</script>
+		}
 
-		<!-- library for cookie management -->
-		<script src="js/jquery.cookie.js"></script>
-		<!-- calender plugin -->
-		<script src="bower_components/moment/min/moment.min.js"></script>
-		<script src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-		<!-- data table plugin -->
-		<script src="js/jquery.dataTables.min.js"></script>
+		if (document.getElementById("chkBoxWrittingMid").checked == true
+				|| document.getElementById("chkBoxMultiMid").checked == true
+				|| document.getElementById("chkBoxOffMidNoMid").checked == true
+				|| document.getElementById("chkBoxWrittingFinal").checked == true
+				|| document.getElementById("chkBoxOffFinalNoFinal").checked == true
+				|| document.getElementById("chkBoxOffFinal").checked == true) {
 
-		<!-- select or dropdown enhancer -->
-		<script src="bower_components/chosen/chosen.jquery.min.js"></script>
-		<!-- plugin for gallery image view -->
-		<script src="bower_components/colorbox/jquery.colorbox-min.js"></script>
-		<!-- notification plugin -->
-		<script src="js/jquery.noty.js"></script>
-		<!-- library for making tables responsive -->
-		<script src="bower_components/responsive-tables/responsive-tables.js"></script>
-		<!-- tour plugin -->
-		<script
-			src="bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
-		<!-- star rating plugin -->
-		<script src="js/jquery.raty.min.js"></script>
-		<!-- for iOS style toggle switch -->
-		<script src="js/jquery.iphone.toggle.js"></script>
-		<!-- autogrowing textarea plugin -->
-		<script src="js/jquery.autogrow-textarea.js"></script>
-		<!-- multiple file upload plugin -->
-		<script src="js/jquery.uploadify-3.1.min.js"></script>
-		<!-- history.js for cross-browser state change on ajax -->
-		<script src="js/jquery.history.js"></script>
-		<!-- application script for Charisma demo -->
-		<script src="js/charisma.js"></script>
-				
+			document.forms['examSurvyBox'].submit();
+			
+		}
+
+	}
+	
+	</script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js">
+		
+	</script>
+
+	<!-- library for cookie management -->
+	<script src="js/jquery.cookie.js"></script>
+	<!-- calender plugin -->
+	<script src="bower_components/moment/min/moment.min.js"></script>
+	<script src="bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+	<!-- data table plugin -->
+	<script src="js/jquery.dataTables.min.js"></script>
+
+	<!-- select or dropdown enhancer -->
+	<script src="bower_components/chosen/chosen.jquery.min.js"></script>
+	<!-- plugin for gallery image view -->
+	<script src="bower_components/colorbox/jquery.colorbox-min.js"></script>
+	<!-- notification plugin -->
+	<script src="js/jquery.noty.js"></script>
+	<!-- library for making tables responsive -->
+	<script src="bower_components/responsive-tables/responsive-tables.js"></script>
+	<!-- tour plugin -->
+	<script
+		src="bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js"></script>
+	<!-- star rating plugin -->
+	<script src="js/jquery.raty.min.js"></script>
+	<!-- for iOS style toggle switch -->
+	<script src="js/jquery.iphone.toggle.js"></script>
+	<!-- autogrowing textarea plugin -->
+	<script src="js/jquery.autogrow-textarea.js"></script>
+	<!-- multiple file upload plugin -->
+	<script src="js/jquery.uploadify-3.1.min.js"></script>
+	<!-- history.js for cross-browser state change on ajax -->
+	<script src="js/jquery.history.js"></script>
+	<!-- application script for Charisma demo -->
+	<script src="js/charisma.js"></script>
+
 </body>
 </html>

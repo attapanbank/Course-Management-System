@@ -19,19 +19,37 @@ try{
 	con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 	stmt = con.createStatement();
 
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+	
 	Object strUserID = session.getAttribute("sUserID");
 	String year = String.valueOf(session.getAttribute("sYear"));
 	String semester = String.valueOf(session.getAttribute("sSemester"));
 
-	String sFirstname = String.valueOf(session
-			.getAttribute("sFirstname"));
+	
 	String cos = request.getParameter("courseSelect");
 	String cosCode = null;
 	String cosCredit = null;
 	String cosCodeHave = null;
 	
 	// Select course form table course
-	String QueryString_selectCourse = "SELECT * FROM cms.course WHERE courseName = '"
+	String QueryString_selectCourse = "SELECT * FROM course WHERE courseName = '"
 			+ cos + "';";
 
 	ResultSet rsSelectCourse = stmt
@@ -51,7 +69,7 @@ try{
 	
 	// check data same and sava
 	
-	String queryString = "SELECT * FROM cms.course_survey WHERE courseCode ='"+cosCode+"' AND userID = '"+ strUserID+"' ";
+	String queryString = "SELECT * FROM course_survey WHERE courseCode ='"+cosCode+"' AND userID = '"+ strUserID+"' ";
 	ResultSet rs = stmt.executeQuery(queryString);
 	while (rs.next()) {
 
