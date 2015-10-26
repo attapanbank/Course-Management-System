@@ -57,7 +57,7 @@
 	if (reporttype.equals("surveysortbyteacher")) {
 		System.out.println(1);
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/candidate "
-				+ year + " " + term + ".xlsx"; */
+				+ year + " " + term + ".xls"; */
 
 		try {
 			Class.forName(readdriver);
@@ -197,7 +197,7 @@
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition",
 					"attachment; filename=candidate " + year + " "
-							+ term + ".xlsx");
+							+ term + ".xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -215,7 +215,7 @@
 		int intterm = Integer.parseInt(term);
 
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/course "
-				+ year + " " + term + ".xlsx"; */
+				+ year + " " + term + ".xls"; */
 
 		try {
 			Class.forName(readdriver);
@@ -490,7 +490,7 @@
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition",
 					"attachment; filename=course " + year + " " + term
-							+ ".xlsx");
+							+ ".xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -1097,7 +1097,7 @@
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition",
 					"attachment; filename=workload " + year + " " + term
-							+ ".xlsx");
+							+ ".xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -1113,7 +1113,7 @@
 	} else if (reporttype.equals("candidate+exam")) {
 		System.out.println(4);
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/ExamReport "
-				+ year + " " + term + ".xlsx"; */
+				+ year + " " + term + ".xls"; */
 
 		try {
 			Class.forName(readdriver);
@@ -1510,7 +1510,7 @@
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition",
 					"attachment; filename=ExamReport " + year + " "
-							+ term + ".xlsx");
+							+ term + ".xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -1525,7 +1525,7 @@
 	} else if (reporttype.equals("off/noexam")) {
 		System.out.println(5);
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/offschedulenoexam "
-				+ year + " " + term + ".xlsx"; */
+				+ year + " " + term + ".xls"; */
 
 		try {
 
@@ -1767,7 +1767,7 @@
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition",
 					"attachment; filename=offschedulenoexam " + year
-							+ " " + term + ".xlsx.xls");
+							+ " " + term + ".xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
