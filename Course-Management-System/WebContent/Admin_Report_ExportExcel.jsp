@@ -1618,7 +1618,7 @@
 				HSSFCell cell5 = rowdata.createCell(5);
 				HSSFCell cell6 = rowdata.createCell(6);
 				HSSFCell cell7 = rowdata.createCell(7);
-
+ 
 				cell0.setCellValue(rsexamsurvey
 						.getString("examsurvey.courseCode"));
 				cell1.setCellValue(rsexamsurvey
