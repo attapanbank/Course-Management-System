@@ -403,7 +403,11 @@
 					/*rowdata.setHeightInPoints((countselected2 * sheet
 							.getDefaultRowHeightInPoints()));*/
 					for (int i = 0; i < str.length; i++) {
-						sb.append(str[i] + "\n");
+						if (i == str.length - 1) {
+							sb.append(str[i]);
+						} else {
+							sb.append(str[i] + "\n");
+						}
 					}
 					cell6.setCellValue(sb.toString());
 
@@ -450,7 +454,11 @@
 							.getDefaultRowHeightInPoints()));*/
 
 					for (int i = 0; i < str2.length; i++) {
-						sb2.append(str2[i] + "\n");
+						if (i == str2.length - 1) {
+							sb2.append(str2[i]);
+						} else {
+							sb2.append(str2[i] + "\n");
+						}
 					}
 					cell7.setCellValue(sb2.toString());
 
@@ -1096,8 +1104,8 @@
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition",
-					"attachment; filename=workload " + year + " " + term
-							+ ".xls");
+					"attachment; filename=workload " + year + " "
+							+ term + ".xls");
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -1107,7 +1115,7 @@
 		} catch (ClassNotFoundException e) {
 
 		} catch (Exception e) {
-			
+
 		}
 
 	} else if (reporttype.equals("candidate+exam")) {
@@ -1379,7 +1387,11 @@
 					rowdata.setHeightInPoints((countcandidate2 * sheet
 							.getDefaultRowHeightInPoints()));
 					for (int i = 0; i < str.length; i++) {
-						sb.append(str[i] + "\n");
+						if (i == str.length - 1) {
+							sb.append(str[i]);
+						} else {
+							sb.append(str[i] + "\n");
+						}
 					}
 					cell8.setCellValue(sb.toString());
 					// End Get Candidate
@@ -1618,7 +1630,7 @@
 				HSSFCell cell5 = rowdata.createCell(5);
 				HSSFCell cell6 = rowdata.createCell(6);
 				HSSFCell cell7 = rowdata.createCell(7);
- 
+
 				cell0.setCellValue(rsexamsurvey
 						.getString("examsurvey.courseCode"));
 				cell1.setCellValue(rsexamsurvey
@@ -1657,7 +1669,11 @@
 				rowdata.setHeightInPoints((countcandidate2 * sheet
 						.getDefaultRowHeightInPoints()));
 				for (int i = 0; i < str.length; i++) {
-					sb.append(str[i] + "\n");
+					if (i == str.length - 1) {
+						sb.append(str[i]);
+					} else {
+						sb.append(str[i] + "\n");
+					}
 				}
 				cell2.setCellValue(sb.toString());
 
