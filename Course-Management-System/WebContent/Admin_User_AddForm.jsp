@@ -101,10 +101,10 @@
 			swal("Password is not allow special characters.");
 		} else if(password!=confirmpassword){
 			swal("Password and Confirm Password must be the same.");
-		} else if(checkusernamelength < 8 || checkusernamelength > 12){
-			alert("Username must between 8-12 Characters");
-		} else if(checkpasswordlength < 8 || checkpasswordlength > 12){
-			swal("Password must between 8-12 Characters");
+		} else if(checkusernamelength < 8 || checkusernamelength > 20){
+			alert("Username must between 8-20 Characters");
+		} else if(checkpasswordlength < 8 || checkpasswordlength > 20){
+			swal("Password must between 8-20 Characters");
 		} else if (/\s/.test(username) || /\s/.test(password)) {
 			swal("Input cannot use white spaces");
 		} else {
