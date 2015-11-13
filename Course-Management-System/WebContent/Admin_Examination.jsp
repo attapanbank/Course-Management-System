@@ -716,7 +716,7 @@
 								<tbody>
 									<%
 										stmt = con.createStatement();
-										String QuerySurveyString = "SELECT * FROM examination_checksurvey";
+										String QuerySurveyString = "SELECT * FROM examination_checksurvey ORDER BY year DESC , semester DESC";
 										ResultSet result = stmt.executeQuery(QuerySurveyString);
 										while (result.next()) {
 									%>

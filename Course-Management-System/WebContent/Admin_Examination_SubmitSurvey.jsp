@@ -66,6 +66,35 @@
 		Class.forName(readdriver);
 		con = DriverManager.getConnection(url, readuser, readpass);
 		stmt = con.createStatement();
+
+		// Check all ON to OFF before set ON the one you select
+		if (checkboxvalue.equals("ON")) {
+			String QueryLengthON = "SELECT * FROM examination_checksurvey where checksurvey = 'ON'";
+			ResultSet rslength = stmt.executeQuery(QueryLengthON);
+			rslength.last();
+			int length = rslength.getRow();
+
+			// Get ID of all ON
+			String id[] = new String[length];
+			int lengthid = 0;
+			String QueryGetID = "SELECT * FROM examination_checksurvey where checksurvey = 'ON'";
+			ResultSet rsid = stmt.executeQuery(QueryGetID);
+			while (rsid.next()) {
+				id[lengthid] = rsid
+						.getString("examination_checksurvey.examination_checksurveyID");
+				System.out.println("ID " + id[lengthid]);
+				lengthid++;
+			}
+
+			// Update ON to OFF
+			String QueryUpdate[] = new String[length];
+			for (int i = 0; i < length; i++) {
+				QueryUpdate[i] = "UPDATE examination_checksurvey SET checksurvey = 'OFF' WHERE examination_checksurveyID = '"
+						+ id[i] + "'";
+				stmt.executeUpdate(QueryUpdate[i]);
+			}
+		}
+
 		String QueryString = "SELECT checksurvey FROM examination_checksurvey WHERE year = "
 				+ surveyyear + " AND semester = " + surveyterm;
 		ResultSet rs = stmt.executeQuery(QueryString);
