@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1" import="java.sql.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="en">
 <head>
 <!--
         ===
@@ -18,7 +18,7 @@
         ===
     -->
 <meta charset="utf-8">
-<title>Admin</title>
+<title>Teacher</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description"
 	content="Charisma, a fully featured, responsive, HTML5, Bootstrap admin template.">
@@ -60,9 +60,6 @@
 <link rel="shortcut icon" href="img/favicon.ico">
 
 </head>
-
-<body>
-
 <%// Validate USER
 String sUserID = null;
 String sUserType = null;
@@ -81,6 +78,7 @@ sMajor = (String) session.getAttribute("sMajor");
 if (sUserID == null) {
 	response.sendRedirect("Main_Login.jsp");
 } %>
+<body>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
 
@@ -99,10 +97,13 @@ if (sUserID == null) {
 					data-toggle="dropdown">
 					
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"><% out.print(sFirstname); %></span> <span class="caret"></span>
+						class="hidden-sm hidden-xs"> <%
+ 	out.print(sFirstname);
+ %>
+					</span> <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="Teacher_Assistance_Profile.jsp">Profile</a></li>
+					<li><a href="Teacher_Profile.jsp">Profile</a></li>
 					<li class="divider"></li>
 					<li><a href="Main_Logout.jsp">Logout</a></li>
 				</ul>
@@ -129,17 +130,16 @@ if (sUserID == null) {
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
 							<li class="active"><a class="ajax-link"
-								href="Teacher_Assistance_News.jsp"><i
-									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
+								href="Teacher_Assistance_News.jsp"><i class="glyphicon glyphicon-home"></i><span>
+										News</span></a></li>
 							<li class="nav-header hidden-md">Management</li>
-							<li><a class="ajax-link"
-								href="Teacher_Assistance_Workload.jsp"><i
+							<li><a class="ajax-link" href="Teacher_Assistance_Workload.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Workload</span></a></li>
-							<li class="active"><a class="ajax-link"
-								href="Teacher_Assistance_Course.jsp"><i
+							<li><a class="ajax-link" href="Teacher_Assistance_Course.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Course</span></a></li>
+							
 
 
 
@@ -167,8 +167,8 @@ if (sUserID == null) {
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
-						<li><a href="Admin_News.html">Home</a></li>
-						<li><a href="Admin_News.html">Dashboard</a></li>
+						<li><a href="Teacher_News.html">Home</a></li>
+						<li><a href="Teacher_News.html">Dashboard</a></li>
 					</ul>
 				</div>
 
@@ -191,15 +191,52 @@ if (sUserID == null) {
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							<div class="box-content row" align="center">
-								<img style="width: 650px; height: 350px" src="img/schoolIt.jpg"
-									align="middle">
+							
 
+								<%
+									Statement stmt;
+									Connection con;
+									String url = "jdbc:mysql://localhost:3306/cms";
 
+									Class.forName("com.mysql.jdbc.Driver");
+									con = DriverManager.getConnection(url, "root", "root");
 
+									stmt = con.createStatement();
 
+									String QueryString = "select * from courseplan_checksurvey where checksurvey ='ON' ";
 
+									ResultSet rs = stmt.executeQuery(QueryString);
 
+									String on = null;
+									String year = null;
+									String semester = null;
+								%>
+
+								<%
+									while (rs.next()) {
+										on = rs.getString("checksurvey");
+										year = rs.getString("year");
+										semester = rs.getString("semester");
+
+										if(on.equals("ON")){ %>
+										<div class="alert alert-info">
+										                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+										                    <strong>New !</strong> A course survey year <%=year%> term <%=semester %> has been already open.
+										                </div>
+
+																	
+														
+														<% }else if(on.equals("OFF")){%>
+															<div class="alert alert-info">
+										                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+										                    <strong> The course survey has been close already.</strong>
+										                </div>
+													<% 	 } 	
+									}
+								%>
+
+	
+							
 							</div>
 						</div>
 					</div>

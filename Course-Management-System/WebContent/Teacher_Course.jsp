@@ -196,10 +196,13 @@
 				%>
 
 
-
+<%
+									if (on != null) {
+										if (on.equals("ON")) {
+								%>
 
 				<div class="row">
-					<div class="box col-md-6">
+					<div class="box col-md-12">
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
@@ -247,10 +250,7 @@
 											+ year + "' and courseplan.semester='" + semester + "';";
 								%>
 
-								<%
-									if (on != null) {
-										if (on.equals("ON")) {
-								%>
+								
 
 								<form action="Teacher_Save_Survey.jsp" method="post" id="myform">
 									<div class="center">
@@ -367,7 +367,13 @@
 
 
 
-								<%
+								
+
+							</div>
+						</div>
+					</div>
+
+<%
 									} else if (on.equals("OFF")) {
 								%>
 								<div class="alert alert-info">
@@ -393,11 +399,6 @@
 								<%
 									}
 								%>
-
-							</div>
-						</div>
-					</div>
-
 
 					<%
 						if (on != null) {
@@ -529,12 +530,11 @@
 		<%}else{%>
 		
 		
-					<div class="box col-md-6">
+					<div class="box col-md-12">
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-star-empty"></i> Your select
-									Course
+									<i class="glyphicon glyphicon-star-empty"></i> List courses in survey.
 								</h2>
 
 								<div class="box-icon">
@@ -649,8 +649,7 @@
 						<div class="box-inner">
 							<div class="box-header well" data-original-title="">
 								<h2>
-									<i class="glyphicon glyphicon-star-empty"></i>Course that you
-									teach in this term
+									<i class="glyphicon glyphicon-star-empty"></i>Course
 
 								</h2>
 
@@ -866,18 +865,10 @@
 												</td>
 												<td>
 													<%
-													String courseFinal2 = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"+strUserID+"' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab';";
-													ResultSet rsFinal2 = stmt.executeQuery(courseFinal2);
-													stmt = con.createStatement();
 													
-													while(rsFinal2.next()){
 														
-														String courseLab = rsFinal2.getString("currentcourse.courseCode");
+														out.print(rsFinal.getString("section.sectionlab"));
 														
-														if(courseLab.equals(sCosCode)){
-														out.print(rsFinal2.getString("section.sectionlab"));
-														}
-													}
 													%>
 												</td>
 											</tr>

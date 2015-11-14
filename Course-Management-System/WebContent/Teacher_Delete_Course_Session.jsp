@@ -27,7 +27,20 @@
 	
 	
 	
-	out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=Teacher_Course.jsp\">");
+	stmt = con.createStatement();
+	String checkType = "SELECT * FROM cms.user where userID = '"+strUserID+"' ; ";
+	ResultSet rsCheck = stmt.executeQuery(checkType);
+	String userType = null ;
+	while(rsCheck.next()){
+		userType = rsCheck.getString("usertype");
+		if(userType.equals("Teacher")){
+			out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=Teacher_Course.jsp\">");
+		}else{
+			out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0;URL=Teacher_Assistance_Course.jsp\">");
+		}
+		
+		
+	}
 	
 	
 con.close();

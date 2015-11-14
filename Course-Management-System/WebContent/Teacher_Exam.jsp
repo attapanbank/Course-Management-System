@@ -555,7 +555,7 @@
 
 										<%
 											stmt = con.createStatement();
-											String qeString = "SELECT * FROM section inner join candidate inner join currentcourse inner join course inner join examsurvey where userID = '"
+											String qeString = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
 													+ strUserID
 													+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
 													+ Syear
@@ -569,7 +569,7 @@
 											String reasonFinal = null;
 											String courseCode = null;
 											String userType = null;
-											String examID = null;
+											
 
 											while (rsExamResult.next()) {
 										%>
@@ -577,7 +577,7 @@
 											<tr>
 												<td>
 													<%
-														examID = rsExamResult.getString("examsurvey.examSurveyID");
+														
 															courseCode = rsExamResult.getString("course.courseCode");
 															out.print(courseCode);
 													%>
@@ -591,13 +591,11 @@
 													<%
 														// get co-course
 															stmt = con.createStatement();
-															String QueryStringCoCourse = "SELECT * FROM section inner join examsurvey inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+															String QueryStringCoCourse = "SELECT * FROM section inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
 																	+ Syear
 																	+ "' and currentcourse.semester = '"
 																	+ Sterm
-																	+ "'  and  section.sectionID = candidate.sectionID and currentcourse.courseco_userID = user.userID and examsurvey.examSurveyID = '"
-																	+ examID
-																	+ "'and user.userID = candidate.userID and currentcourse.courseCode = '"
+																	+ "'  and  section.sectionID = candidate.sectionID and currentcourse.courseco_userID = user.userID and  user.userID = candidate.userID and currentcourse.courseCode = '"
 																	+ courseCode + "' group by currentcourse.courseCode ;";
 															ResultSet rsCoCourse = stmt.executeQuery(QueryStringCoCourse);
 															while (rsCoCourse.next()) {
@@ -612,11 +610,11 @@
 													<%
 														// TO Get teacher assistance
 															stmt = con.createStatement();
-															String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
+															String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section  on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
 																	+ Syear
 																	+ "' and currentcourse.semester ='"
 																	+ Sterm
-																	+ "' and currentcourse.courseCode = examsurvey.courseCode and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;";
+																	+ "'  and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;";
 															ResultSet rsta = stmt.executeQuery(sql);
 															// Check form db who is teacher assistance.
 															// Loop only teacher assisstance.
@@ -634,13 +632,17 @@
 
 												<td>
 													<%
-														stmt = con.createStatement();
-															String examType = "SELECT * FROM examsurvey where examSurveyID = '"+examID+"' ;";
+														
+													
+													stmt = con.createStatement();
+															String examType = "SELECT * FROM examsurvey where courseCode = '"+courseCode+"' ;";
 															ResultSet rs = stmt.executeQuery(examType);
+															
 															while (rs.next()) {
 
 																String checkExamID = rs.getString("examSurveyID");
 																String course = rs.getString("courseCode");
+																//out.print(checkExamID);
 
 																if (course.equals(courseCode)) {
 																	midType = rs.getString("midtermType");
@@ -678,10 +680,11 @@
 
 												</td>
 
+
 												<td>
 													<%
 														stmt = con.createStatement();
-															String examType2 = "SELECT * FROM examsurvey where examSurveyID = '"+examID+"' ;";
+															String examType2 = "SELECT * FROM examsurvey where courseCode = '"+courseCode+"' ;";
 															ResultSet rs2 = stmt.executeQuery(examType2);
 															while (rs2.next()) {
 
