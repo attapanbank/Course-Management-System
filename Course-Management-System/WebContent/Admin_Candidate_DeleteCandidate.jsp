@@ -48,14 +48,36 @@ http://www.mkyong.com/mysql/cant-delete-records-in-mysql-workbench/ -->
 	con = DriverManager.getConnection(url, readuser, readpass);
 
 	String deletesectionid = request.getParameter("del");
+	String currentcourseID = null;
 
 	stmt = con.createStatement();
+	// Get currentcourseID to check section left or not
+	String checksection = "SELECT * FROM section WHERE sectionID = '"
+			+ deletesectionid + "'";
+	ResultSet rs = stmt.executeQuery(checksection);
+	if (rs.next()) {
+		currentcourseID = rs.getString("section.currentcourseID");
+	}
+
 	String QueryString = "Delete from section where sectionID = '"
 			+ deletesectionid + "'";
 	stmt.executeUpdate(QueryString);
 	String QueryString2 = "Delete from candidate where sectionID = '"
 			+ deletesectionid + "'";
 	stmt.executeUpdate(QueryString2);
+
+	// Delete currentcourse and course co-ordinator if no section left
+	String checksection2 = "SELECT * FROM section WHERE currentcourseID = '"
+			+ currentcourseID + "'";
+	ResultSet rs2 = stmt.executeQuery(checksection2);
+	if (rs2.next()) {
+		System.out.println("Have section");
+	} else {
+		System.out.println("No section left");
+		String deletecourse = "DELETE FROM currentcourse WHERE currentcourseID = '"
+				+ currentcourseID + "'";
+		stmt.executeUpdate(deletecourse);
+	}
 
 	response.sendRedirect("Admin_Candidate.jsp");
 %>
