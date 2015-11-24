@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="java.sql.*"%>
+	<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.io.*,java.util.Locale"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -196,12 +201,17 @@ if (sUserID == null) {
 							
 
 								<%
-									Statement stmt;
-									Connection con;
-									String url = "jdbc:mysql://localhost:3306/cms";
-
-									Class.forName("com.mysql.jdbc.Driver");
-									con = DriverManager.getConnection(url, "root", "root");
+								Statement stmt;
+								Connection con;
+								InputStream stream = application
+										.getResourceAsStream("/fileUpload/db.properties");
+								Properties props = new Properties();
+								props.load(stream);
+								String url = props.getProperty("driver");
+								String dbUrl = props.getProperty("url");
+								String dbUser = props.getProperty("user");
+								String dbPassword = props.getProperty("password");
+								con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 
 									stmt = con.createStatement();
 
