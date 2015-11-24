@@ -31,8 +31,7 @@
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
 <%
-	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
+	InputStream stream = application.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
 	props.load(stream);
 
@@ -129,7 +128,7 @@
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> <%=sUserName %></span> <span
+						class="hidden-sm hidden-xs"> <%=sUserName%></span> <span
 						class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
@@ -309,13 +308,26 @@
 
 										<div class="box-icon">
 											<a href="Coordinator_AddNews.jsp"
-												class="btn btn-round btn-default"><i
+												class="btn btn-round btn-default confirmation"><i
 												class="glyphicon glyphicon-share"></i></a> <a href="#"
 												class="btn btn-minimize btn-round btn-default"><i
 												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 												class="btn btn-close btn-round btn-default"><i
 												class="glyphicon glyphicon-remove"></i></a>
 										</div>
+										<script type="text/javascript">
+											var elems = document
+													.getElementsByClassName('confirmation');
+											var confirmIt = function(e) {
+												if (!confirm('Are you sure to submit to Admin?'))
+													e.preventDefault();
+											};
+											for (var i = 0, l = elems.length; i < l; i++) {
+												elems[i].addEventListener(
+														'click', confirmIt,
+														false);
+											}
+										</script>
 									</div>
 									<div class="box-content" style="display: block;">
 										<%
