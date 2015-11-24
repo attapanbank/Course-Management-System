@@ -252,7 +252,7 @@
 												class="btn btn-setting btn-round btn-default"
 												data-toggle="modal"><i class="glyphicon glyphicon-cog"></i></a>
 											<a href="#" class="btn btn-minimize btn-round btn-default"><i
-												class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
+												class="glyphicon glyphicon-chevron-down"></i></a> <a href="#"
 												class="btn btn-close btn-round btn-default"><i
 												class="glyphicon glyphicon-remove"></i></a>
 										</div>
@@ -268,7 +268,7 @@
 									
 									%>
 									
-									<div class="box-content">
+									<div class="box-content" style="display: none;">
 										<table
 											class="table table-striped table-bordered bootstrap-datatable datatable responsive">
 											<thead>
@@ -1687,25 +1687,65 @@
 								</script>
 
 								<hr>
-								<div class="modal fade" id="settingforworkload" tabindex="-1"
-									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal">×</button>
-												<h3>Settings</h3>
-											</div>
-											<div class="modal-body">
-												<p>Here settings can be configured...</p>
-											</div>
-											<div class="modal-footer">
-												<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-												<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-													changes</a>
-											</div>
-										</div>
-									</div>
-								</div>
+								<div class="modal fade" id="settingforworkload"
+				tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">×</button>
+							<h3>Setting Workload Year</h3>
+						</div>
+						<div class="modal-body">
+							<form method="post"
+								action="Admin_Workload_SetYear.jsp"
+								role="setyeartermform" id="setyeartermform">
+								<label for="Year">Year</label> <select id="workloadyear"
+									name="workloadyear">
+									<script>
+										var myDate = new Date();
+										var year = myDate.getFullYear() + 543;
+										for (var i = year + 1; i > 2540; i--) {
+											document
+													.write('<option value="'+i+'">'
+															+ i + '</option>');
+										}
+									</script>
+								</select> <label for="Term">Term</label> <select id="workloadterm"
+									name="workloadterm">
+									<option value="1">1</option>
+									<option value="2">2</option>
+								</select> <br> <a href="#" class="btn btn-default"
+									data-dismiss="modal">Close</a> <input type="button"
+									class="btn btn-primary" onClick="sendworkloadsetting()"
+									value="Submit" />
+							</form>
+						</div>
+						<div class="modal-footer"></div>
+					</div>
+				</div>
+			</div>
+			
+			<script type="text/javascript">
+				function sendworkloadsetting() {
+					document.getElementById("setyeartermform").submit();
+				}
+			</script>
+				
+
+<script type="text/javascript">
+			var win = null;
+
+			function NewWindow(mypage, myname, w, h, scroll) {
+				LeftPosition = (screen.width) ? (screen.width - w) / 2 : 0;
+				TopPosition = (screen.height) ? (screen.height - h) / 2 : 0;
+				settings = 'height=' + h + ',width=' + w + ',top='
+						+ TopPosition + ',left=' + LeftPosition
+						+ ',scrollbars=' + scroll + ',resizable'
+				win = window.open(mypage, myname, settings)
+				
+			}
+		</script>
 
 								<div class="modal fade" id="settingfornotcandidate"
 									tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
