@@ -7,7 +7,7 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.io.*,java.util.Locale"%>
-<%@page import="java.util.ArrayList" %>
+<%@page import="java.util.ArrayList"%>
 
 
 <%
@@ -33,7 +33,7 @@
 
 <%
 	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
+	.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
 	props.load(stream);
 
@@ -64,9 +64,9 @@
 	int countteacher2 = 0;
 	while (rsteacher2.next()) {
 		arrayTeacher[countteacher2] = rsteacher2
-				.getString("user.firstname")
-				+ " "
-				+ rsteacher2.getString("user.lastname");
+		.getString("user.firstname")
+		+ " "
+		+ rsteacher2.getString("user.lastname");
 		countteacher2++;
 	}
 	//end query name of teacher
@@ -84,7 +84,7 @@
 	int countta2 = 0;
 	while (rsta2.next()) {
 		arrayTa[countta2] = rsta2.getString("user.firstname") + " "
-				+ rsta2.getString("user.lastname");
+		+ rsta2.getString("user.lastname");
 		countta2++;
 	}
 	//end query name of ta
@@ -236,9 +236,9 @@
 						<li><a href="Admin_Candidate.jsp">Candidate</a></li>
 					</ul>
 				</div>
-				
-				
-			<div class="row">
+
+
+				<div class="row">
 					<div class="box col-md-12">
 						<div class="row">
 							<div class="box col-md-12">
@@ -257,17 +257,13 @@
 												class="glyphicon glyphicon-remove"></i></a>
 										</div>
 									</div>
-									
-									<% 
-									
-									stmt = con.createStatement();
-									String qUser = "SELECT * FROM user where usertype = 'Teacher Assistance' or usertype = 'Teacher';";
-									ResultSet rsUser = stmt.executeQuery(qUser);
-									
-									
-									
+
+									<%
+										stmt = con.createStatement();
+																							String qUser = "SELECT * FROM user where usertype = 'Teacher Assistance' or usertype = 'Teacher';";
+																							ResultSet rsUser = stmt.executeQuery(qUser);
 									%>
-									
+
 									<div class="box-content" style="display: none;">
 										<table
 											class="table table-striped table-bordered bootstrap-datatable datatable responsive">
@@ -281,512 +277,512 @@
 													<th>Actions</th>
 												</tr>
 											</thead>
-											
-											<% 					
-											String Astrdateterm1_1 = "";
-											String Astrdateterm1_2 = "";
-											String Astrdateterm2_1 = "";
-											String Astrdateterm2_2 = "";
 
-											String Aacademicyear = null;
-											String Aacademicterm = null;
-
-											if (null == (String) session.getAttribute("WorkloadYear")) {
-
-												Date td = new Date();
-												String strtd = new String("");
-												SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-												SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
-														new Locale("th"));
-												strtd = format.format(td);
-												Date today = format.parse(strtd);
-												//System.out.println(today);
-
-												/* String[] datetd = strtd.split("-", 3);
-												int ydatetd = Integer.parseInt(datetd[0]);
-												int mdatetd = Integer.parseInt(datetd[1]);
-												int ddatetd = Integer.parseInt(datetd[2]); */
-
-												stmt = con.createStatement();
-												String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
-												ResultSet rs = stmt.executeQuery(QueryString);
-												if (rs.next()) {
-													Astrdateterm1_1 = rs.getString("dateterm1_1");
-													Astrdateterm1_2 = rs.getString("dateterm1_2");
-													Astrdateterm2_1 = rs.getString("dateterm2_1");
-													Astrdateterm2_2 = rs.getString("dateterm2_2");
-
-													Date dateterm1_1 = format2.parse(Astrdateterm1_1);
-													Date dateterm1_2 = format2.parse(Astrdateterm1_2);
-													Date dateterm2_1 = format2.parse(Astrdateterm2_1);
-													Date dateterm2_2 = format2.parse(Astrdateterm2_2);
-
-													String[] term1_1 = Astrdateterm1_1.split("-", 3);
-													int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
-													int mterm1_1 = Integer.parseInt(term1_1[1]);
-													int dterm1_1 = Integer.parseInt(term1_1[2]);
-
-													int intacademicyear = yterm1_1;
-													Aacademicyear = Integer.toString(intacademicyear);
-
-													/* System.out.println(dateterm1_1);
-													System.out.println(dateterm1_2);
-													System.out.println(dateterm2_1);
-													System.out.println(dateterm2_2); */
-
-													if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
-															&& (today.after(dateterm1_1) || today
-																	.equals(dateterm1_1))) {
-														Aacademicterm = "1";
-													} else if ((today.before(dateterm2_2) || today
-															.equals(dateterm2_2))
-															&& (today.after(dateterm2_1) || today
-																	.equals(dateterm2_1))) {
-														Aacademicterm = "2";
-													} else {
-														Aacademicyear = "";
-														Aacademicterm = "";
-														System.out.println("None");
-													}
-												}
-
-												session.setAttribute("academicyear", Aacademicyear);
-												session.setAttribute("academicterm", Aacademicterm);
-										%>
-										<p>
-											<b><i>Year : <%=Aacademicyear%> Term : <%=Aacademicterm%>
-											</i></b>
-										</p>
-
-										<%
-											} else {
-										%>
-
-										<p>
-											<b><i>Year : <%=(String) session.getAttribute("WorkloadYear")%>
-													Term : <%=(String) session.getAttribute("WorkloadTerm")%></i></b>
-										</p>
-
-										<%
-											}
-										%>
-										<%
-											
-										
-											String Syear = "";
-											String Sterm = "";
-											if (null == (String) session.getAttribute("WorkloadYear")) {
-												Syear = (String) session.getAttribute("academicyear");
-												Sterm = (String) session.getAttribute("academicterm");
-											} else if (null != (String) session.getAttribute("WorkloadYear")) {
-												Syear = (String) session.getAttribute("WorkloadYear");
-												Sterm = (String) session.getAttribute("WorkloadTerm");
-											} else {
-												Syear = null;
-												Sterm = null;
-											}
-										%>
-											
 											<%
-											
-											while(rsUser.next()){ 
-											String userID = rsUser.getString("userID");
-											
+												String Astrdateterm1_1 = "";
+																													String Astrdateterm1_2 = "";
+																													String Astrdateterm2_1 = "";
+																													String Astrdateterm2_2 = "";
+
+																													String Aacademicyear = null;
+																													String Aacademicterm = null;
+
+																													if (null == (String) session.getAttribute("WorkloadYear")) {
+
+																														Date td = new Date();
+																														String strtd = new String("");
+																														SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+																														SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+																																new Locale("th"));
+																														strtd = format.format(td);
+																														Date today = format.parse(strtd);
+																														//System.out.println(today);
+
+																														/* String[] datetd = strtd.split("-", 3);
+																														int ydatetd = Integer.parseInt(datetd[0]);
+																														int mdatetd = Integer.parseInt(datetd[1]);
+																														int ddatetd = Integer.parseInt(datetd[2]); */
+
+																														stmt = con.createStatement();
+																														String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+																														ResultSet rs = stmt.executeQuery(QueryString);
+																														if (rs.next()) {
+																															Astrdateterm1_1 = rs.getString("dateterm1_1");
+																															Astrdateterm1_2 = rs.getString("dateterm1_2");
+																															Astrdateterm2_1 = rs.getString("dateterm2_1");
+																															Astrdateterm2_2 = rs.getString("dateterm2_2");
+
+																															Date dateterm1_1 = format2.parse(Astrdateterm1_1);
+																															Date dateterm1_2 = format2.parse(Astrdateterm1_2);
+																															Date dateterm2_1 = format2.parse(Astrdateterm2_1);
+																															Date dateterm2_2 = format2.parse(Astrdateterm2_2);
+
+																															String[] term1_1 = Astrdateterm1_1.split("-", 3);
+																															int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+																															int mterm1_1 = Integer.parseInt(term1_1[1]);
+																															int dterm1_1 = Integer.parseInt(term1_1[2]);
+
+																															int intacademicyear = yterm1_1;
+																															Aacademicyear = Integer.toString(intacademicyear);
+
+																															/* System.out.println(dateterm1_1);
+																															System.out.println(dateterm1_2);
+																															System.out.println(dateterm2_1);
+																															System.out.println(dateterm2_2); */
+
+																															if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																																	&& (today.after(dateterm1_1) || today
+																																			.equals(dateterm1_1))) {
+																																Aacademicterm = "1";
+																															} else if ((today.before(dateterm2_2) || today
+																																	.equals(dateterm2_2))
+																																	&& (today.after(dateterm2_1) || today
+																																			.equals(dateterm2_1))) {
+																																Aacademicterm = "2";
+																															} else {
+																																Aacademicyear = "";
+																																Aacademicterm = "";
+																																System.out.println("None");
+																															}
+																														}
+
+																														session.setAttribute("academicyear", Aacademicyear);
+																														session.setAttribute("academicterm", Aacademicterm);
+											%>
+											<p>
+												<b><i>Year : <%=Aacademicyear%> Term : <%=Aacademicterm%>
+												</i></b>
+											</p>
+
+											<%
+												} else {
+											%>
+
+											<p>
+												<b><i>Year : <%=(String) session.getAttribute("WorkloadYear")%>
+														Term : <%=(String) session.getAttribute("WorkloadTerm")%></i></b>
+											</p>
+
+											<%
+												}
+											%>
+											<%
+												String Syear = "";
+																													String Sterm = "";
+																													if (null == (String) session.getAttribute("WorkloadYear")) {
+																														Syear = (String) session.getAttribute("academicyear");
+																														Sterm = (String) session.getAttribute("academicterm");
+																													} else if (null != (String) session.getAttribute("WorkloadYear")) {
+																														Syear = (String) session.getAttribute("WorkloadYear");
+																														Sterm = (String) session.getAttribute("WorkloadTerm");
+																													} else {
+																														Syear = null;
+																														Sterm = null;
+																													}
+											%>
+
+											<%
+												while(rsUser.next()){ 
+																													String userID = rsUser.getString("userID");
 											%>
 											<tbody>
 												<tr>
-													<td><%out.print(rsUser.getString("user.firstname")+" "+ rsUser.getString("user.lastname")); %></td>
-													<td><%stmt = con.createStatement();
-													String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-															+ userID
-															+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID  group by currentcourse.courseCode;";
-													ResultSet rsFinal = stmt.executeQuery(courseFinal); 
-													
-													
-													
-													ArrayList<Integer> listHourAll = new ArrayList<Integer>();
-													ArrayList<Double> listResult = new ArrayList<Double>();
-													
-													if (userID != null) {
-														while (rsFinal.next()) {
-															
-															int of_lec = 0;
-															int of_lecturers = 0;
-															int of_lab = 0;
-															int of_lablecturers = 0;
-															double wlLect = 0;
-															double wlLab = 0;
-															
-															int hourAll = 0 ;
-															double result =0;
-															
-															String courseCode = rsFinal.getString("course.courseCode");
-															String courseName = rsFinal.getString("course.courseName");
-															String credit = null;
-															credit = rsFinal.getString("course.Credit");
-															System.out.print(credit);
-															String[] parts = credit.split("[\\s()]", 4);
-
-															System.out.println(credit);
-															String creditSplit = parts[0];
-															String splitnext = parts[2];
-
-															String[] partstwo = splitnext.split("-", 3);
-															String lect = partstwo[0];
-															String lab = partstwo[1];
-															String self = partstwo[2];
-
-															int lect_of_hour = Integer.parseInt(lect);
-															int lab_of_hour = Integer.parseInt(lab);
-															
-															
-															if(courseName.equalsIgnoreCase("Senior Project 2") 
-																	|| courseName.equalsIgnoreCase("Co-operative Education") 
-																	|| courseName.equalsIgnoreCase("Senior Project 1")){
-																
-															}else{
-															if (lect_of_hour == 0) {
-															
-																out.print(lect_of_hour);
-															} else {
-
-																
-																
-																
-																stmt = con.createStatement();
-																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																		+ sUserID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																		+ courseCode + "'  ";
-																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
-																rsOfLec.last();
-																of_lec = rsOfLec.getInt("rowcount");
-																
-
-															}
-															}
-															
-															stmt = con.createStatement();
-															String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID ";
-															ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
-
-															rsOfLectures.last();
-															of_lecturers = rsOfLectures.getInt("rowcount");
-															
-															
-															if(courseName.equalsIgnoreCase("Senior Project 2") 
-																	|| courseName.equalsIgnoreCase("Co-operative Education") 
-																	|| courseName.equalsIgnoreCase("Senior Project 1")){
-																
-																
-															}else{
-															
-															if (lab_of_hour == 0) {
-																out.print(lab_of_hour);
-															} else {
-
-																stmt = con.createStatement();
-																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																		+ sUserID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																		+ courseCode + "'  ";
-																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
-
-																rsOfLec.next();
-																of_lab = rsOfLec.getInt("rowcount");
-																
-
-															}
-															}
-															stmt = con.createStatement();
-															String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID;  ";
-															ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
-															rsOfLec2.last();
-															of_lablecturers = rsOfLec2.getRow();
-															while (rsOfLec2.next()) {
-																String a = rsOfLec2
-																		.getString("currentcourse.courseCode");
-
-															}
-															
-															if(courseName.equalsIgnoreCase("Senior Project 2") 
-																	|| courseName.equalsIgnoreCase("Co-operative Education") 
-																	|| courseName.equalsIgnoreCase("Senior Project 1")){
-																
-																hourAll = 0 ;
-																listHourAll.add(hourAll);
-															
-															}else{
-															
-															
-															hourAll = lect_of_hour + lab_of_hour;
-																listHourAll.add(hourAll);
-																			
-																
-															}
-																
-																
-														}
-														}
-													
-													int totalHour  = 0 ;
-													double totalResult = 0 ;
-													
-													for(int i = 0; i<listHourAll.size(); i++)
-													  {
-														  
-														totalHour = totalHour + listHourAll.get(i);
-														
-														
-														  }
-													 out.print(totalHour);
-													
-													%></td>
 													<td>
-													<%stmt = con.createStatement();
-													String courseFinal2 = "SELECT * FROM cms.section inner join candidate inner join currentcourse inner join course where userID = '"
-															+ sUserID
-															+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' group by currentcourse.courseCode;";
-													ResultSet rsFinal2 = stmt.executeQuery(courseFinal);
-													
-													int of_lec = 0;
-													int of_lecturers = 0;
-													int of_lab = 0;
-													int of_lablecturers = 0;
-													double wlLect = 0;
-													double wlLab = 0;
-													
-													int hourAll = 0 ;
-													double result =0;
-													
-													
-													ArrayList<Double> listResult2 = new ArrayList<Double>();
-													
-													if (userID != null) {
-														while (rsFinal2.next()) {
-
-															String credit = null;
-															String courseCode = rsFinal2.getString("course.courseCode");
-															String courseName = rsFinal2.getString("course.courseName");
-															
-															credit = rsFinal2.getString("course.Credit");
-															System.out.print(credit);
-															String[] parts = credit.split("[\\s()]", 4);
-
-															System.out.println(credit);
-															String creditSplit = parts[0];
-															String splitnext = parts[2];
-
-															String[] partstwo = splitnext.split("-", 3);
-															String lect = partstwo[0];
-															String lab = partstwo[1];
-															String self = partstwo[2];
-
-															int lect_of_hour = Integer.parseInt(lect);
-															int lab_of_hour = Integer.parseInt(lab);
-															
-															if(courseName.equalsIgnoreCase("Senior Project 2") 
-																	|| courseName.equalsIgnoreCase("Co-operative Education") 
-																	|| courseName.equalsIgnoreCase("Senior Project 1")){
-																
-															}else{
-															
-															if (lect_of_hour == 0) {
-																
-															} else {
-
-																stmt = con.createStatement();
-																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																		+ userID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																		+ courseCode + "'  ";
-																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
-																rsOfLec.last();
-																of_lec = rsOfLec.getInt("rowcount");
-																
-
-															}
-															}
-															
-															
-															if(courseName.equalsIgnoreCase("Senior Project 2") 
-																	|| courseName.equalsIgnoreCase("Co-operative Education") 
-																	|| courseName.equalsIgnoreCase("Senior Project 1")){
-																
-															}else{
-															
-															if (lab_of_hour == 0) {
-																out.print(lab_of_hour);
-															} else {
-
-																stmt = con.createStatement();
-																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																		+ userID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																		+ courseCode + "'  ";
-																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
-
-																rsOfLec.next();
-																of_lab = rsOfLec.getInt("rowcount");
-																
-
-															}
-															}
-															
-															stmt = con.createStatement();
-															String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID ";
-															ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
-
-															rsOfLectures.last();
-															of_lecturers = rsOfLectures.getInt("rowcount");
-															
-															
-															stmt = con.createStatement();
-															String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID;  ";
-															ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
-															rsOfLec2.last();
-															of_lablecturers = rsOfLec2.getRow();
-															while (rsOfLec2.next()) {
-																String a = rsOfLec2
-																		.getString("currentcourse.courseCode");
-
-															}
-
-															
-															try {
-
-																
-
-																if(courseName.equalsIgnoreCase("Senior Project 2") 
-																		|| courseName.equalsIgnoreCase("Co-operative Education") 
-																		|| courseName.equalsIgnoreCase("Senior Project 1")){
-																	
-																}else{
-																
-																if (of_lecturers != 0 && of_lablecturers != 0) {
-
-																	if (of_lecturers >= 2) {
-																		// for lecture
-																		wlLect = (of_lec * lect_of_hour * 0.5)
-																				/ of_lecturers;
-																	} else {
-																		wlLect = (of_lec * lect_of_hour) / of_lecturers;
-																	}
-
-																	// for lab
-
-																	wlLab = (of_lab * lab_of_hour * 0.5)
-																			/ of_lablecturers;
-
-																	 result = wlLab + wlLect;
-																	
-
-																} else if (of_lecturers == 0 && of_lablecturers != 0) {
-																	// for lab
-																	wlLab = (of_lab * lab_of_hour * 0.5)
-																			/ of_lablecturers;
-
-																	 result = wlLab + wlLect;
-																	
-																} else if (of_lecturers != 0 && of_lablecturers == 0) {
-																	if (of_lecturers >= 2) {
-																		// for lecture
-																		wlLect = (of_lec * lect_of_hour * 0.5)
-																				/ of_lecturers;
-																	} else {
-																		wlLect = (of_lec * lect_of_hour) / of_lecturers;
-																	}
-
-																	 result = wlLab + wlLect;
-																	
-																} else if (of_lecturers == 0 && of_lablecturers == 0) {
-																	// no calculate
-																	 result = wlLab + wlLect;
-																	
-																}
-																
-																listResult2.add(result);
-																
-																}
-															} catch (ArithmeticException e) {
-																out.print(e);
-															} catch (NumberFormatException e) {
-																out.print(e);
-															} catch (Exception e) {
-																out.print(e);
-															}
-															
-															
-															
-														}}
-													
-													double totalResult2 = 0 ;
-													for(int i = 0; i<listResult2.size(); i++)
-													  {
-														totalResult2 = totalResult2 + listResult2.get(i);
-														}
-													String finalResult = String.format("%.2f", totalResult2);
-													out.print(finalResult);
-													%>
-													
+														<%
+															out.print(rsUser.getString("user.firstname")+" "+ rsUser.getString("user.lastname"));
+														%>
 													</td>
-													
 													<td>
-													<% 
-													stmt = con.createStatement();
-													String qWorkload = "SELECT * FROM workload where userID = '"+userID+"' and year = '"+Syear+"' and semester = '"+Sterm+"' "; 
-													ResultSet rswl = stmt.executeQuery(qWorkload);
-													
-													while(rswl.next()){
-														String status = rswl.getString("status");
-														
-														if(status.equals("confirm")){%>
-														
-															<span class="label label-info">Confirm</span>
-														<% }else if(status.equals("reject")){%>
-													
-													<span class="label label-warning">Reject</span>
-													<% 	
-													}}
-													%>
-													
-													
-													 </td>
-													<td><% 
-													stmt = con.createStatement();
-													String qWorkload2 = "SELECT * FROM workload where userID = '"+userID+"' and year = '"+Sterm+"' and semester = '"+Syear+"' "; 
-													ResultSet rswl2 = stmt.executeQuery(qWorkload);
-													String comment = null;
-													while(rswl2.next()){
-														comment = rswl2.getString("comment");
-														
-														if(comment.equals("null")){
-															out.print("-");
+														<%
+															stmt = con.createStatement();
+																																					String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																							+ userID
+																																							+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID  group by currentcourse.courseCode;";
+																																					ResultSet rsFinal = stmt.executeQuery(courseFinal); 
+																																					
+																																					
+																																					
+																																					ArrayList<Integer> listHourAll = new ArrayList<Integer>();
+																																					ArrayList<Double> listResult = new ArrayList<Double>();
+																																					
+																																					if (userID != null) {
+																																						while (rsFinal.next()) {
+																																							
+																																							int of_lec = 0;
+																																							int of_lecturers = 0;
+																																							int of_lab = 0;
+																																							int of_lablecturers = 0;
+																																							double wlLect = 0;
+																																							double wlLab = 0;
+																																							
+																																							int hourAll = 0 ;
+																																							double result =0;
+																																							
+																																							String courseCode = rsFinal.getString("course.courseCode");
+																																							String courseName = rsFinal.getString("course.courseName");
+																																							String credit = null;
+																																							credit = rsFinal.getString("course.Credit");
+																																							System.out.print(credit);
+																																							String[] parts = credit.split("[\\s()]", 4);
+
+																																							System.out.println(credit);
+																																							String creditSplit = parts[0];
+																																							String splitnext = parts[2];
+
+																																							String[] partstwo = splitnext.split("-", 3);
+																																							String lect = partstwo[0];
+																																							String lab = partstwo[1];
+																																							String self = partstwo[2];
+
+																																							int lect_of_hour = Integer.parseInt(lect);
+																																							int lab_of_hour = Integer.parseInt(lab);
+																																							
+																																							
+																																							if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																									|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																									|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																								
+																																							}else{
+																																							if (lect_of_hour == 0) {
+																																							
+																																								out.print(lect_of_hour);
+																																							} else {
+
+																																								
+																																								
+																																								
+																																								stmt = con.createStatement();
+																																								String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																										+ sUserID
+																																										+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																																										+ courseCode + "'  ";
+																																								ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+																																								rsOfLec.last();
+																																								of_lec = rsOfLec.getInt("rowcount");
+																																								
+
+																																							}
+																																							}
+																																							
+																																							stmt = con.createStatement();
+																																							String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																																									+ courseCode + "' group by candidate.userID ";
+																																							ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
+
+																																							if(rsOfLectures.next()){
+																																							rsOfLectures.last();
+																																							of_lecturers = rsOfLectures.getInt("rowcount");
+																																							}
+																																							
+																																							if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																									|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																									|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																								
+																																								
+																																							}else{
+																																							
+																																							if (lab_of_hour == 0) {
+																																								out.print(lab_of_hour);
+																																							} else {
+
+																																								stmt = con.createStatement();
+																																								String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																										+ sUserID
+																																										+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																																										+ courseCode + "'  ";
+																																								ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+
+																																								rsOfLec.next();
+																																								of_lab = rsOfLec.getInt("rowcount");
+																																								
+
+																																							}
+																																							}
+																																							stmt = con.createStatement();
+																																							String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																																									+ courseCode + "' group by candidate.userID;  ";
+																																							ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
+																																							rsOfLec2.last();
+																																							of_lablecturers = rsOfLec2.getRow();
+																																							while (rsOfLec2.next()) {
+																																								String a = rsOfLec2
+																																										.getString("currentcourse.courseCode");
+
+																																							}
+																																							
+																																							if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																									|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																									|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																								
+																																								hourAll = 0 ;
+																																								listHourAll.add(hourAll);
+																																							
+																																							}else{
+																																							
+																																							
+																																							hourAll = lect_of_hour + lab_of_hour;
+																																								listHourAll.add(hourAll);
+																																											
+																																								
+																																							}
+																																								
+																																								
+																																						}
+																																						}
+																																					
+																																					int totalHour  = 0 ;
+																																					double totalResult = 0 ;
+																																					
+																																					for(int i = 0; i<listHourAll.size(); i++)
+																																					  {
+																																						  
+																																						totalHour = totalHour + listHourAll.get(i);
+																																						
+																																						
+																																						  }
+																																					 out.print(totalHour);
 														%>
-														
-															
-														<% }else {
-															out.print(comment);
+													</td>
+													<td>
+														<%
+															stmt = con.createStatement();
+																																					String courseFinal2 = "SELECT * FROM cms.section inner join candidate inner join currentcourse inner join course where userID = '"
+																																							+ sUserID
+																																							+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' group by currentcourse.courseCode;";
+																																					ResultSet rsFinal2 = stmt.executeQuery(courseFinal);
+																																					
+																																					int of_lec = 0;
+																																					int of_lecturers = 0;
+																																					int of_lab = 0;
+																																					int of_lablecturers = 0;
+																																					double wlLect = 0;
+																																					double wlLab = 0;
+																																					
+																																					int hourAll = 0 ;
+																																					double result =0;
+																																					
+																																					
+																																					ArrayList<Double> listResult2 = new ArrayList<Double>();
+																																					
+																																					if (userID != null) {
+																																						while (rsFinal2.next()) {
+
+																																							String credit = null;
+																																							String courseCode = rsFinal2.getString("course.courseCode");
+																																							String courseName = rsFinal2.getString("course.courseName");
+																																							
+																																							credit = rsFinal2.getString("course.Credit");
+																																							System.out.print(credit);
+																																							String[] parts = credit.split("[\\s()]", 4);
+
+																																							System.out.println(credit);
+																																							String creditSplit = parts[0];
+																																							String splitnext = parts[2];
+
+																																							String[] partstwo = splitnext.split("-", 3);
+																																							String lect = partstwo[0];
+																																							String lab = partstwo[1];
+																																							String self = partstwo[2];
+
+																																							int lect_of_hour = Integer.parseInt(lect);
+																																							int lab_of_hour = Integer.parseInt(lab);
+																																							
+																																							if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																									|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																									|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																								
+																																							}else{
+																																							
+																																							if (lect_of_hour == 0) {
+																																								
+																																							} else {
+
+																																								stmt = con.createStatement();
+																																								String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																										+ userID
+																																										+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																																										+ courseCode + "'  ";
+																																								ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+																																								rsOfLec.last();
+																																								of_lec = rsOfLec.getInt("rowcount");
+																																								
+
+																																							}
+																																							}
+																																							
+																																							
+																																							if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																									|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																									|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																								
+																																							}else{
+																																							
+																																							if (lab_of_hour == 0) {
+																																								out.print(lab_of_hour);
+																																							} else {
+
+																																								stmt = con.createStatement();
+																																								String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																										+ userID
+																																										+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																																										+ courseCode + "'  ";
+																																								ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+
+																																								rsOfLec.next();
+																																								of_lab = rsOfLec.getInt("rowcount");
+																																								
+
+																																							}
+																																							}
+																																							
+																																							stmt = con.createStatement();
+																																							String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																																									+ courseCode + "' group by candidate.userID ";
+																																							ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
+																																							
+																																							if(rsOfLectures.next()){
+																																							rsOfLectures.last();
+																																							of_lecturers = rsOfLectures.getInt("rowcount");
+																																							}
+																																							
+																																							stmt = con.createStatement();
+																																							String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																																									+ courseCode + "' group by candidate.userID;  ";
+																																							ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
+																																							rsOfLec2.last();
+																																							of_lablecturers = rsOfLec2.getRow();
+																																							while (rsOfLec2.next()) {
+																																								String a = rsOfLec2
+																																										.getString("currentcourse.courseCode");
+
+																																							}
+
+																																							
+																																							try {
+
+																																								
+
+																																								if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																										|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																										|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																									
+																																								}else{
+																																								
+																																								if (of_lecturers != 0 && of_lablecturers != 0) {
+
+																																									if (of_lecturers >= 2) {
+																																										// for lecture
+																																										wlLect = (of_lec * lect_of_hour * 0.5)
+																																												/ of_lecturers;
+																																									} else {
+																																										wlLect = (of_lec * lect_of_hour) / of_lecturers;
+																																									}
+
+																																									// for lab
+
+																																									wlLab = (of_lab * lab_of_hour * 0.5)
+																																											/ of_lablecturers;
+
+																																									 result = wlLab + wlLect;
+																																									
+
+																																								} else if (of_lecturers == 0 && of_lablecturers != 0) {
+																																									// for lab
+																																									wlLab = (of_lab * lab_of_hour * 0.5)
+																																											/ of_lablecturers;
+
+																																									 result = wlLab + wlLect;
+																																									
+																																								} else if (of_lecturers != 0 && of_lablecturers == 0) {
+																																									if (of_lecturers >= 2) {
+																																										// for lecture
+																																										wlLect = (of_lec * lect_of_hour * 0.5)
+																																												/ of_lecturers;
+																																									} else {
+																																										wlLect = (of_lec * lect_of_hour) / of_lecturers;
+																																									}
+
+																																									 result = wlLab + wlLect;
+																																									
+																																								} else if (of_lecturers == 0 && of_lablecturers == 0) {
+																																									// no calculate
+																																									 result = wlLab + wlLect;
+																																									
+																																								}
+																																								
+																																								listResult2.add(result);
+																																								
+																																								}
+																																							} catch (ArithmeticException e) {
+																																								out.print(e);
+																																							} catch (NumberFormatException e) {
+																																								out.print(e);
+																																							} catch (Exception e) {
+																																								out.print(e);
+																																							}
+																																							
+																																							
+																																							
+																																						}}
+																																					
+																																					double totalResult2 = 0 ;
+																																					for(int i = 0; i<listResult2.size(); i++)
+																																					  {
+																																						totalResult2 = totalResult2 + listResult2.get(i);
+																																						}
+																																					String finalResult = String.format("%.2f", totalResult2);
+																																					out.print(finalResult);
 														%>
-													
-													
-													<% 	
-													}}
-													%></td>
+
+													</td>
+
+													<td>
+														<%
+															stmt = con.createStatement();
+																																					String qWorkload = "SELECT * FROM workload where userID = '"+userID+"' and year = '"+Syear+"' and semester = '"+Sterm+"' "; 
+																																					ResultSet rswl = stmt.executeQuery(qWorkload);
+																																					
+																																					while(rswl.next()){
+																																						String status = rswl.getString("status");
+																																						
+																																						if(status.equals("confirm")){
+														%> <span class="label label-info">Confirm</span> <%
+ 	}else if(status.equals("reject")){
+ %> <span class="label label-warning">Reject</span> <%
+ 	}}
+ %>
+
+
+													</td>
+													<td>
+														<%
+															stmt = con.createStatement();
+																																					String qWorkload2 = "SELECT * FROM workload where userID = '"+userID+"' and year = '"+Sterm+"' and semester = '"+Syear+"' "; 
+																																					ResultSet rswl2 = stmt.executeQuery(qWorkload);
+																																					String comment = null;
+																																					while(rswl2.next()){
+																																						comment = rswl2.getString("comment");
+																																						
+																																						if(comment.equals("null")){
+																																							out.print("-");
+														%> <%
+ 	}else {
+  													out.print(comment);
+ %> <%
+ 	}}
+ %>
+													</td>
 													<td><a class="btn btn-success btn-setting"
-												href="Admin_Candidate_Workload_Detail.jsp?userID=<%out.print(rsUser.getString("user.userID"));%>&&year=<%=Syear%>&&term=<%=Sterm%>"
-												data-toggle="modal"
-												onClick="NewWindow(this.href,'name','800','600','yes');return false">
-													<i class="glyphicon glyphicon-zoom-in icon-white"></i> View
-											</a></td>
-												
-												
+														href="Admin_Candidate_Workload_Detail.jsp?userID=<%out.print(rsUser.getString("user.userID"));%>&&year=<%=Syear%>&&term=<%=Sterm%>"
+														data-toggle="modal"
+														onClick="NewWindow(this.href,'name','800','600','yes');return false">
+															<i class="glyphicon glyphicon-zoom-in icon-white"></i>
+															View
+													</a></td>
 											</tbody>
-											<%} %>
+											<%
+												}
+											%>
 										</table>
 									</div>
 								</div>
@@ -800,9 +796,9 @@
 					</div>
 					<!--/#content.col-md-0-->
 				</div>
-				
-					
-			
+
+
+
 				<!--/fluid-row-->
 
 				<div class="row">
@@ -836,73 +832,73 @@
 
 											<%
 												String strdateterm1_1 = "";
-												String strdateterm1_2 = "";
-												String strdateterm2_1 = "";
-												String strdateterm2_2 = "";
+																														String strdateterm1_2 = "";
+																														String strdateterm2_1 = "";
+																														String strdateterm2_2 = "";
 
-												String academicyear = null;
-												String academicterm = null;
+																														String academicyear = null;
+																														String academicterm = null;
 
-												if (null == (String) session.getAttribute("NotCandidateYear")) {
+																														if (null == (String) session.getAttribute("NotCandidateYear")) {
 
-													Date td = new Date();
-													String strtd = new String("");
-													SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-													SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
-															new Locale("th"));
-													strtd = format.format(td);
-													Date today = format.parse(strtd);
-													//System.out.println(today);
+																															Date td = new Date();
+																															String strtd = new String("");
+																															SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+																															SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+																																	new Locale("th"));
+																															strtd = format.format(td);
+																															Date today = format.parse(strtd);
+																															//System.out.println(today);
 
-													/* String[] datetd = strtd.split("-", 3);
-													int ydatetd = Integer.parseInt(datetd[0]);
-													int mdatetd = Integer.parseInt(datetd[1]);
-													int ddatetd = Integer.parseInt(datetd[2]); */
+																															/* String[] datetd = strtd.split("-", 3);
+																															int ydatetd = Integer.parseInt(datetd[0]);
+																															int mdatetd = Integer.parseInt(datetd[1]);
+																															int ddatetd = Integer.parseInt(datetd[2]); */
 
-													stmt = con.createStatement();
-													String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
-													ResultSet rs = stmt.executeQuery(QueryString);
-													if (rs.next()) {
-														strdateterm1_1 = rs.getString("dateterm1_1");
-														strdateterm1_2 = rs.getString("dateterm1_2");
-														strdateterm2_1 = rs.getString("dateterm2_1");
-														strdateterm2_2 = rs.getString("dateterm2_2");
+																															stmt = con.createStatement();
+																															String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+																															ResultSet rs = stmt.executeQuery(QueryString);
+																															if (rs.next()) {
+																																strdateterm1_1 = rs.getString("dateterm1_1");
+																																strdateterm1_2 = rs.getString("dateterm1_2");
+																																strdateterm2_1 = rs.getString("dateterm2_1");
+																																strdateterm2_2 = rs.getString("dateterm2_2");
 
-														Date dateterm1_1 = format2.parse(strdateterm1_1);
-														Date dateterm1_2 = format2.parse(strdateterm1_2);
-														Date dateterm2_1 = format2.parse(strdateterm2_1);
-														Date dateterm2_2 = format2.parse(strdateterm2_2);
+																																Date dateterm1_1 = format2.parse(strdateterm1_1);
+																																Date dateterm1_2 = format2.parse(strdateterm1_2);
+																																Date dateterm2_1 = format2.parse(strdateterm2_1);
+																																Date dateterm2_2 = format2.parse(strdateterm2_2);
 
-														String[] term1_1 = strdateterm1_1.split("-", 3);
-														int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
-														int mterm1_1 = Integer.parseInt(term1_1[1]);
-														int dterm1_1 = Integer.parseInt(term1_1[2]);
+																																String[] term1_1 = strdateterm1_1.split("-", 3);
+																																int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+																																int mterm1_1 = Integer.parseInt(term1_1[1]);
+																																int dterm1_1 = Integer.parseInt(term1_1[2]);
 
-														int intacademicyear = yterm1_1;
-														academicyear = Integer.toString(intacademicyear);
+																																int intacademicyear = yterm1_1;
+																																academicyear = Integer.toString(intacademicyear);
 
-														/* System.out.println(dateterm1_1);
-														System.out.println(dateterm1_2);
-														System.out.println(dateterm2_1);
-														System.out.println(dateterm2_2); */
+																																/* System.out.println(dateterm1_1);
+																																System.out.println(dateterm1_2);
+																																System.out.println(dateterm2_1);
+																																System.out.println(dateterm2_2); */
 
-														if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
-																&& (today.after(dateterm1_1) || today
-																		.equals(dateterm1_1))) {
-															academicterm = "1";
-														} else if ((today.before(dateterm2_2) || today
-																.equals(dateterm2_2))
-																&& (today.after(dateterm2_1) || today
-																		.equals(dateterm2_1))) {
-															academicterm = "2";
-														} else {
-															academicyear = "";
-															academicterm = "";
-														}
-													}
+																																if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																																		&& (today.after(dateterm1_1) || today
+																																				.equals(dateterm1_1))) {
+																																	academicterm = "1";
+																																} else if ((today.before(dateterm2_2) || today
+																																		.equals(dateterm2_2))
+																																		&& (today.after(dateterm2_1) || today
+																																				.equals(dateterm2_1))) {
+																																	academicterm = "2";
+																																} else {
+																																	academicyear = "";
+																																	academicterm = "";
+																																}
+																															}
 
-													session.setAttribute("academicyear", academicyear);
-													session.setAttribute("academicterm", academicterm);
+																															session.setAttribute("academicyear", academicyear);
+																															session.setAttribute("academicterm", academicterm);
 											%>
 
 											<p>
@@ -939,59 +935,59 @@
 											<tbody>
 												<%
 													String year = "";
-													String term = "";
-													if (null == (String) session.getAttribute("NotCandidateYear")) {
-														year = (String) session.getAttribute("academicyear");
-														term = (String) session.getAttribute("academicterm");
-													} else if (null != (String) session
-															.getAttribute("NotCandidateYear")) {
-														year = (String) session.getAttribute("NotCandidateYear");
-														term = (String) session.getAttribute("NotCandidateTerm");
-													} else {
-														year = null;
-														term = null;
-													}
+																																	String term = "";
+																																	if (null == (String) session.getAttribute("NotCandidateYear")) {
+																																		year = (String) session.getAttribute("academicyear");
+																																		term = (String) session.getAttribute("academicterm");
+																																	} else if (null != (String) session
+																																			.getAttribute("NotCandidateYear")) {
+																																		year = (String) session.getAttribute("NotCandidateYear");
+																																		term = (String) session.getAttribute("NotCandidateTerm");
+																																	} else {
+																																		year = null;
+																																		term = null;
+																																	}
 
-													stmt = con.createStatement();
-													String QueryString = "SELECT * FROM courseplan LEFT JOIN course ON course.courseCode = courseplan.courseCode WHERE courseplan.year = '"
-															+ year
-															+ "' AND courseplan.semester = '"
-															+ term
-															+ "' ORDER BY courseplan.courseCode;";
-													ResultSet rs = stmt.executeQuery(QueryString);
+																																	stmt = con.createStatement();
+																																	String QueryString = "SELECT * FROM courseplan LEFT JOIN course ON course.courseCode = courseplan.courseCode WHERE courseplan.year = '"
+																																			+ year
+																																			+ "' AND courseplan.semester = '"
+																																			+ term
+																																			+ "' ORDER BY courseplan.courseCode;";
+																																	ResultSet rs = stmt.executeQuery(QueryString);
 
-													int count = 0;
-													while (rs.next()) {
-														// count length
-														stmt = con.createStatement();
-														String QueryString2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
-																+ rs.getString("courseplan.courseCode")
-																+ "' AND course_survey.year = '"
-																+ year
-																+ "' AND course_survey.semester ='"
-																+ term
-																+ "' GROUP BY user.userID";
-														ResultSet rs2 = stmt.executeQuery(QueryString2);
-														rs2.last();
-														int length = rs2.getRow();
-														//System.out.println(length);
-														// get user firstname
-														stmt = con.createStatement();
-														String[] arrayusername = new String[length];
-														String QueryString3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
-																+ rs.getString("courseplan.courseCode")
-																+ "' AND course_survey.year = '"
-																+ year
-																+ "' AND course_survey.semester ='"
-																+ term
-																+ "' GROUP BY user.userID";
-														ResultSet rs3 = stmt.executeQuery(QueryString3);
-														int length2 = 0;
-														while (rs3.next()) {
-															arrayusername[length2] = rs3.getString("user.firstname")
-																	+ " " + rs3.getString("user.lastname");
-															length2++;
-														}
+																																	int count = 0;
+																																	while (rs.next()) {
+																																		// count length
+																																		stmt = con.createStatement();
+																																		String QueryString2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
+																																				+ rs.getString("courseplan.courseCode")
+																																				+ "' AND course_survey.year = '"
+																																				+ year
+																																				+ "' AND course_survey.semester ='"
+																																				+ term
+																																				+ "' GROUP BY user.userID";
+																																		ResultSet rs2 = stmt.executeQuery(QueryString2);
+																																		rs2.last();
+																																		int length = rs2.getRow();
+																																		//System.out.println(length);
+																																		// get user firstname
+																																		stmt = con.createStatement();
+																																		String[] arrayusername = new String[length];
+																																		String QueryString3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN courseplan ON course_survey.courseCode = courseplan.courseCode WHERE courseplan.courseCode = '"
+																																				+ rs.getString("courseplan.courseCode")
+																																				+ "' AND course_survey.year = '"
+																																				+ year
+																																				+ "' AND course_survey.semester ='"
+																																				+ term
+																																				+ "' GROUP BY user.userID";
+																																		ResultSet rs3 = stmt.executeQuery(QueryString3);
+																																		int length2 = 0;
+																																		while (rs3.next()) {
+																																			arrayusername[length2] = rs3.getString("user.firstname")
+																																					+ " " + rs3.getString("user.lastname");
+																																			length2++;
+																																		}
 												%>
 												<tr>
 													<td><input type="checkbox" class="checkbox"
@@ -1106,44 +1102,44 @@
 												</tr>
 												<%
 													count++;
-													}
+																																	}
 
-													stmt = con.createStatement();
-													String Queryfake = "SELECT * FROM notcandidate LEFT JOIN course ON course.courseCode = notcandidate.courseCode WHERE notcandidate.year = '"
-															+ year + "' AND notcandidate.semester = '" + term + "' ";
-													ResultSet rsfake = stmt.executeQuery(Queryfake);
-													int countfake = 0;
-													while (rsfake.next()) {
-														stmt = con.createStatement();
-														String Queryfake2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
-																+ rsfake.getString("notcandidate.courseCode")
-																+ "' AND course_survey.year = '"
-																+ year
-																+ "' AND course_survey.semester ='"
-																+ term
-																+ "' GROUP BY user.userID";
-														ResultSet rsfake2 = stmt.executeQuery(Queryfake2);
-														rsfake2.last();
-														int lengthfake = rsfake2.getRow();
-														//System.out.println(lengthfake);
-														stmt = con.createStatement();
-														String[] arrayusername = new String[lengthfake];
-														String Queryfake3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
-																+ rsfake.getString("notcandidate.courseCode")
-																+ "' AND course_survey.year = '"
-																+ year
-																+ "' AND course_survey.semester ='"
-																+ term
-																+ "' GROUP BY user.userID";
-														ResultSet rsfake3 = stmt.executeQuery(Queryfake3);
-														int lengthfake2 = 0;
-														while (rsfake3.next()) {
-															arrayusername[lengthfake2] = rsfake3
-																	.getString("user.firstname")
-																	+ " "
-																	+ rsfake3.getString("user.lastname");
-															lengthfake2++;
-														}
+																																	stmt = con.createStatement();
+																																	String Queryfake = "SELECT * FROM notcandidate LEFT JOIN course ON course.courseCode = notcandidate.courseCode WHERE notcandidate.year = '"
+																																			+ year + "' AND notcandidate.semester = '" + term + "' ";
+																																	ResultSet rsfake = stmt.executeQuery(Queryfake);
+																																	int countfake = 0;
+																																	while (rsfake.next()) {
+																																		stmt = con.createStatement();
+																																		String Queryfake2 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
+																																				+ rsfake.getString("notcandidate.courseCode")
+																																				+ "' AND course_survey.year = '"
+																																				+ year
+																																				+ "' AND course_survey.semester ='"
+																																				+ term
+																																				+ "' GROUP BY user.userID";
+																																		ResultSet rsfake2 = stmt.executeQuery(Queryfake2);
+																																		rsfake2.last();
+																																		int lengthfake = rsfake2.getRow();
+																																		//System.out.println(lengthfake);
+																																		stmt = con.createStatement();
+																																		String[] arrayusername = new String[lengthfake];
+																																		String Queryfake3 = "SELECT * FROM course_survey INNER JOIN user ON course_survey.UserID = user.UserID INNER JOIN notcandidate ON course_survey.courseCode = notcandidate.courseCode WHERE notcandidate.courseCode = '"
+																																				+ rsfake.getString("notcandidate.courseCode")
+																																				+ "' AND course_survey.year = '"
+																																				+ year
+																																				+ "' AND course_survey.semester ='"
+																																				+ term
+																																				+ "' GROUP BY user.userID";
+																																		ResultSet rsfake3 = stmt.executeQuery(Queryfake3);
+																																		int lengthfake2 = 0;
+																																		while (rsfake3.next()) {
+																																			arrayusername[lengthfake2] = rsfake3
+																																					.getString("user.firstname")
+																																					+ " "
+																																					+ rsfake3.getString("user.lastname");
+																																			lengthfake2++;
+																																		}
 												%>
 												<tr>
 													<td><input type="hidden" name="surveyid"
@@ -1259,7 +1255,7 @@
 												</tr>
 												<%
 													countfake++;
-													}
+																																	}
 												%>
 											</tbody>
 										</table>
@@ -1418,20 +1414,20 @@
 													<tbody>
 														<%
 															stmt = con.createStatement();
-															String QueryCandidateLength = "SELECT * FROM currentcourse INNER JOIN course ON currentcourse.courseCode = course.courseCode INNER JOIN section ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN candidate ON section.sectionID = candidate.sectionID WHERE currentcourse.year = '"
-																	+ year + "' AND currentcourse.semester = '" + term + "'";
-															ResultSet rscandidatelength = stmt
-																	.executeQuery(QueryCandidateLength);
-															rscandidatelength.last();
-															int candidatelength = rscandidatelength.getRow();
-															String QueryCandidate = "SELECT * FROM currentcourse INNER JOIN course ON currentcourse.courseCode = course.courseCode INNER JOIN section ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.year = '"
-																	+ year
-																	+ "' AND currentcourse.semester = '"
-																	+ term
-																	+ "' GROUP BY section.sectionID;";
-															ResultSet rscandidate = stmt.executeQuery(QueryCandidate);
-															String sectionid[] = new String[candidatelength];
-															while (rscandidate.next()) {
+																																							String QueryCandidateLength = "SELECT * FROM currentcourse INNER JOIN course ON currentcourse.courseCode = course.courseCode INNER JOIN section ON currentcourse.currentcourseID = section.currentcourseID INNER JOIN candidate ON section.sectionID = candidate.sectionID WHERE currentcourse.year = '"
+																																									+ year + "' AND currentcourse.semester = '" + term + "'";
+																																							ResultSet rscandidatelength = stmt
+																																									.executeQuery(QueryCandidateLength);
+																																							rscandidatelength.last();
+																																							int candidatelength = rscandidatelength.getRow();
+																																							String QueryCandidate = "SELECT * FROM currentcourse INNER JOIN course ON currentcourse.courseCode = course.courseCode INNER JOIN section ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.year = '"
+																																									+ year
+																																									+ "' AND currentcourse.semester = '"
+																																									+ term
+																																									+ "' GROUP BY section.sectionID;";
+																																							ResultSet rscandidate = stmt.executeQuery(QueryCandidate);
+																																							String sectionid[] = new String[candidatelength];
+																																							while (rscandidate.next()) {
 														%>
 														<tr>
 															<td>
@@ -1577,16 +1573,16 @@
 															<tbody>
 																<%
 																	stmt = con.createStatement();
-																	String QueryCurrentcourse = "SELECT * FROM currentcourse INNER JOIN course on currentcourse.courseCode = course.courseCode WHERE currentcourse.year = '"
-																			+ year + "' AND currentcourse.semester = '" + term + "'";
-																	ResultSet rscurrentcourse = stmt.executeQuery(QueryCurrentcourse);
-																	while (rscurrentcourse.next()) {
+																																													String QueryCurrentcourse = "SELECT * FROM currentcourse INNER JOIN course on currentcourse.courseCode = course.courseCode WHERE currentcourse.year = '"
+																																															+ year + "' AND currentcourse.semester = '" + term + "'";
+																																													ResultSet rscurrentcourse = stmt.executeQuery(QueryCurrentcourse);
+																																													while (rscurrentcourse.next()) {
 																%>
 																<tr>
 																	<td>
 																		<%
 																			out.println(rscurrentcourse
-																						.getString("currentcourse.courseCode"));
+																																																						.getString("currentcourse.courseCode"));
 																		%>
 																	</td>
 																	<td>
@@ -1687,65 +1683,72 @@
 								</script>
 
 								<hr>
-								<div class="modal fade" id="settingforworkload"
-				tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">×</button>
-							<h3>Setting Workload Year</h3>
-						</div>
-						<div class="modal-body">
-							<form method="post"
-								action="Admin_Workload_SetYear.jsp"
-								role="setyeartermform" id="setyeartermform">
-								<label for="Year">Year</label> <select id="workloadyear"
-									name="workloadyear">
-									<script>
-										var myDate = new Date();
-										var year = myDate.getFullYear() + 543;
-										for (var i = year + 1; i > 2540; i--) {
-											document
-													.write('<option value="'+i+'">'
-															+ i + '</option>');
-										}
-									</script>
-								</select> <label for="Term">Term</label> <select id="workloadterm"
-									name="workloadterm">
-									<option value="1">1</option>
-									<option value="2">2</option>
-								</select> <br> <a href="#" class="btn btn-default"
-									data-dismiss="modal">Close</a> <input type="button"
-									class="btn btn-primary" onClick="sendworkloadsetting()"
-									value="Submit" />
-							</form>
-						</div>
-						<div class="modal-footer"></div>
-					</div>
-				</div>
-			</div>
-			
-			<script type="text/javascript">
-				function sendworkloadsetting() {
-					document.getElementById("setyeartermform").submit();
-				}
-			</script>
-				
+								<div class="modal fade" id="settingforworkload" tabindex="-1"
+									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">×</button>
+												<h3>Setting Workload Year</h3>
+											</div>
+											<div class="modal-body">
+												<form method="post" action="Admin_Workload_SetYear.jsp"
+													role="setyeartermform" id="setyeartermform">
+													<label for="Year">Year</label> <select id="workloadyear"
+														name="workloadyear">
+														<script>
+															var myDate = new Date();
+															var year = myDate
+																	.getFullYear() + 543;
+															for (var i = year + 1; i > 2540; i--) {
+																document
+																		.write('<option value="'+i+'">'
+																				+ i
+																				+ '</option>');
+															}
+														</script>
+													</select> <label for="Term">Term</label> <select id="workloadterm"
+														name="workloadterm">
+														<option value="1">1</option>
+														<option value="2">2</option>
+													</select> <br> <a href="#" class="btn btn-default"
+														data-dismiss="modal">Close</a> <input type="button"
+														class="btn btn-primary" onClick="sendworkloadsetting()"
+														value="Submit" />
+												</form>
+											</div>
+											<div class="modal-footer"></div>
+										</div>
+									</div>
+								</div>
 
-<script type="text/javascript">
-			var win = null;
+								<script type="text/javascript">
+									function sendworkloadsetting() {
+										document.getElementById(
+												"setyeartermform").submit();
+									}
+								</script>
 
-			function NewWindow(mypage, myname, w, h, scroll) {
-				LeftPosition = (screen.width) ? (screen.width - w) / 2 : 0;
-				TopPosition = (screen.height) ? (screen.height - h) / 2 : 0;
-				settings = 'height=' + h + ',width=' + w + ',top='
-						+ TopPosition + ',left=' + LeftPosition
-						+ ',scrollbars=' + scroll + ',resizable'
-				win = window.open(mypage, myname, settings)
-				
-			}
-		</script>
+
+								<script type="text/javascript">
+									var win = null;
+
+									function NewWindow(mypage, myname, w, h,
+											scroll) {
+										LeftPosition = (screen.width) ? (screen.width - w) / 2
+												: 0;
+										TopPosition = (screen.height) ? (screen.height - h) / 2
+												: 0;
+										settings = 'height=' + h + ',width='
+												+ w + ',top=' + TopPosition
+												+ ',left=' + LeftPosition
+												+ ',scrollbars=' + scroll
+												+ ',resizable'
+										win = window.open(mypage, myname,
+												settings)
+
+									}
+								</script>
 
 								<div class="modal fade" id="settingfornotcandidate"
 									tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
