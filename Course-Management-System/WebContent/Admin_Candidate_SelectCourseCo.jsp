@@ -124,7 +124,7 @@
 	<br>
 	<div align="center">
 		<form method="post" action="Admin_Candidate_SaveCourseCo.jsp"
-			id="form">
+			id="formcourseco">
 			<table border="1">
 				<%
 					stmt = con.createStatement();
@@ -162,11 +162,16 @@
 				%>
 			</table>
 			<br>
-			<button class="btn btn-danger" onclick="window.close()">Close</button>
-			<input type="submit" class="btn btn-primary" value="Submit" />
 		</form>
+		<button class="btn btn-danger" onclick="window.close()">Close</button>
+			<button class="btn btn-primary" onclick="sendcoursecoid()">Submit</button>
 	</div>
 
+	<script type="text/javascript">
+		function sendcoursecoid() {
+			document.getElementById("formcourseco").submit();
+		}
+	</script>
 	<!-- external javascript -->
 
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
