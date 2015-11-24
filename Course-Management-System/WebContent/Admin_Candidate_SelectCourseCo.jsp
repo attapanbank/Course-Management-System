@@ -164,7 +164,7 @@
 			<br>
 		</form>
 		<button class="btn btn-danger" onclick="window.close()">Close</button>
-		<button class="btn btn-primary" onclick="sendcoursecoid()">Submit</button>
+			<button class="btn btn-primary" onclick="sendcoursecoid()">Submit</button>
 	</div>
 
 	<script type="text/javascript">
