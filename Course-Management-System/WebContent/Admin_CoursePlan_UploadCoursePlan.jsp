@@ -200,7 +200,7 @@
 		System.out.println("InvalidFormatException");
 	} catch (Exception e) {
 		request.setAttribute("errorupload",
-				"Something wrong please check your file.");
+				"Something wrong please check your excel format.");
 		System.out.println("Exception e");
 		e.printStackTrace();
 	}
