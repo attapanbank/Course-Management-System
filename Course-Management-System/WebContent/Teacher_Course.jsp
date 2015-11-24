@@ -237,17 +237,17 @@
 
 								<%
 									String QueryString1301 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1301%' AND courseplan.year='"
-											+ year + "' and courseplan.semester='" + semester + "';";
+											+ year + "' and courseplan.semester='" + semester + "' GROUP BY course.courseCode;";
 									String QueryString1302 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1302%' AND courseplan.year='"
-											+ year + "' and courseplan.semester='" + semester + "';";
+											+ year + "' and courseplan.semester='" + semester + "' GROUP BY course.courseCode;";
 									String QueryString1305 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1305%' AND courseplan.year='"
-											+ year + "' and courseplan.semester='" + semester + "';";
+											+ year + "' and courseplan.semester='" + semester + "' GROUP BY course.courseCode;";
 									String QueryString1306 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1306%' AND courseplan.year='"
-											+ year + "' and courseplan.semester='" + semester + "';";
+											+ year + "' and courseplan.semester='" + semester + "' GROUP BY course.courseCode;";
 									String QueryString1501 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1501%' AND courseplan.year='"
-											+ year + "' and courseplan.semester='" + semester + "';";
+											+ year + "' and courseplan.semester='" + semester + "' GROUP BY course.courseCode;";
 									String QueryString1502 = "SELECT * FROM course INNER JOIN courseplan WHERE course.courseCode = courseplan.courseCode AND course.courseCode LIKE '1502%' AND courseplan.year='"
-											+ year + "' and courseplan.semester='" + semester + "';";
+											+ year + "' and courseplan.semester='" + semester + "' GROUP BY course.courseCode;";
 								%>
 
 								

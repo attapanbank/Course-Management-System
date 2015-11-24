@@ -450,7 +450,7 @@
 							String QueryInsertlabfake = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
 									+ sectionid2
 									+ "','"
-									+ labuserid2[lab] + "'), 'Lect'";
+									+ labuserid2[lab] + "', 'Lab')";
 							stmt.executeUpdate(QueryInsertlabfake);
 						}
 					}
