@@ -106,7 +106,7 @@ try{
 	
 
 		stmt = con.createStatement();
-		String checkType = "SELECT * FROM cms.user where userID = '"+strUserID+"' ; ";
+		String checkType = "SELECT * FROM user where userID = '"+strUserID+"' ; ";
 		ResultSet rsCheck = stmt.executeQuery(checkType);
 		String userType = null ;
 		while(rsCheck.next()){
