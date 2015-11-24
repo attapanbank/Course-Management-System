@@ -480,7 +480,7 @@ if (sUserID == null) {
 																			String cosCe = null;
 
 																			String QueryString_selectCourse = "SELECT * FROM course_survey where userID = '"
-																					+ sUserID + "';";
+																					+ sUserID + "'and year = '"+year+"' and semester = '"+semester+"';";
 
 																			ResultSet rsSelectCourse = stmt
 																					.executeQuery(QueryString_selectCourse);
@@ -505,7 +505,7 @@ if (sUserID == null) {
 																			%>
 																		</td>
 
-																		<td><a class="btn btn-danger"
+																		<td><a class="btn btn-danger confirmation"
 																			href="Teacher_Delete_Course_Session.jsp?coursesurveyID=<%out.print(rsSelectCourse
 									.getString("coursesurveyID"));%>">
 																				<i class="glyphicon glyphicon-trash icon-white"></i>
@@ -534,7 +534,18 @@ if (sUserID == null) {
 							</div>
 						</div>
 					</div>
-
+<script type="text/javascript">
+									var elems = document
+											.getElementsByClassName('confirmation');
+									var confirmIt = function(e) {
+										if (!confirm('Are you sure to delete?'))
+											e.preventDefault();
+									};
+									for (var i = 0, l = elems.length; i < l; i++) {
+										elems[i].addEventListener('click',
+												confirmIt, false);
+									}
+								</script>
 					<%
 						} else {}%>
 
@@ -931,7 +942,7 @@ if (sUserID == null) {
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal">×</button>
+								<button type="button" class="close" data-dismiss="modal">�</button>
 								<h3>Setting Examination Year</h3>
 							</div>
 							<div class="modal-body">
@@ -987,7 +998,7 @@ if (sUserID == null) {
 
 			<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				Â© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
+				© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
 				- 2014
 			</p>
 
