@@ -296,7 +296,7 @@
 										%>
 
 										<select data-placeholder="Select Course" id="selectcourse"
-											name="selectcourse" data-rel="chosen">
+											name="selectcourse">
 											<option value=""></option>
 											<optgroup label="Information Technology">
 												<%
