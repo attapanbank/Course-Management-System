@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="java.sql.*"%>
+	<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
 
 
 <script type="text/javascript">
@@ -16,10 +18,16 @@
 	try {
 		Statement stmt;
 		Connection con;
-		String url = "jdbc:mysql://localhost:3306/cms";
 
-		Class.forName("com.mysql.jdbc.Driver");
-		con = DriverManager.getConnection(url, "root", "root");
+		InputStream stream = application
+				.getResourceAsStream("/fileUpload/db.properties");
+		Properties props = new Properties();
+		props.load(stream);
+		String url = props.getProperty("driver");
+		String dbUrl = props.getProperty("url");
+		String dbUser = props.getProperty("user");
+		String dbPassword = props.getProperty("password");
+		con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 		stmt = con.createStatement();
 		String courseID = request.getParameter("coursesurveyID");
 
@@ -73,8 +81,7 @@
 				noFinal = "Not have";
 			}
 		}
-		out.print(offMid);
-		out.print(offFinal);
+		
 		out.print("Save complete");
 
 		String cosCodeHave = null;
