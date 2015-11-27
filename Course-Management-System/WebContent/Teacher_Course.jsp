@@ -712,27 +712,36 @@
 
 												<td>
 													<%
-														String cosSurvey = null ;
-													stmt = con.createStatement();
-													String QueryStringCheckSurvey = "SELECT * FROM candidate inner join section inner join currentcourse where candidate.userID = '"
+														String cosSurvey = null;
+																	String uid = null;
+																	stmt = con.createStatement();
+																	String QueryStringCheckSurvey = "SELECT * FROM candidate inner join section inner join currentcourse  on candidate.userID = '"
 																			+ strUserID
 																			+ "' and currentcourse.year = '"
 																			+ Ayear
-																			+ "' and currentcourse.semester = '"
+																			+ "'and currentcourse.semester = '"
 																			+ Aterm
-																			+ "' group by currentcourse.courseCode;";
+																			+ "' and currentcourse.courseCode = '"
+																			+ cosCo
+																			+ "' and currentcourse.currentcourseID = section.currentcourseID and candidate.sectionID = section.sectionID; ;";
 
 																	ResultSet rsCheckSurvey = stmt
 																			.executeQuery(QueryStringCheckSurvey);
-																	
-																	while(rsCheckSurvey.next()){
-																		cosSurvey =rsCheckSurvey.getString("currentcourse.courseCode");
-																		
+
+																	while (rsCheckSurvey.next()) {
+																		cosSurvey = rsCheckSurvey
+																				.getString("currentcourse.courseCode");
+																		uid = rsCheckSurvey.getString("candidate.userID");
+
 																	}
-																	
-																	if(cosSurvey.equals(cosCo)){
-																		out.print("Confirm");
-																		
+
+																	if (cosSurvey != null && uid != null) {
+																		if (cosCo.equals(cosSurvey)
+																				&& uid.equals(strUserID)) {
+																			out.print("Confirm");
+																		}
+																	} else {
+																		out.print("Not Confirm");
 																	}
 													%>
 												</td>

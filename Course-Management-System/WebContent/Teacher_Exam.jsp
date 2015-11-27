@@ -274,15 +274,15 @@
 												<th colspan="1" rowspan="1">Action</th>
 										</thead>
 
-										<%
-											while (rsExam.next()) {
-										%>
+										
 
 
 
 										<tbody aria-relevant="all" aria-live="polite" role="alert">
 
-
+<%
+											while (rsExam.next()) {
+										%>
 											<tr>
 												<td>
 													<%
@@ -571,9 +571,11 @@
 											String userType = null;
 											
 
-											while (rsExamResult.next()) {
+											
 										%>
 										<tbody>
+											
+											<%while (rsExamResult.next()) { %>
 											<tr>
 												<td>
 													<%
@@ -633,16 +635,16 @@
 												<td>
 													<%
 														
-													
+													// Midterm
 													stmt = con.createStatement();
-															String examType = "SELECT * FROM examsurvey where courseCode = '"+courseCode+"' ;";
+															String examType = "SELECT * FROM examsurvey where courseCode = '"+courseCode+"' and year = '"+Syear+"' and semester = '"+Sterm+"' ;";
 															ResultSet rs = stmt.executeQuery(examType);
 															
 															while (rs.next()) {
 
 																String checkExamID = rs.getString("examSurveyID");
 																String course = rs.getString("courseCode");
-																//out.print(checkExamID);
+																
 
 																if (course.equals(courseCode)) {
 																	midType = rs.getString("midtermType");
@@ -684,7 +686,7 @@
 												<td>
 													<%
 														stmt = con.createStatement();
-															String examType2 = "SELECT * FROM examsurvey where courseCode = '"+courseCode+"' ;";
+															String examType2 = "SELECT * FROM examsurvey where courseCode = '"+courseCode+"' and year = '"+Syear+"' and semester = '"+Sterm+"';";
 															ResultSet rs2 = stmt.executeQuery(examType2);
 															while (rs2.next()) {
 
@@ -727,12 +729,12 @@
 
 
 											</tr>
-
-										</tbody>
-
-										<%
+	<%
 											}
 										%>
+										</tbody>
+
+									
 
 
 

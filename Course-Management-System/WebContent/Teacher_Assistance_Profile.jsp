@@ -242,7 +242,7 @@
 										<span class="input-group-addon"><i
 											class="glyphicon glyphicon-user red"></i></span> <input type="text"
 											id="username" name="username" class="form-control" value="<%= rs.getString("username") %>"
-											placeholder="Username %>">
+											placeholder="Username %>" disabled="disabled">
 									</div>
 									<br>
 									<div class="input-group col-md-6">

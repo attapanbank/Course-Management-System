@@ -275,7 +275,7 @@
 									<div class="input-group col-md-6">
 										<span class="input-group-addon"><i
 											class="glyphicon glyphicon-user red"></i></span> <input type="text"
-											id="username" name="username" class="form-control"
+											id="username" name="username" class="form-control" disabled="disabled"
 											value="<%=rs.getString("username")%>"
 											placeholder="Username %>">
 									</div>
@@ -359,46 +359,7 @@
 		<!--/fluid-row-->
 
 		<hr>
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>ประวัติการสอน</h3>
-					</div>
-					<div class="modal-body">
-						<table
-							class="table table-striped table-bordered bootstrap-datatable datatable responsive">
-							<thead>
-								<tr>
-									<th>ปีการศึกษา</th>
-									<th>รหัสวิชา</th>
-									<th>รายวิชา</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>2557</td>
-									<td>1305080</td>
-									<td>Basic Information Technology</td>
-								</tr>
-								<tr>
-									<td>2558</td>
-									<td>1305076</td>
-									<td>Introduction Information Technology</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 		<footer class="row">
 		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
 			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
