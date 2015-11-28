@@ -3,6 +3,10 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.util.Date"%>
+<%@ page import="java.util.Calendar"%>
+<%@ page import="java.text.DateFormat"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 <%
 	// Validate USER
 	String sUserID = null;
@@ -233,7 +237,8 @@
 											try {
 												Class.forName("com.mysql.jdbc.Driver");
 												stmt = con.createStatement();
-
+												
+												// course plan
 												String sql = "SELECT * FROM courseplan join course where courseplan.CourseCode=course.courseCode";
 
 												ResultSet rec = stmt.executeQuery(sql);
@@ -250,7 +255,7 @@
 																<tr role="row">
 																	<th class="sorting_asc" role="columnheader"
 																		tabindex="0" aria-controls="DataTables_Table_0"
-																		rowspan="1" colspan="1" style="width: 120px;"
+																		rowspan="1" colspan="1" style="width: 100px;"
 																		aria-sort="ascending"
 																		aria-label="Code: activate to sort column descending">Code</th>
 																	<th class="sorting" role="columnheader" tabindex="0"
@@ -260,7 +265,7 @@
 																		Name</th>
 																	<th class="sorting" role="columnheader" tabindex="0"
 																		aria-controls="DataTables_Table_0" rowspan="1"
-																		colspan="1" style="width: 283px;"
+																		colspan="1" style="width: 70px;"
 																		aria-label="Name: activate to sort column ascending">Major</th>
 																</tr>
 															</thead>
@@ -273,7 +278,7 @@
 																<tr>
 																	<td class=" sorting_1"><%=rec.getString("courseCode")%></td>
 																	<td class="center"><%=rec.getString("courseName")%></td>
-																	<td class="center">Major</td>
+																	<td class="center"><%=rec.getString("major")%></td>
 																</tr>
 																<%
 																	}
@@ -336,9 +341,57 @@
 											try {
 												Class.forName("com.mysql.jdbc.Driver");
 												stmt = con.createStatement();
+												
+												//get year and semester from database
+												int curYear = 0;
+												int curYearOnBE = 0;
+												int curSemester = 0;
+
+												String sqlYear = "SELECT * FROM cmsit.setsemesterdate;";
+												ResultSet recYear = stmt.executeQuery(sqlYear);
+												if ((recYear != null) && (recYear.next())) {
+													Date today = new Date();
+													DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+													Date startDate = df.parse(recYear.getString("dateterm1_1"));
+													Date endDate = df.parse(recYear.getString("dateterm1_2"));
+
+													// specify year
+													Calendar cal = Calendar.getInstance();
+													cal.setTime(startDate);
+													curYear = cal.get(Calendar.YEAR);
+
+													if (today.after(startDate) || today.before(endDate)) { // specify semester
+														curSemester = 1;
+													} else {
+														curSemester = 2;
+													}
+
+												}
+												curYearOnBE = curYear + 543;
+												//System.out.print("year : " + curYearOnBE);
+												//System.out.println(" semester : " + curSemester);
+
+												// specify year on specific academic year
+												// 1 st year
+												int yearOnBE1 = (curYear) + 543;
+												String yearOnBEStr1 = Integer.toString(yearOnBE1);
+												//System.out.println(yearOnBEStr1);
+												//2 nd year
+												int yearOnBE2 = (curYear) + 543 - 1;
+												String yearOnBEStr2 = Integer.toString(yearOnBE2);
+												//System.out.println(yearOnBEStr2);
+												//3 rd year
+												int yearOnBE3 = (curYear) + 543 - 2;
+												String yearOnBEStr3 = Integer.toString(yearOnBE3);
+												//System.out.println(yearOnBEStr3);
+												//4 th year
+												int yearOnBE4 = (curYear) + 543 - 3;
+												String yearOnBEStr4 = Integer.toString(yearOnBE4);
+												//System.out.println(yearOnBEStr4);
+
 
 												// match
-												String sqlp = "SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode)";
+												String sqlp = "SELECT * FROM studyplan inner join course on (studyplan.courseCode=course.courseCode) inner join courseplan on (studyplan.courseCode=courseplan.courseCode) WHERE academicYear >= '"+yearOnBE4+"' AND academicYear <= '"+yearOnBE1+"' AND studyYear like '"+curYearOnBE+"' AND studySemester like '"+curSemester+"'  group by studyplan.courseCode";
 												ResultSet recp = stmt.executeQuery(sqlp);
 										%>
 										<div id="DataTables_Table_0_wrapper"
@@ -350,7 +403,7 @@
 													<tr role="row">
 														<th class="sorting_asc" role="columnheader" tabindex="0"
 															aria-controls="DataTables_Table_0" rowspan="1"
-															colspan="1" style="width: 120px;" aria-sort="ascending"
+															colspan="1" style="width: 100px;" aria-sort="ascending"
 															aria-label="Code: activate to sort column descending">Code</th>
 														<th class="sorting" role="columnheader" tabindex="0"
 															aria-controls="DataTables_Table_0" rowspan="1"
@@ -358,7 +411,7 @@
 															aria-label="Name: activate to sort column ascending">Course
 															Name</th>
 														<th aria-label="Status: activate to sort column ascending"
-															style="width: 80px;" colspan="1" rowspan="1"
+															style="width: 70px;" colspan="1" rowspan="1"
 															aria-controls="DataTables_Table_0" tabindex="0"
 															role="columnheader" class="sorting">Major</th>
 														<th aria-label="Status: activate to sort column ascending"
@@ -375,7 +428,7 @@
 													<tr>
 														<td class="sorting_1"><%=recp.getString("courseCode")%></td>
 														<td class="center"><%=recp.getString("courseName")%></td>
-														<td class="center"><%=recp.getString("major")%></td>
+														<td class="center"><%=recp.getString("major")%><%=Integer.parseInt(recp.getString("academicyear")) % 100%></td>
 														<td class=" "><span
 															class="label-success label label-default">Match</span></td>
 													</tr>
@@ -383,7 +436,24 @@
 														}
 
 															//not match
-															sqlp = "select * from studyplan inner join course on (studyplan.courseCode=course.courseCode)where studyplan.courseCode not in (select courseplan.courseCode from courseplan)union all select * from courseplan inner join course on (courseplan.courseCode=course.courseCode)where coursePlan.courseCode not in (select studyplan.courseCode from studyplan)";
+															sqlp = "select * from studyplan inner join course on (studyplan.courseCode=course.courseCode)where studyplan.courseCode not in (select courseplan.courseCode from courseplan) AND academicYear >= '"+yearOnBE4+"' AND academicYear <= '"+yearOnBE1+"' AND studyYear like '"+curYearOnBE+"' AND studySemester like '"+curSemester+"' group by studyplan.courseCode";
+															recp = stmt.executeQuery(sqlp);
+													%>
+													<%
+														while ((recp != null) && (recp.next())) {
+													%>
+													<tr>
+														<td class="sorting_1"><%=recp.getString("courseCode")%></td>
+														<td class="center"><%=recp.getString("courseName")%></td>
+														<td class="center"><%=recp.getString("major")%><%=(Integer.parseInt(recp.getString("academicyear")) % 100)%></td>
+														<td class=" "><span
+															class="label-default label label-danger">Mismatch</span></td>
+													</tr>
+													<%
+														}
+
+															//not match
+															sqlp = "select * from courseplan inner join course on (courseplan.courseCode=course.courseCode)where coursePlan.courseCode not in (select studyplan.courseCode from studyplan) group by coursePlan.courseCode";
 															recp = stmt.executeQuery(sqlp);
 													%>
 													<%
