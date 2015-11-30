@@ -222,7 +222,7 @@
 													.getAttribute("GetTeacherMajor");
 
 											if ((String) request.getAttribute("GetTeacherMajor") == null) {
-												QueryTeacher = "SELECT * FROM user ORDER BY usertype";
+												QueryTeacher = "SELECT * FROM user WHERE usertype = 'Teacher' OR usertype = 'Teaching Assistance' ORDER BY usertype";
 											} else {
 												QueryTeacher = (String) request.getAttribute("GetTeacherMajor");
 											}
