@@ -220,8 +220,8 @@
 				<!-- content starts -->
 				<div>
 					<ul class="breadcrumb">
-						<li><a href="Coordinator.jsp">Home</a></li>
-						<li><a href="Coordinator_FormUserInfo.jsp">Edit User
+						<li><a href="Admin_News.jsp">Home</a></li>
+						<li><a href="Admin_FormUserInfo.jsp">Edit User
 								Information</a></li>
 					</ul>
 				</div>
@@ -387,7 +387,7 @@
 																	<td>
 																		<p>Username :
 																	</td>
-																	<td><input type="text" name="username"
+																	<td><input disabled="disabled" type="text" name="username"
 																		id="username" value="<%=sUserName%>">
 																		</p></td>
 																</tr>

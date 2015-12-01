@@ -377,7 +377,7 @@
 																	<td>
 																		<p>Username :
 																	</td>
-																	<td><input type="text" name="username"
+																	<td><input disabled="disabled" type="text" name="username"
 																		id="username" value="<%=sUserName%>">
 																		</p></td>
 																</tr>
