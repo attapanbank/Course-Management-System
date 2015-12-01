@@ -150,7 +150,7 @@
 					.getNumericCellValue();
 			int courseCode = (int) row.getCell(2).getNumericCellValue();
 
-			String sql = " INSERT INTO `cmsit`.`studyplan` (`academicYear`,`studyYear`, `studySemester`, `courseCode`, `major`) VALUES ('"
+			String sql = " INSERT INTO studyplan (academicYear,studyYear, studySemester, courseCode, major) VALUES ('"
 					+ academicYearInt
 					+ "', '"
 					+ studyYear
