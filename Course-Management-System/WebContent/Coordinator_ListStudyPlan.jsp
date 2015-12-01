@@ -136,7 +136,7 @@
 			</button>
 
 
-			<a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a>
+			<a class="navbar-brand" href="Coordinator.jsp"> <span>IT:CMS</span></a>
 			<!-- user dropdown starts -->
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
