@@ -153,12 +153,7 @@
 				<!-- content starts -->
 
 
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Course Select</a></li>
-					</ul>
-				</div>
+				
 
 
 				<%

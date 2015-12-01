@@ -175,12 +175,7 @@
 				<!-- content starts -->
 
 
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Workload</a></li>
-					</ul>
-				</div>
+				
 
 
 
