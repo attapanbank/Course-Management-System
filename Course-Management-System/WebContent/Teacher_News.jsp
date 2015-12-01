@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="java.sql.*"%>
-	<%@page import="java.io.InputStream"%>
+<%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -65,24 +65,26 @@
 <link rel="shortcut icon" href="img/favicon.ico">
 
 </head>
-<%// Validate USER
-String sUserID = null;
-String sUserType = null;
-String sFirstname = null;
-String sLastname = null;
-String sUserName = null;
-String sPassword = null;
-String sMajor = null;
-sUserID = (String) session.getAttribute("sUserID");
-sUserType = (String) session.getAttribute("sUserType");
-sFirstname = (String) session.getAttribute("sFirstname");
-sLastname = (String) session.getAttribute("sLastname");
-sUserName = (String) session.getAttribute("sUserName");
-sPassword = (String) session.getAttribute("sPassword");
-sMajor = (String) session.getAttribute("sMajor");
-if (sUserID == null) {
-	response.sendRedirect("Main_Login.jsp");
-} %>
+<%
+	// Validate USER
+	String sUserID = null;
+	String sUserType = null;
+	String sFirstname = null;
+	String sLastname = null;
+	String sUserName = null;
+	String sPassword = null;
+	String sMajor = null;
+	sUserID = (String) session.getAttribute("sUserID");
+	sUserType = (String) session.getAttribute("sUserType");
+	sFirstname = (String) session.getAttribute("sFirstname");
+	sLastname = (String) session.getAttribute("sLastname");
+	sUserName = (String) session.getAttribute("sUserName");
+	sPassword = (String) session.getAttribute("sPassword");
+	sMajor = (String) session.getAttribute("sMajor");
+	if (sUserID == null) {
+		response.sendRedirect("Main_Login.jsp");
+	}
+%>
 <body>
 	<!-- topbar starts -->
 	<div class="navbar navbar-default" role="navigation">
@@ -100,7 +102,7 @@ if (sUserID == null) {
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
-					
+
 					<i class="glyphicon glyphicon-user"></i><span
 						class="hidden-sm hidden-xs"> <%
  	out.print(sFirstname);
@@ -172,7 +174,7 @@ if (sUserID == null) {
 
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
-				
+
 
 
 				<div class="row">
@@ -185,16 +187,15 @@ if (sUserID == null) {
 								</h2>
 
 								<div class="box-icon">
-									<a href="#"
-										class="btn btn-minimize btn-round btn-default"><i
+									<a href="#" class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"><i
 										class="glyphicon glyphicon-remove"></i></a>
 								</div>
 							</div>
-							
 
-								<%
+
+							<%
 								Statement stmt;
 								Connection con;
 								InputStream stream = application
@@ -206,105 +207,157 @@ if (sUserID == null) {
 								String dbUser = props.getProperty("user");
 								String dbPassword = props.getProperty("password");
 								con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+							%>
+							<%
+								stmt = con.createStatement();
 
-									stmt = con.createStatement();
+								String QueryString = "select * from courseplan_checksurvey where checksurvey ='ON' ";
 
-									String QueryString = "select * from courseplan_checksurvey where checksurvey ='ON' ";
+								ResultSet rs = stmt.executeQuery(QueryString);
 
-									ResultSet rs = stmt.executeQuery(QueryString);
+								String on = null;
+								String year = null;
+								String semester = null;
+							%>
 
-									String on = null;
-									String year = null;
-									String semester = null;
-								%>
+							<%
+								while (rs.next()) {
+									on = rs.getString("checksurvey");
+									year = rs.getString("year");
+									semester = rs.getString("semester");
 
-								<%
-									while (rs.next()) {
-										on = rs.getString("checksurvey");
-										year = rs.getString("year");
-										semester = rs.getString("semester");
-
-										if(on.equals("ON")){ %>
-										<div class="alert alert-info">
-										                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-										                    <strong>New !</strong> A course survey year <%=year%> term <%=semester %> has been already open.
-										                </div>
-
-																	
-														
-														<% }else if(on.equals("OFF")){%>
-															<div class="alert alert-info">
-										                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-										                    <strong> The course survey has been close already.</strong>
-										                </div>
-													<% 	 } 	
-									}
-								%>
-
-	
-							
+									if (on.equals("ON")) {
+							%>
+							<div class="alert alert-info">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong>New !</strong> A course survey year
+								<%=year%>
+								term
+								<%=semester%>
+								has been already open.
 							</div>
+
+
+
+							<%
+								} else if (on.equals("OFF")) {
+							%>
+							<div class="alert alert-info">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong> The course survey has been close already.</strong>
+							</div>
+							<%
+								}
+								}
+							%>
+
+							<%
+								stmt = con.createStatement();
+
+								String QueryString2 = "select * from examination_checksurvey where checksurvey ='ON' ";
+
+								ResultSet rs2 = stmt.executeQuery(QueryString2);
+
+								String on2 = null;
+								String year2 = null;
+								String semester2 = null;
+							%>
+
+							<%
+								while (rs2.next()) {
+									on2 = rs2.getString("checksurvey");
+									year2 = rs2.getString("year");
+									semester2 = rs2.getString("semester");
+
+									if (on2.equals("ON")) {
+							%>
+							<div class="alert alert-info">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong>New !</strong> A examination survey year
+								<%=year2%>
+								term
+								<%=semester2%>
+								has been already open.
+							</div>
+
+
+
+							<%
+								} else if (on2.equals("OFF")) {
+							%>
+							<div class="alert alert-info">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong> The examination survey has been close already.</strong>
+							</div>
+							<%
+								}
+								}
+							%>
+
+
+
 						</div>
 					</div>
 				</div>
-
-				<!-- content ends -->
-			</div>
-			<!--/#content.col-md-0-->
-		</div>
-		<!--/fluid-row-->
-
-		<!-- Ad, you can remove it -->
-		<div class="row">
-			<div class="col-md-9 col-lg-9 col-xs-9  hidden-xs">
-				<script async
-					src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-				<!-- Charisma Demo 2 -->
-				<ins class="adsbygoogle"
-					style="display: inline-block; width: 728px; height: 90px"
-					data-ad-client="ca-pub-5108790028230107" data-ad-slot="3193373905"></ins>
-				<script>
-					(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
 			</div>
 
-
+			<!-- content ends -->
 		</div>
-		<!-- Ad ends -->
+		<!--/#content.col-md-0-->
+	</div>
+	<!--/fluid-row-->
 
-		<hr>
+	<!-- Ad, you can remove it -->
+	<div class="row">
+		<div class="col-md-9 col-lg-9 col-xs-9  hidden-xs">
+			<script async
+				src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Charisma Demo 2 -->
+			<ins class="adsbygoogle"
+				style="display: inline-block; width: 728px; height: 90px"
+				data-ad-client="ca-pub-5108790028230107" data-ad-slot="3193373905"></ins>
+			<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</div>
 
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
 
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>Settings</h3>
-					</div>
-					<div class="modal-body">
-						<p>Here settings can be configured...</p>
-					</div>
-					<div class="modal-footer">
-						<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<a href="#" class="btn btn-primary" data-dismiss="modal">Save
-							changes</a>
-					</div>
+	</div>
+	<!-- Ad ends -->
+
+	<hr>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Settings</h3>
+				</div>
+				<div class="modal-body">
+					<p>Here settings can be configured...</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+					<a href="#" class="btn btn-primary" data-dismiss="modal">Save
+						changes</a>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<footer class="row">
-		<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-			© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
-			2014
-		</p>
+	<footer class="row">
+	<p class="col-md-9 col-sm-9 col-xs-12 copyright">
+		© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012 -
+		2014
+	</p>
 
-		<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
-			Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
-		</p>
-		</footer>
+	<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
+		Theme by:<a href="http://usman.it/free-responsive-admin-template">Charisma</a>
+	</p>
+	</footer>
 
 	</div>
 	<!--/.fluid-container-->
