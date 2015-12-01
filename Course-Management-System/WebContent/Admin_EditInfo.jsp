@@ -70,7 +70,7 @@
 		Class.forName("com.mysql.jdbc.Driver");
 		stmt = connect.createStatement();
 
-		String sql = "UPDATE `user` SET `username` = '"+username+"', `password` = '"+newPass+"', `firstname` = '"+firstname+"', `lastname` = '"+lastname+"', `major` = '"+major+"' WHERE `userID` = "+intuserID+";";
+		String sql = "UPDATE `user` SET `password` = '"+newPass+"', `firstname` = '"+firstname+"', `lastname` = '"+lastname+"', `major` = '"+major+"' WHERE `userID` = "+intuserID+";";
 		stmt.execute(sql);
 		System.out.println("Update Compleate.");
 		
