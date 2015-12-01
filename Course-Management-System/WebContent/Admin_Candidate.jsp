@@ -261,7 +261,7 @@
 									<% 
 									
 									stmt = con.createStatement();
-									String qUser = "SELECT * FROM user where usertype = 'Teacher Assistance' or usertype = 'Teacher';";
+									String qUser = "SELECT * FROM user where usertype = 'Teaching Assistance' or usertype = 'Teacher';";
 									ResultSet rsUser = stmt.executeQuery(qUser);
 									
 									

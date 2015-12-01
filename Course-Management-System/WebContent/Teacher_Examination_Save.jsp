@@ -86,7 +86,7 @@
 
 		String cosCodeHave = null;
 		String examSurveyID = "";
-		String queryString = "SELECT * FROM cms.examsurvey WHERE courseCode ='"
+		String queryString = "SELECT * FROM examsurvey WHERE courseCode ='"
 				+ cosCode
 				+ "' AND year = '"
 				+ year
