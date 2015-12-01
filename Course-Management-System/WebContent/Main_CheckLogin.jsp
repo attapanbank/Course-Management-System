@@ -58,7 +58,7 @@
 
 		String userAdminType = "Admin";
 		String userTeacherType = "Teacher";
-		String userTAType = "Teacher Assistance";
+		String userTAType = "Teaching Assistance";
 		String userCoType = "Major Coordinator";
 
 		
