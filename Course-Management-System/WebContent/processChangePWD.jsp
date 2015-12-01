@@ -1,5 +1,7 @@
 <%@page import="java.sql.*"%>
 <%@page import="java.io.*"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.util.Properties"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -84,13 +86,22 @@
 		String type = null ;
 		String tAdmin = "Admin";
 		String tTeacher = "Teacher";
-		String tTA = "Teacher Assistance";
+		String tTA = "Teaching Assistance";
 		String tCo = "Coordinater";
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://localhost:3306/cms";
-			con = DriverManager.getConnection(url, "root", "root");
+			
+
+			InputStream stream = application
+					.getResourceAsStream("/fileUpload/db.properties");
+			Properties props = new Properties();
+			props.load(stream);
+			String url = props.getProperty("driver");
+			String dbUrl = props.getProperty("url");
+			String dbUser = props.getProperty("user");
+			String dbPassword = props.getProperty("password");
+			con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 			stmt = con.createStatement();
+			String courseID = request.getParameter("coursesurveyID");
 			ResultSet rs = stmt.executeQuery("select * from user where password= '"
 							+ oldpassword + "'and userID ='"+strUserID +"'");
 			if (rs.next()) {
@@ -119,7 +130,7 @@
 		page.
 	</div>
 	<%
-		out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"4;URL=LoginCMS.jsp\">");
+		out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"4;URL=Main_Login.jsp\">");
 					
 				} else  {%>
 	
@@ -143,7 +154,7 @@
 				out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"4;URL=Coordinator_Profile.jsp\">");
 				
 			}else{
-				out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"4;URL=LoginCMS.jsp\">");
+				out.print("<META HTTP-EQUIV=\"Refresh\" CONTENT=\"4;URL=Main_Login.jsp\">");
 			}
 			
 			

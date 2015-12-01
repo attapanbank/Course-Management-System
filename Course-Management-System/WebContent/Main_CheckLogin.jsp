@@ -58,7 +58,7 @@
 
 		String userAdminType = "Admin";
 		String userTeacherType = "Teacher";
-		String userTAType = "Teacher Assistance";
+		String userTAType = "Teaching Assistance";
 		String userCoType = "Major Coordinator";
 
 		
@@ -80,6 +80,8 @@
 			session.setAttribute("sMajor", major);
 			session.setAttribute("sUserName", userName);
 			session.setAttribute("sPassword", password);
+			
+		
 			
 
 			// check type of user to auther user
