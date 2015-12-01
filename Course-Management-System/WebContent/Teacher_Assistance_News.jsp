@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="java.sql.*"%>
-	<%@page import="java.io.InputStream"%>
+<%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -92,7 +92,7 @@ if (sUserID == null) {
 			</button>
 
 
-			<a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a>
+			<a class="navbar-brand" href="#"> <span>IT:CMS</span></a>
 			<!-- user dropdown starts -->
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
