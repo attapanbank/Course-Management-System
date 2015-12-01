@@ -81,6 +81,8 @@
 			session.setAttribute("sUserName", userName);
 			session.setAttribute("sPassword", password);
 			
+		
+			
 
 			// check type of user to auther user
 			if (userType.equals(userAdminType)) {
