@@ -133,27 +133,38 @@
 			<tr>
 				<td>
 					<%
-						String teacherID =  rsDetail.getString("candidate.userID");
-					stmt = con.createStatement();
-					String qName = "SELECT * FROM user where userID = '"+teacherID+"'";
-					ResultSet rst = stmt.executeQuery(qName);
-					while(rst.next()){
-					out.print("-"+rst.getString("user.firstname")+" "+rst.getString("user.lastname"));}
+						String teacherID = rsDetail.getString("candidate.userID");
+							stmt = con.createStatement();
+							String qName = "SELECT * FROM user where userID = '"
+									+ teacherID + "'";
+							ResultSet rst = stmt.executeQuery(qName);
+							while (rst.next()) {
+								out.print("-" + rst.getString("user.firstname") + " "
+										+ rst.getString("user.lastname"));
+							}
 					%>
 				</td>
 
 
 				<td>
-				<% //Teacher Co-Course  
-				stmt = con.createStatement();
-				String QueryStringCoCourse = "SELECT * FROM section inner join examsurvey inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+ year+"' and currentcourse.semester = '"+term+"'  and  section.sectionID = candidate.sectionID and currentcourse.courseco_userID = user.userID and examsurvey.examSurveyID = '"+examid+"'and user.userID = candidate.userID and currentcourse.courseCode = '"+courseCode+"' group by currentcourse.courseCode ;";
-				ResultSet rsCoCourse = stmt.executeQuery(QueryStringCoCourse);
-				while(rsCoCourse.next()){
-					out.print("-"+rsCoCourse.getString("user.firstname")+" "+rsCoCourse.getString("user.lastname"));
-					
-				}
-				
-				%>
+					<%
+						//Teacher Co-Course  
+							stmt = con.createStatement();
+							String QueryStringCoCourse = "SELECT * FROM section inner join examsurvey inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+									+ year
+									+ "' and currentcourse.semester = '"
+									+ term
+									+ "'  and  section.sectionID = candidate.sectionID and currentcourse.courseco_userID = user.userID and examsurvey.examSurveyID = '"
+									+ examid
+									+ "'and user.userID = candidate.userID and currentcourse.courseCode = '"
+									+ courseCode + "' group by currentcourse.courseCode ;";
+							ResultSet rsCoCourse = stmt.executeQuery(QueryStringCoCourse);
+							while (rsCoCourse.next()) {
+								out.print("-" + rsCoCourse.getString("user.firstname")
+										+ " " + rsCoCourse.getString("user.lastname"));
+
+							}
+					%>
 				</td>
 				<td>
 					<%
@@ -200,10 +211,30 @@
 				</td>
 				<td>
 					<%
-						out.print(rsDetail.getString("examsurvey.reasonMid"));
-					%><br> <%
- 	out.print(rsDetail.getString("examsurvey.reasonFinal"));
- %>
+						//reason
+							String couseCo = null ;
+					String rm =null;
+					String rf = null ;
+					String coCourse = rsDetail.getString("currentcourse.courseco_userID");
+					//out.print(rsDetail.getString("candidate.userID"));
+						stmt = con.createStatement();
+						String QueryStringCoCourse2 = "SELECT * FROM examsurvey inner join candidate inner join section inner join currentcourse where examsurvey.courseCode = currentcourse.courseCode and candidate.teachtype = 'Lect' and examsurvey.courseCode = '"
+								+ courseCode
+								+ "' and section.sectionID = candidate.sectionID and currentcourse.currentcourseID = section.currentcourseID and examsurvey.year = '"
+								+ year + "' and examsurvey.semester = '" + term + "' and candidate.userID = '"+teacherID+"'  ;";
+							ResultSet rsCoCourse2 = stmt.executeQuery(QueryStringCoCourse2);
+							while (rsCoCourse2.next()) {
+								couseCo = rsCoCourse2.getString("candidate.userID");
+								//out.print(couseCo);
+								rm = rsCoCourse2.getString("examsurvey.reasonMid");
+								rf = rsCoCourse2.getString("examsurvey.reasonFinal");
+							}
+							
+							if(coCourse.equals(couseCo)){
+								out.print(rm+"<br>");
+								out.print(rf+"<br>");
+							}
+					%>
 				</td>
 
 			</tr>
