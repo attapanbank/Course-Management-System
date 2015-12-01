@@ -95,7 +95,7 @@ if (sUserID == null) {
 			</button>
 
 
-			<a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a>
+			<a class="navbar-brand" href="#"> <span>IT:CMS</span></a>
 			<!-- user dropdown starts -->
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
@@ -172,12 +172,7 @@ if (sUserID == null) {
 
 			<div id="content" class="col-lg-10 col-sm-10">
 				<!-- content starts -->
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="Teacher_News.html">Home</a></li>
-						<li><a href="Teacher_News.html">Dashboard</a></li>
-					</ul>
-				</div>
+				
 
 
 				<div class="row">
@@ -190,8 +185,7 @@ if (sUserID == null) {
 								</h2>
 
 								<div class="box-icon">
-									<a href="#" class="btn btn-setting btn-round btn-default"><i
-										class="glyphicon glyphicon-cog"></i></a> <a href="#"
+									<a href="#"
 										class="btn btn-minimize btn-round btn-default"><i
 										class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
 										class="btn btn-close btn-round btn-default"><i

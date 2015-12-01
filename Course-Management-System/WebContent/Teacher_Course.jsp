@@ -63,7 +63,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a>
+			<a class="navbar-brand" href="#"> <span>IT:CMS</span></a>
 			<!-- user dropdown starts -->
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
@@ -155,12 +155,7 @@
 				<!-- content starts -->
 
 
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Course Select</a></li>
-					</ul>
-				</div>
+				
 
 
 				<%
