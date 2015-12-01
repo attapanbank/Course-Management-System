@@ -9,20 +9,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<!--
-        ===
-        This comment should NOT be removed.
 
-        Charisma v2.0.0
-
-        Copyright 2012-2014 Muhammad Usman
-        Licensed under the Apache License v2.0
-        http://www.apache.org/licenses/LICENSE-2.0
-
-        http://usman.it
-        http://twitter.com/halalit_usman
-        ===
-    -->
+   
 <meta charset="utf-8">
 <title>Workload</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -84,7 +72,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="index.html"> <span>IT:CMS</span></a>
+			<a class="navbar-brand" href="#"> <span>IT:CMS</span></a>
 			<!-- user dropdown starts -->
 			<div class="btn-group pull-right">
 				<button class="btn btn-default dropdown-toggle"
@@ -177,12 +165,7 @@
 				<!-- content starts -->
 
 
-				<div>
-					<ul class="breadcrumb">
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Workload</a></li>
-					</ul>
-				</div>
+			
 
 
 

@@ -63,13 +63,7 @@
 					</h2>
 
 					<div class="box-icon">
-						<a href="Teacher_Profile.jsp"
-							class="btn btn-setting btn-round btn-default"><i
-							class="glyphicon glyphicon-cog"></i></a> <a href="#"
-							class="btn btn-minimize btn-round btn-default"><i
-							class="glyphicon glyphicon-chevron-up"></i></a> <a href="#"
-							class="btn btn-close btn-round btn-default"><i
-							class="glyphicon glyphicon-remove"></i></a>
+						
 					</div>
 				</div>
 				<div class="box-content" style="display: block;">
@@ -149,7 +143,7 @@
 											</div>
 											<div class="radio">
 												<label> <input type="radio" name="chkBoxOffMidNoMid"
-													id="chkBoxOffMidNoMid" value="Not have"> No-Exam
+													id="chkBoxNoMid" value="Not have"> No-Exam
 												</label>
 											</div></td>
 										<td class="center"><input type="text" name="reasonMid"
@@ -167,7 +161,7 @@
 											</div>
 											<div class="radio">
 												<label> <input type="radio" name="chkBoxOffFinalNoFinal"
-													id="chkBoxOffFinalNoFinal" value="Not have"> No-Exam
+													id="chkBoxNoFinal" value="Not have"> No-Exam
 												</label>
 											</div></td>
 										<td><input type="text" name="reasonFinal"
@@ -230,31 +224,46 @@ function check() {
 
 		}
 
+		//Mid off/Writting
 		if (document.getElementById("chkBoxOffMidNoMid").checked == true
 				&& document.getElementById("chkBoxWrittingMid").checked == true
-
-		//|| document.getElementById("chkBoxWrittingFinal").checked != true
-		//|| document.getElementById("chkBoxMultiFinal").checked != true
-		//|| document.getElementById("chkBoxOffFinal").checked != true
 		) {
 			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
 			document.getElementById("chkBoxOffMidNoMid");
 			return false;
-
+		}
+		// Mid No/Writing
+		if (document.getElementById("chkBoxNoMid").checked == true
+				&& document.getElementById("chkBoxWrittingMid").checked == true
+		) {
+			swal("If you selecting Multple choice or writing you can't select No-Exam ");
+			document.getElementById("chkBoxNoMid");
+			return false;
 		}
 
+		// Mid off/Mul
 		if (document.getElementById("chkBoxOffMidNoMid").checked == true
 				&& document.getElementById("chkBoxMultiMid").checked == true
-		//|| document.getElementById("chkBoxWrittingFinal").checked != true
-		//|| document.getElementById("chkBoxMultiFinal").checked != true
-		//|| document.getElementById("chkBoxOffFinal").checked != true
+		
 		) {
 			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
 			document.getElementById("chkBoxOffMidNoMid");
 			return false;
 
 		}
+		// Mid No/Mul
+		if (document.getElementById("chkBoxNoMid").checked == true
+				&& document.getElementById("chkBoxMultiMid").checked == true
+		
+		) {
+			swal("If you selecting Multple choice or writing you can't select No-Exam ");
+			document.getElementById("chkBoxNoMid");
+			return false;
 
+		}
+		
+		
+	// Final off/writing
 		if (document.getElementById("chkBoxOffFinalNoFinal").checked == true
 				&& document.getElementById("chkBoxWrittingFinal").checked == true) {
 			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
@@ -262,11 +271,29 @@ function check() {
 			return false;
 
 		}
+		
+	// Fianl No/writing
+	if (document.getElementById("chkBoxNoFinal").checked == true
+				&& document.getElementById("chkBoxWrittingFinal").checked == true) {
+			swal("If you selecting Multple choice or writing you can't select No-Exam ");
+			document.getElementById("chkBoxNoFinal");
+			return false;
 
+		}
+// final off/mul
 		if (document.getElementById("chkBoxOffFinalNoFinal").checked == true
 				&& document.getElementById("chkBoxMultiFinal").checked == true) {
 			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
-			document.getElementById("chkBoxOffFinal");
+			document.getElementById("chkBoxOffFinalNoFinal");
+			return false;
+
+		}
+		
+		// final no/mul
+		if (document.getElementById("chkBoxNoFinal").checked == true
+				&& document.getElementById("chkBoxMultiFinal").checked == true) {
+			swal("If you selecting Multple choice or writing you can't select Off Schedule ");
+			document.getElementById("chkBoxNoFinal");
 			return false;
 
 		}
@@ -299,6 +326,40 @@ function check() {
 	}
 	
 	</script>
+	
+	<script type="text/javascript">
+        var allRadios = document.getElementsByName('chkBoxOffFinalNoFinal');
+        var booRadio;
+        var x = 0;
+        for(x = 0; x < allRadios.length; x++){
+
+            allRadios[x].onclick = function() {
+                if(booRadio == this){
+                    this.checked = false;
+                    booRadio = null;
+                }else{
+                    booRadio = this;
+                }
+            };
+        }
+    </script>
+    
+    <script type="text/javascript">
+        var allRadios = document.getElementsByName('chkBoxOffMidNoMid');
+        var booRadio;
+        var x = 0;
+        for(x = 0; x < allRadios.length; x++){
+
+            allRadios[x].onclick = function() {
+                if(booRadio == this){
+                    this.checked = false;
+                    booRadio = null;
+                }else{
+                    booRadio = this;
+                }
+            };
+        }
+    </script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js">
 		
 	</script>
