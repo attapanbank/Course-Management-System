@@ -3,7 +3,10 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.util.Date"%>
 <%@ page import="java.util.Calendar"%>
+<%@ page import="java.text.DateFormat"%>
+<%@ page import="java.text.SimpleDateFormat"%>
 <%
 	// Validate USER
 	String sUserID = null;
@@ -32,8 +35,7 @@
 <%@page import="java.io.InputStream"%>
 <%@page import="java.util.Properties"%>
 <%
-	InputStream stream = application
-			.getResourceAsStream("/fileUpload/db.properties");
+	InputStream stream = application.getResourceAsStream("/fileUpload/db.properties");
 	Properties props = new Properties();
 	props.load(stream);
 
@@ -147,7 +149,7 @@
 				<button class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
 					<i class="glyphicon glyphicon-user"></i><span
-						class="hidden-sm hidden-xs"> <%=sUserName %></span> <span
+						class="hidden-sm hidden-xs"> <%=sUserName%></span> <span
 						class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
@@ -219,29 +221,59 @@
 				&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;lt;/div&amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;amp;gt;
 			</noscript>
 			<%
-				// start get data  from SQL server
-				int year = Calendar.getInstance().get(Calendar.YEAR);
-				// 1 st year
-				int yearOnBE1 = (year) + 543;
-				String yearOnBEStr1 = Integer.toString(yearOnBE1);
-				//System.out.println(yearOnBEStr1);
-				//2 nd year
-				int yearOnBE2 = (year) + 543 - 1;
-				String yearOnBEStr2 = Integer.toString(yearOnBE2);
-				//System.out.println(yearOnBEStr2);
-				//3 rd year
-				int yearOnBE3 = (year) + 543 - 2;
-				String yearOnBEStr3 = Integer.toString(yearOnBE3);
-				//System.out.println(yearOnBEStr3);
-				//4 th year
-				int yearOnBE4 = (year) + 543 - 3;
-				String yearOnBEStr4 = Integer.toString(yearOnBE4);
-				//System.out.println(yearOnBEStr4);
-
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
 					stmt = con.createStatement();
 
+					//get year and semester from database
+					int curYear = 0;
+					int curYearOnBE = 0;
+					int curSemester = 0;
+
+					String sqlYear = "SELECT * FROM setsemesterdate;";
+					ResultSet recYear = stmt.executeQuery(sqlYear);
+					if ((recYear != null) && (recYear.next())) {
+						Date today = new Date();
+						DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+						Date startDate = df.parse(recYear.getString("dateterm1_1"));
+						Date endDate = df.parse(recYear.getString("dateterm1_2"));
+
+						// specify year
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(startDate);
+						curYear = cal.get(Calendar.YEAR);
+						
+
+						if (today.after(startDate) || today.before(endDate)) { // specify semester
+							curSemester = 1;
+						} else {
+							curSemester = 2;
+						}
+						
+					}
+					curYearOnBE = curYear + 543;
+					//System.out.print("year : " + curYearOnBE);
+					//System.out.println(" semester : " + curSemester);
+
+					// specify year on specific academic year
+					// 1 st year
+					int yearOnBE1 = (curYear) + 543;
+					String yearOnBEStr1 = Integer.toString(yearOnBE1);
+					//System.out.println(yearOnBEStr1);
+					//2 nd year
+					int yearOnBE2 = (curYear) + 543 - 1;
+					String yearOnBEStr2 = Integer.toString(yearOnBE2);
+					//System.out.println(yearOnBEStr2);
+					//3 rd year
+					int yearOnBE3 = (curYear) + 543 - 2;
+					String yearOnBEStr3 = Integer.toString(yearOnBE3);
+					//System.out.println(yearOnBEStr3);
+					//4 th year
+					int yearOnBE4 = (curYear) + 543 - 3;
+					String yearOnBEStr4 = Integer.toString(yearOnBE4);
+					//System.out.println(yearOnBEStr4);
+
+					// study plan management
 					String sql = "SELECT studyplan.academicYear FROM studyplan group by studyplan.academicYear order by studyplan.academicYear desc";
 					ResultSet rec = stmt.executeQuery(sql);
 			%>
@@ -321,11 +353,10 @@
 															<option value="ICE">ICE</option>
 														</select> <br />
 														<button type="submit" class="btn btn-warning btn-sm">Add
-															Study Plan</button>&nbsp
-														<a class="btn btn-primary btn-sm"
+															Study Plan</button>
+														&nbsp <a class="btn btn-primary btn-sm"
 															href="Coordinator_DuplicateStudyPlanForm.jsp">
-															Duplicate
-														</a>
+															Duplicate </a>
 													</form>
 
 
@@ -443,7 +474,7 @@
 																		<tr role="row">
 																			<th class="sorting_asc" role="columnheader"
 																				tabindex="0" aria-controls="DataTables_Table_0"
-																				rowspan="1" colspan="1" style="width: 176px;"
+																				rowspan="1" colspan="1" style="width: 100px;"
 																				aria-sort="ascending"
 																				aria-label="Code: activate to sort column descending">Code</th>
 																			<th class="sorting" role="columnheader" tabindex="0"
@@ -462,7 +493,7 @@
 																		<%
 																			// Year 1st
 																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																						+ yearOnBEStr1 + "'";
+																						+ yearOnBEStr1 + "' AND studyYear like '"+curYearOnBE+"' AND studySemester like '"+curSemester+"'";
 																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
 																		%>
@@ -523,7 +554,7 @@
 																	<tr role="row">
 																		<th class="sorting_asc" role="columnheader"
 																			tabindex="0" aria-controls="DataTables_Table_0"
-																			rowspan="1" colspan="1" style="width: 201px;"
+																			rowspan="1" colspan="1" style="width: 100px;"
 																			aria-sort="ascending"
 																			aria-label="Code: activate to sort column descending">Code</th>
 																		<th class="sorting" role="columnheader" tabindex="0"
@@ -542,7 +573,7 @@
 																	<%
 																		// Year 2
 																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																					+ yearOnBEStr2 + "'";
+																					+ yearOnBEStr2 + "' AND studyYear like '"+curYearOnBE+"' AND studySemester like '"+curSemester+"'";
 																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
 																	%>
@@ -606,7 +637,7 @@
 																		<tr role="row">
 																			<th class="sorting_asc" role="columnheader"
 																				tabindex="0" aria-controls="DataTables_Table_0"
-																				rowspan="1" colspan="1" style="width: 176px;"
+																				rowspan="1" colspan="1" style="width: 100px;"
 																				aria-sort="ascending"
 																				aria-label="Code: activate to sort column descending">Code</th>
 																			<th class="sorting" role="columnheader" tabindex="0"
@@ -625,7 +656,7 @@
 																		<%
 																			// Year 3
 																				sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																						+ yearOnBEStr3 + "'";
+																						+ yearOnBEStr3 + "' AND studyYear like '"+curYearOnBE+"' AND studySemester like '"+curSemester+"'";
 																				rec = stmt.executeQuery(sql);
 																				while ((rec != null) && (rec.next())) {
 																		%>
@@ -687,7 +718,7 @@
 																	<tr role="row">
 																		<th class="sorting_asc" role="columnheader"
 																			tabindex="0" aria-controls="DataTables_Table_0"
-																			rowspan="1" colspan="1" style="width: 201px;"
+																			rowspan="1" colspan="1" style="width: 100px;"
 																			aria-sort="ascending"
 																			aria-label="Code: activate to sort column descending">Code</th>
 																		<th class="sorting" role="columnheader" tabindex="0"
@@ -706,7 +737,7 @@
 																	<%
 																		// Year 4
 																			sql = "SELECT * FROM studyplan inner join course on (studyPlan.courseCode=course.courseCode) Where academicYear like '"
-																					+ yearOnBEStr4 + "'";
+																					+ yearOnBEStr4 + "' AND studyYear like '"+curYearOnBE+"' AND studySemester like '"+curSemester+"'";
 																			rec = stmt.executeQuery(sql);
 																			while ((rec != null) && (rec.next())) {
 																	%>
