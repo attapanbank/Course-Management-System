@@ -347,7 +347,7 @@
 												int curYearOnBE = 0;
 												int curSemester = 0;
 
-												String sqlYear = "SELECT * FROM cmsit.setsemesterdate;";
+												String sqlYear = "SELECT * FROM setsemesterdate;";
 												ResultSet recYear = stmt.executeQuery(sqlYear);
 												if ((recYear != null) && (recYear.next())) {
 													Date today = new Date();
