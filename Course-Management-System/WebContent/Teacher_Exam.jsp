@@ -509,6 +509,9 @@
 														academicterm = "";
 														System.out.println("None");
 													}
+												}else{
+													academicyear = "";
+													academicterm = "";
 												}
 
 												session.setAttribute("academicyear", academicyear);
