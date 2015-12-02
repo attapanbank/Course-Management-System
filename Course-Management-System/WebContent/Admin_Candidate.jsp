@@ -348,9 +348,6 @@
 														Aacademicterm = "";
 														System.out.println("None");
 													}
-												} else {
-													Aacademicyear = "";
-													Aacademicterm = "";
 												}
 
 												session.setAttribute("academicyear", Aacademicyear);
@@ -450,7 +447,7 @@
 															}else{
 															if (lect_of_hour == 0) {
 															
-																out.print(lect_of_hour);
+																//out.print(lect_of_hour);
 															} else {
 
 																
@@ -486,7 +483,7 @@
 															}else{
 															
 															if (lab_of_hour == 0) {
-																out.print(lab_of_hour);
+																//out.print(lab_of_hour);
 															} else {
 
 																stmt = con.createStatement();
@@ -621,7 +618,7 @@
 															}else{
 															
 															if (lab_of_hour == 0) {
-																out.print(lab_of_hour);
+																//out.print(lab_of_hour);
 															} else {
 
 																stmt = con.createStatement();
@@ -902,9 +899,6 @@
 															academicyear = "";
 															academicterm = "";
 														}
-													} else {
-														academicyear = "";
-														academicterm = "";
 													}
 
 													session.setAttribute("academicyear", academicyear);
