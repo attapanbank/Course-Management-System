@@ -479,6 +479,9 @@
 															academicyear = "";
 															academicterm = "";
 														}
+													} else {
+														academicyear = "";
+														academicterm = "";
 													}
 
 													session.setAttribute("academicyear", academicyear);

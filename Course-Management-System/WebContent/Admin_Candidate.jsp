@@ -348,6 +348,9 @@
 														Aacademicterm = "";
 														System.out.println("None");
 													}
+												} else {
+													Aacademicyear = "";
+													Aacademicterm = "";
 												}
 
 												session.setAttribute("academicyear", Aacademicyear);
@@ -899,6 +902,9 @@
 															academicyear = "";
 															academicterm = "";
 														}
+													} else {
+														academicyear = "";
+														academicterm = "";
 													}
 
 													session.setAttribute("academicyear", academicyear);
