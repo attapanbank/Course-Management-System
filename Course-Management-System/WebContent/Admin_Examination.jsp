@@ -143,7 +143,7 @@
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
 							<li><a class="ajax-link" href="Admin_News.jsp"><i
-									class="glyphicon glyphicon-home"></i><span> Dashboard</span></a></li>
+									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
 							<li class="nav-header hidden-md">Management</li>
 							<li><a class="ajax-link" href="Admin_Candidate.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
