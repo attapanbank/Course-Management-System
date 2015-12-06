@@ -279,6 +279,15 @@
 								<%=semester2%>
 								has been already open.
 							</div>
+							
+							<div class="alert alert-info">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong>New !</strong> A Workload confirm year
+								<%=year2%>
+								term
+								<%=semester2%>
+								has been already open.
+							</div>
 
 
 

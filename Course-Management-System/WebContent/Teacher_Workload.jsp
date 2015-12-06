@@ -673,17 +673,55 @@ String strdateterm2_2 = "";
 
 																																																															}
 														%>
-														<table>
+														
+														
+														
+														<%
+								stmt = con.createStatement();
+
+								String QueryString2 = "select * from examination_checksurvey where checksurvey ='ON' ";
+
+								ResultSet rs2 = stmt.executeQuery(QueryString2);
+
+								String on2 = null;
+								String year2 = null;
+								String semester2 = null;
+							%>
+
+							<%
+								while (rs2.next()) {
+									on2 = rs2.getString("checksurvey");
+									year2 = rs2.getString("year");
+									semester2 = rs2.getString("semester");
+
+									if (on2.equals("ON")) {
+							%>
+							
+<table>
 															<tr>
 																<td><a
-																	href="Teacher_Confirm_Workload.jsp?userID=<%=strUserID%>&&year=<%=Syear%>&&term=<%=Sterm%>&&status=confirm"
+																	href="Teacher_Confirm_Workload.jsp?userID=<%=strUserID%>&&year=<%=year2%>&&term=<%=semester2%>&&status=confirm"
 																	class="btn btn-primary" data-dismiss="modal">Confirm</a></td>
 																<td><a class="btn btn-danger examSurveybtn"
-																	href="Teacher_Reject_Comment_Workload.jsp?userID=<%=strUserID%>&&year=<%=Syear%>&&term=<%=Sterm%>"
+																	href="Teacher_Reject_Comment_Workload.jsp?userID=<%=strUserID%>&&year=<%=year2%>&&term=<%=semester2%>"
 																	onClick="NewWindow(this.href,'name','600','120','yes');return false">
 																		Reject </a></td>
 															</tr>
 														</table>
+
+
+							<%
+								} else if (on2.equals("OFF")) {
+							%>
+							
+							<%
+								}
+								}
+							%>
+														
+														
+														
+														
 
 
 

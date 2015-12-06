@@ -237,7 +237,47 @@ if (sUserID == null) {
 									}
 								%>
 
-	
+	<%
+								stmt = con.createStatement();
+
+								String QueryString2 = "select * from examination_checksurvey where checksurvey ='ON' ";
+
+								ResultSet rs2 = stmt.executeQuery(QueryString2);
+
+								String on2 = null;
+								String year2 = null;
+								String semester2 = null;
+							%>
+
+							<%
+								while (rs2.next()) {
+									on2 = rs2.getString("checksurvey");
+									year2 = rs2.getString("year");
+									semester2 = rs2.getString("semester");
+
+									if (on2.equals("ON")) {
+							%>
+							
+							
+							<div class="alert alert-info">
+								<button type="button" class="close" data-dismiss="alert">&times;</button>
+								<strong>New !</strong> A Workload confirm year
+								<%=year2%>
+								term
+								<%=semester2%>
+								has been already open.
+							</div>
+
+
+
+							<%
+								} else if (on2.equals("OFF")) {
+							%>
+							
+							<%
+								}
+								}
+							%>
 							
 							</div>
 						</div>

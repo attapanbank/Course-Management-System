@@ -91,24 +91,24 @@
 					data-toggle="dropdown">
 					<%
 						Object strUserID = session.getAttribute("sUserID");
-																		// Validate USER
-																		String sUserID = null;
-																		String sUserType = null;
-																		String sFirstname = null;
-																		String sLastname = null;
-																		String sUserName = null;
-																		String sPassword = null;
-																		String sMajor = null;
-																		sUserID = (String) session.getAttribute("sUserID");
-																		sUserType = (String) session.getAttribute("sUserType");
-																		sFirstname = (String) session.getAttribute("sFirstname");
-																		sLastname = (String) session.getAttribute("sLastname");
-																		sUserName = (String) session.getAttribute("sUserName");
-																		sPassword = (String) session.getAttribute("sPassword");
-																		sMajor = (String) session.getAttribute("sMajor");
-																		if (sUserID == null) {
-																			response.sendRedirect("Main_Login.jsp");
-																		}
+																					// Validate USER
+																					String sUserID = null;
+																					String sUserType = null;
+																					String sFirstname = null;
+																					String sLastname = null;
+																					String sUserName = null;
+																					String sPassword = null;
+																					String sMajor = null;
+																					sUserID = (String) session.getAttribute("sUserID");
+																					sUserType = (String) session.getAttribute("sUserType");
+																					sFirstname = (String) session.getAttribute("sFirstname");
+																					sLastname = (String) session.getAttribute("sLastname");
+																					sUserName = (String) session.getAttribute("sUserName");
+																					sPassword = (String) session.getAttribute("sPassword");
+																					sMajor = (String) session.getAttribute("sMajor");
+																					if (sUserID == null) {
+																						response.sendRedirect("Main_Login.jsp");
+																					}
 					%>
 					<i class="glyphicon glyphicon-user"></i><span
 						class="hidden-sm hidden-xs"> <%
@@ -142,17 +142,18 @@
 						<div class="nav-sm nav nav-stacked"></div>
 						<ul style="" class="nav nav-pills nav-stacked main-menu">
 							<li class="nav-header">Main</li>
-							<li><a class="ajax-link" href="Teacher_News.jsp"><i
+							<li><a class="ajax-link" href="Teacher_Assistance_News.jsp"><i
 									class="glyphicon glyphicon-home"></i><span> News</span></a></li>
 							<li class="nav-header hidden-md">Management</li>
 							<li class="active"><a class="ajax-link"
 								href="Teacher_Assistance_Workload.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Workload</span></a></li>
-							<li><a class="ajax-link" href="Teacher_Assistance_Course.jsp"><i
+							<li><a class="ajax-link"
+								href="Teacher_Assistance_Course.jsp"><i
 									class="glyphicon glyphicon-align-justify"></i><span>
 										Course</span></a></li>
-							
+
 
 
 						</ul>
@@ -175,7 +176,7 @@
 				<!-- content starts -->
 
 
-				
+
 
 
 
@@ -236,85 +237,85 @@
 																</tr>
 															</thead>
 
-<%
-Statement stmt;
-Connection con;
-InputStream stream = application.getResourceAsStream("/fileUpload/db.properties");
-Properties props = new Properties();
-props.load(stream);
-String url = props.getProperty("driver");
-String dbUrl = props.getProperty("url");
-String dbUser = props.getProperty("user");
-String dbPassword = props.getProperty("password");
-con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-%>
-<%
-String strdateterm1_1 = "";
-String strdateterm1_2 = "";
-String strdateterm2_1 = "";
-String strdateterm2_2 = "";
+															<%
+																Statement stmt;
+															Connection con;
+															InputStream stream = application.getResourceAsStream("/fileUpload/db.properties");
+															Properties props = new Properties();
+															props.load(stream);
+															String url = props.getProperty("driver");
+															String dbUrl = props.getProperty("url");
+															String dbUser = props.getProperty("user");
+															String dbPassword = props.getProperty("password");
+															con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+															%>
+															<%
+																String strdateterm1_1 = "";
+															String strdateterm1_2 = "";
+															String strdateterm2_1 = "";
+															String strdateterm2_2 = "";
 
-				String academicyear = null;
-				String academicterm = null;
+																	String academicyear = null;
+																	String academicterm = null;
 
-				if (null == (String) session.getAttribute("WorkloadYear")) {
+																	if (null == (String) session.getAttribute("WorkloadYear")) {
 
-				Date td = new Date();
-				String strtd = new String("");
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
-				new Locale("th"));
-				strtd = format.format(td);
-				Date today = format.parse(strtd);
-																																																																
-				stmt = con.createStatement();
-				String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
-				ResultSet rs = stmt.executeQuery(QueryString);
-				if (rs.next()) {
-				strdateterm1_1 = rs.getString("dateterm1_1");
-				strdateterm1_2 = rs.getString("dateterm1_2");
-				strdateterm2_1 = rs.getString("dateterm2_1");
-				strdateterm2_2 = rs.getString("dateterm2_2");
+																	Date td = new Date();
+																	String strtd = new String("");
+																	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+																	SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd",
+																	new Locale("th"));
+																	strtd = format.format(td);
+																	Date today = format.parse(strtd);
+																																																																													
+																	stmt = con.createStatement();
+																	String QueryString = "SELECT * FROM setsemesterdate WHERE setsemesterdate_ID = '1'";
+																	ResultSet rs = stmt.executeQuery(QueryString);
+																	if (rs.next()) {
+																	strdateterm1_1 = rs.getString("dateterm1_1");
+																	strdateterm1_2 = rs.getString("dateterm1_2");
+																	strdateterm2_1 = rs.getString("dateterm2_1");
+																	strdateterm2_2 = rs.getString("dateterm2_2");
 
-				Date dateterm1_1 = format2.parse(strdateterm1_1);
-				Date dateterm1_2 = format2.parse(strdateterm1_2);
-				Date dateterm2_1 = format2.parse(strdateterm2_1);
-				Date dateterm2_2 = format2.parse(strdateterm2_2);
+																	Date dateterm1_1 = format2.parse(strdateterm1_1);
+																	Date dateterm1_2 = format2.parse(strdateterm1_2);
+																	Date dateterm2_1 = format2.parse(strdateterm2_1);
+																	Date dateterm2_2 = format2.parse(strdateterm2_2);
 
-				String[] term1_1 = strdateterm1_1.split("-", 3);
-				int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
-				int mterm1_1 = Integer.parseInt(term1_1[1]);
-				int dterm1_1 = Integer.parseInt(term1_1[2]);
+																	String[] term1_1 = strdateterm1_1.split("-", 3);
+																	int yterm1_1 = 543 + Integer.parseInt(term1_1[0]);
+																	int mterm1_1 = Integer.parseInt(term1_1[1]);
+																	int dterm1_1 = Integer.parseInt(term1_1[2]);
 
-				int intacademicyear = yterm1_1;
-				academicyear = Integer.toString(intacademicyear);
+																	int intacademicyear = yterm1_1;
+																	academicyear = Integer.toString(intacademicyear);
 
-				/* System.out.println(dateterm1_1);
-				System.out.println(dateterm1_2);
-				System.out.println(dateterm2_1);
-				System.out.println(dateterm2_2); */
+																	/* System.out.println(dateterm1_1);
+																	System.out.println(dateterm1_2);
+																	System.out.println(dateterm2_1);
+																	System.out.println(dateterm2_2); */
 
-				if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
-				&& (today.after(dateterm1_1) || today
-				.equals(dateterm1_1))) {
-				academicterm = "1";
-				} else if ((today.before(dateterm2_2) || today
-				.equals(dateterm2_2))
-				&& (today.after(dateterm2_1) || today
-				.equals(dateterm2_1))) {
-				academicterm = "2";
-				} else {
-				academicyear = "";
-				academicterm = "";
-				System.out.println("None");
-				}
-					}else{
-						academicyear = "";
-						academicterm = "";
-					}
+																	if ((today.before(dateterm1_2) || today.equals(dateterm1_2))
+																	&& (today.after(dateterm1_1) || today
+																	.equals(dateterm1_1))) {
+																	academicterm = "1";
+																	} else if ((today.before(dateterm2_2) || today
+																	.equals(dateterm2_2))
+																	&& (today.after(dateterm2_1) || today
+																	.equals(dateterm2_1))) {
+																	academicterm = "2";
+																	} else {
+																	academicyear = "";
+																	academicterm = "";
+																	System.out.println("None");
+																	}
+																		}else{
+																			academicyear = "";
+																			academicterm = "";
+																		}
 
-				session.setAttribute("academicyear", academicyear);
-				session.setAttribute("academicterm", academicterm);
+																	session.setAttribute("academicyear", academicyear);
+																	session.setAttribute("academicterm", academicterm);
 															%>
 															<p>
 																<b><i>Year : <%=academicyear%> Term : <%=academicterm%>
@@ -335,44 +336,44 @@ String strdateterm2_2 = "";
 															%>
 															<%
 																String Syear = "";
-																String Sterm = "";
-																if (null == (String) session.getAttribute("WorkloadYear")) {
-																Syear = (String) session.getAttribute("academicyear");
-																Sterm = (String) session.getAttribute("academicterm");
-																} else if (null != (String) session.getAttribute("WorkloadYear")) {
-																Syear = (String) session.getAttribute("WorkloadYear");
-																Sterm = (String) session.getAttribute("WorkloadTerm");
-																} else {
-																Syear = null;
-																Sterm = null;
-																}
+																													String Sterm = "";
+																													if (null == (String) session.getAttribute("WorkloadYear")) {
+																													Syear = (String) session.getAttribute("academicyear");
+																													Sterm = (String) session.getAttribute("academicterm");
+																													} else if (null != (String) session.getAttribute("WorkloadYear")) {
+																													Syear = (String) session.getAttribute("WorkloadYear");
+																													Sterm = (String) session.getAttribute("WorkloadTerm");
+																													} else {
+																													Syear = null;
+																													Sterm = null;
+																													}
 															%>
 
 
 
 															<%
 																stmt = con.createStatement();
-																String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																+ sUserID
-																+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-																+Syear
-																+"' and currentcourse.semester = '"
-																+Sterm
-																+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' group by currentcourse.courseCode;";
-																ResultSet rsFinal = stmt.executeQuery(courseFinal);
-																																																																				
-																int of_lec = 0;
-																int of_lecturers = 0;
-																int of_lab = 0;
-																int of_lablecturers = 0;
-																double wlLect = 0;
-																double wlLab = 0;
-																																																																				
-																int hourAll = 0 ;
-																double result =0;
-																																																																				
-																ArrayList<Integer> listHourAll = new ArrayList<Integer>();
-																ArrayList<Double> listResult = new ArrayList<Double>();
+																													String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																													+ sUserID
+																													+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																													+Syear
+																													+"' and currentcourse.semester = '"
+																													+Sterm
+																													+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' group by currentcourse.courseCode;";
+																													ResultSet rsFinal = stmt.executeQuery(courseFinal);
+																																																																																	
+																													int of_lec = 0;
+																													int of_lecturers = 0;
+																													int of_lab = 0;
+																													int of_lablecturers = 0;
+																													double wlLect = 0;
+																													double wlLab = 0;
+																																																																																	
+																													int hourAll = 0 ;
+																													double result =0;
+																																																																																	
+																													ArrayList<Integer> listHourAll = new ArrayList<Integer>();
+																													ArrayList<Double> listResult = new ArrayList<Double>();
 															%>
 
 
@@ -382,22 +383,22 @@ String strdateterm2_2 = "";
 
 																<%
 																	if (strUserID != null) {
-																	while (rsFinal.next()) {
+																															while (rsFinal.next()) {
 
-																	String credit = null;
+																															String credit = null;
 																%>
 																<tr class="odd">
 																	<td class="center">
 																		<%
 																			String courseCode = rsFinal.getString("course.courseCode");
-																			out.print(courseCode);
+																																			out.print(courseCode);
 																		%>
 																	</td>
 
 																	<td class="center">
 																		<%
 																			String courseName = rsFinal.getString("course.courseName");
-																			out.print(courseName);
+																																			out.print(courseName);
 																		%>
 																	</td>
 																	<td class="center">
@@ -407,214 +408,210 @@ String strdateterm2_2 = "";
 																	</td>
 																	<%
 																		credit = rsFinal.getString("course.Credit");
-																		System.out.print(credit);
-																		String[] parts = credit.split("[\\s()]", 4);
+																																	System.out.print(credit);
+																																	String[] parts = credit.split("[\\s()]", 4);
 
-																		System.out.println(credit);
-																		String creditSplit = parts[0];
-																		String splitnext = parts[2];
+																																	System.out.println(credit);
+																																	String creditSplit = parts[0];
+																																	String splitnext = parts[2];
 
-																		String[] partstwo = splitnext.split("-", 3);
-																		String lect = partstwo[0];
-																		String lab = partstwo[1];
-																		String self = partstwo[2];
+																																	String[] partstwo = splitnext.split("-", 3);
+																																	String lect = partstwo[0];
+																																	String lab = partstwo[1];
+																																	String self = partstwo[2];
 
-																		int lect_of_hour = Integer.parseInt(lect);
-																		int lab_of_hour = Integer.parseInt(lab);
+																																	int lect_of_hour = Integer.parseInt(lect);
+																																	int lab_of_hour = Integer.parseInt(lab);
 																	%>
 
 																	<td class="center">
 																		<%
-																			
-																		if(courseName.equalsIgnoreCase("Senior Project 2") 
-																				|| courseName.equalsIgnoreCase("Co-operative Education") 
-																				|| courseName.equalsIgnoreCase("Senior Project 1")){
-																			
-																		
-																		}else{
-																		if (lect_of_hour == 0) {
-																					out.print(lect_of_hour);
-																				} else {
+																			if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																				|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																				|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																			
+																																		
+																																		}else{
+																																		if (lect_of_hour == 0) {
+																																					out.print(lect_of_hour);
+																																				} else {
 
-																				stmt = con.createStatement();
-																				String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																				+ sUserID
-																				+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-																				+Syear
-																				+"' and currentcourse.semester = '"
-																				+Sterm
-																				+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																				+ courseCode + "'  ";
-																				ResultSet rsOfLec = stmt.executeQuery(qOfLec);
-																				rsOfLec.last();
-																				of_lec = rsOfLec.getInt("rowcount");
-																				out.print(of_lec);
+																																				stmt = con.createStatement();
+																																				String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																				+ sUserID
+																																				+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																																				+Syear
+																																				+"' and currentcourse.semester = '"
+																																				+Sterm
+																																				+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																																				+ courseCode + "'  ";
+																																				ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+																																				rsOfLec.last();
+																																				of_lec = rsOfLec.getInt("rowcount");
+																																				out.print(of_lec);
 
-																	}
-																		}
+																																	}
+																																		}
 																		%>
 																	</td>
 																	<td class="center">
 																		<%
 																			stmt = con.createStatement();
-																		String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-																			+Syear
-																			+"' and currentcourse.semester = '"+
-																			Sterm
-																			+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																			+ courseCode 
-																			+ "' group by candidate.userID ";
-																			ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
+																																		String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																																			+Syear
+																																			+"' and currentcourse.semester = '"+
+																																			Sterm
+																																			+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																																			+ courseCode 
+																																			+ "' group by candidate.userID ";
+																																			ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
 
-																			rsOfLectures.last();
-																			of_lecturers = rsOfLectures.getInt("rowcount");
-																			out.print(of_lecturers);
+																																			rsOfLectures.last();
+																																			of_lecturers = rsOfLectures.getInt("rowcount");
+																																			out.print(of_lecturers);
 																		%>
 																	</td>
 																	<td class="center">
 																		<%
-																			
-																		
-																		if(courseName.equalsIgnoreCase("Senior Project 2") 
-																				|| courseName.equalsIgnoreCase("Co-operative Education") 
-																				|| courseName.equalsIgnoreCase("Senior Project 1")){
-																			
-																		
-																		}else{
-																		
-																		if (lab_of_hour == 0) {
-																			out.print(lab_of_hour);
-																			} else {
+																			if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																				|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																				|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																			
+																																		
+																																		}else{
+																																		
+																																		if (lab_of_hour == 0) {
+																																			out.print(lab_of_hour);
+																																			} else {
 
-																			stmt = con.createStatement();
-																			String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																							+ sUserID
-																							+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-																							+Syear
-																							+"' and currentcourse.semester = '"
-																							+Sterm
-																							+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																							+ courseCode + "'  ";
-																			ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+																																			stmt = con.createStatement();
+																																			String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																																							+ sUserID
+																																							+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																																							+Syear
+																																							+"' and currentcourse.semester = '"
+																																							+Sterm
+																																							+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																																							+ courseCode + "'  ";
+																																			ResultSet rsOfLec = stmt.executeQuery(qOfLec);
 
-																			rsOfLec.next();
-																			of_lab = rsOfLec.getInt("rowcount");
-																			out.print(of_lab);
+																																			rsOfLec.next();
+																																			of_lab = rsOfLec.getInt("rowcount");
+																																			out.print(of_lab);
 
-																			}
-																		}
+																																			}
+																																		}
 																		%>
 																	</td>
 																	<td class="center">
 																		<%
 																			stmt = con.createStatement();
-																			String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-																			+Syear
-																			+"' and currentcourse.semester = '"+
-																			Sterm
-																			+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																			+ courseCode 
-																			+ "' group by candidate.userID;  ";
-																			ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
-																			rsOfLec2.last();
-																			of_lablecturers = rsOfLec2.getRow();
-																			while (rsOfLec2.next()) {
-																			String a = rsOfLec2.getString("currentcourse.courseCode");
+																																			String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																																			+Syear
+																																			+"' and currentcourse.semester = '"+
+																																			Sterm
+																																			+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																																			+ courseCode 
+																																			+ "' group by candidate.userID;  ";
+																																			ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
+																																			rsOfLec2.last();
+																																			of_lablecturers = rsOfLec2.getRow();
+																																			while (rsOfLec2.next()) {
+																																			String a = rsOfLec2.getString("currentcourse.courseCode");
 
-																			}
+																																			}
 
-																			out.print(of_lablecturers);
+																																			out.print(of_lablecturers);
 																		%>
 																	</td>
 																	<td class="center">
 																		<%
-																		
-																		if(courseName.equalsIgnoreCase("Senior Project 2") 
-																				|| courseName.equalsIgnoreCase("Co-operative Education") 
-																				|| courseName.equalsIgnoreCase("Senior Project 1")){
-																			
-																		out.print("0");
-																		}else{	
-																		
-																		
-																		
-																		hourAll = lect_of_hour + lab_of_hour;
-																			listHourAll.add(hourAll);
-																			out.print(hourAll);
-																		}
+																			if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																				|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																				|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																			
+																																		out.print("0");
+																																		}else{	
+																																		
+																																		
+																																		
+																																		hourAll = lect_of_hour + lab_of_hour;
+																																			listHourAll.add(hourAll);
+																																			out.print(hourAll);
+																																		}
 																		%>
 																	</td>
 																	<td class="center">
 																		<%
 																			try {
-																																																																																				
-																																																																																						
-																				
-																				if(courseName.equalsIgnoreCase("Senior Project 2") 
-																						|| courseName.equalsIgnoreCase("Co-operative Education") 
-																						|| courseName.equalsIgnoreCase("Senior Project 1")){
-																					
-																					out.print("0");
-																				
-																				}		else{																																																													
-																																																																																				
-																			if (of_lecturers != 0 && of_lablecturers != 0) {
+																																																																																																				
+																																																																																																						
+																																				
+																																				if(courseName.equalsIgnoreCase("Senior Project 2") 
+																																						|| courseName.equalsIgnoreCase("Co-operative Education") 
+																																						|| courseName.equalsIgnoreCase("Senior Project 1")){
+																																					
+																																					out.print("0");
+																																				
+																																				}		else{																																																													
+																																																																																																				
+																																			if (of_lecturers != 0 && of_lablecturers != 0) {
 
-																				if (of_lecturers >= 2) {
-																			// for lecture
-																					wlLect = (of_lec * lect_of_hour * 0.5)
-																							/ of_lecturers;
-																				} else {
-																				wlLect = (of_lec * lect_of_hour) / of_lecturers;
-																			}
+																																				if (of_lecturers >= 2) {
+																																			// for lecture
+																																					wlLect = (of_lec * lect_of_hour * 0.5)
+																																							/ of_lecturers;
+																																				} else {
+																																				wlLect = (of_lec * lect_of_hour) / of_lecturers;
+																																			}
 
-																			// for lab
+																																			// for lab
 
-																			wlLab = (of_lab * lab_of_hour * 0.5)
-																			/ of_lablecturers;
+																																			wlLab = (of_lab * lab_of_hour * 0.5)
+																																			/ of_lablecturers;
 
-																			 result = wlLab + wlLect;
-																			String finalResult = String.format("%.2f", result);
-																			out.print(finalResult);
+																																			 result = wlLab + wlLect;
+																																			String finalResult = String.format("%.2f", result);
+																																			out.print(finalResult);
 
-																			} else if (of_lecturers == 0 && of_lablecturers != 0) {
-																			// for lab
-																			wlLab = (of_lab * lab_of_hour * 0.5)
-																			/ of_lablecturers;
+																																			} else if (of_lecturers == 0 && of_lablecturers != 0) {
+																																			// for lab
+																																			wlLab = (of_lab * lab_of_hour * 0.5)
+																																			/ of_lablecturers;
 
-																			result = wlLab + wlLect;
-																			 String finalResult = String.format("%.2f", result);
-																			out.print(finalResult);
+																																			result = wlLab + wlLect;
+																																			 String finalResult = String.format("%.2f", result);
+																																			out.print(finalResult);
 
-																			} else if (of_lecturers != 0 && of_lablecturers == 0) {
-																				if (of_lecturers >= 2) {
-																					// for lecture
-																				wlLect = (of_lec * lect_of_hour * 0.5)
-																				/ of_lecturers;
-																				} else {
-																				wlLect = (of_lec * lect_of_hour) / of_lecturers;
-																				}
+																																			} else if (of_lecturers != 0 && of_lablecturers == 0) {
+																																				if (of_lecturers >= 2) {
+																																					// for lecture
+																																				wlLect = (of_lec * lect_of_hour * 0.5)
+																																				/ of_lecturers;
+																																				} else {
+																																				wlLect = (of_lec * lect_of_hour) / of_lecturers;
+																																				}
 
-																				result = wlLab + wlLect;
-																				String finalResult = String.format("%.2f", result);
-																				out.print(finalResult);
-																				} else if (of_lecturers == 0 && of_lablecturers == 0) {
-																				// no calculate
-																				result = wlLab + wlLect;
-																				 String finalResult = String.format("%.2f", result);
-																				out.print(finalResult);
-																				}
-																				
-																																																																																						
-																				listResult.add(result);
-																				}
-																				} catch (ArithmeticException e) {
-																				out.print(e);
-																				} catch (NumberFormatException e) {
-																				out.print(e);
-																				} catch (Exception e) {
-																				out.print(e);
-																				}
+																																				result = wlLab + wlLect;
+																																				String finalResult = String.format("%.2f", result);
+																																				out.print(finalResult);
+																																				} else if (of_lecturers == 0 && of_lablecturers == 0) {
+																																				// no calculate
+																																				result = wlLab + wlLect;
+																																				 String finalResult = String.format("%.2f", result);
+																																				out.print(finalResult);
+																																				}
+																																				
+																																																																																																						
+																																				listResult.add(result);
+																																				}
+																																				} catch (ArithmeticException e) {
+																																				out.print(e);
+																																				} catch (NumberFormatException e) {
+																																				out.print(e);
+																																				} catch (Exception e) {
+																																				out.print(e);
+																																				}
 																		%>
 																	</td>
 
@@ -626,11 +623,11 @@ String strdateterm2_2 = "";
 																</tr>
 																<%
 																	}
-																	}
+																															}
 																%>
 																<%
 																	int totalHour  = 0 ;
-																	double totalResult = 0 ;
+																															double totalResult = 0 ;
 																%>
 																<tr>
 																	<td></td>
@@ -639,28 +636,28 @@ String strdateterm2_2 = "";
 																	<td></td>
 																	<td></td>
 																	<td></td>
-																	<td >Total</td>
+																	<td>Total</td>
 																	<td>
 																		<%
 																			for(int i = 0; i<listHourAll.size(); i++)
-																		  {
-																																																																																		  
-																			totalHour = totalHour + listHourAll.get(i);
-																																																																																		
-																																																																																		
-																			 }
-																		out.print(totalHour);
+																																		  {
+																																																																																																		  
+																																			totalHour = totalHour + listHourAll.get(i);
+																																																																																																		
+																																																																																																		
+																																			 }
+																																		out.print(totalHour);
 																		%>
 
 																	</td>
 																	<td>
 																		<%
 																			for(int i = 0; i<listResult.size(); i++)
-																		 {
-																		totalResult = totalResult + listResult.get(i);
-																		}
-																		String finalResult = String.format("%.2f", totalResult);
-																		out.print(finalResult);
+																																		 {
+																																		totalResult = totalResult + listResult.get(i);
+																																		}
+																																		String finalResult = String.format("%.2f", totalResult);
+																																		out.print(finalResult);
 																		%>
 
 																	</td>
@@ -676,24 +673,55 @@ String strdateterm2_2 = "";
 
 														<%
 															stmt = con.createStatement();
-																																																															String qCheck = "SELECT * FROM workload where userID = '"
-																																																																	+ strUserID + "'  ";
-																																																															ResultSet rs = stmt.executeQuery(qCheck);
-																																																															while (rs.next()) {
+																																																																											String qCheck = "SELECT * FROM workload where userID = '"
+																																																																													+ strUserID + "'  ";
+																																																																											ResultSet rs = stmt.executeQuery(qCheck);
+																																																																											while (rs.next()) {
 
-																																																															}
+																																																																											}
 														%>
+														<%
+															stmt = con.createStatement();
+
+																				String QueryString2 = "select * from examination_checksurvey where checksurvey ='ON' ";
+
+																				ResultSet rs2 = stmt.executeQuery(QueryString2);
+
+																				String on2 = null;
+																				String year2 = null;
+																				String semester2 = null;
+														%>
+
+														<%
+															while (rs2.next()) {
+																					on2 = rs2.getString("checksurvey");
+																					year2 = rs2.getString("year");
+																					semester2 = rs2.getString("semester");
+
+																					if (on2.equals("ON")) {
+														%>
+
 														<table>
 															<tr>
 																<td><a
-																	href="Teacher_Assistance_Confirm_Workload.jsp?userID=<%=strUserID%>&&year=<%=Syear%>&&term=<%=Sterm%>&&status=confirm"
+																	href="Teacher_Assistance_Confirm_Workload.jsp?userID=<%=strUserID%>&&year=<%=year2%>&&term=<%=semester2%>&&status=confirm"
 																	class="btn btn-primary" data-dismiss="modal">Confirm</a></td>
 																<td><a class="btn btn-danger examSurveybtn"
-																	href="Teacher_Assistance_Reject_Comment_Workload.jsp?userID=<%=strUserID%>&&year=<%=Syear%>&&term=<%=Sterm%>"
+																	href="Teacher_Assistance_Reject_Comment_Workload.jsp?userID=<%=strUserID%>&&year=<%=year2%>&&term=<%=semester2%>"
 																	onClick="NewWindow(this.href,'name','600','120','yes');return false">
 																		Reject </a></td>
 															</tr>
 														</table>
+
+
+														<%
+															} else if (on2.equals("OFF")) {
+														%>
+
+														<%
+															}
+																				}
+														%>
 
 
 
@@ -801,8 +829,8 @@ String strdateterm2_2 = "";
 
 			<footer class="row">
 			<p class="col-md-9 col-sm-9 col-xs-12 copyright">
-				Â© <a href="http://usman.it" target="_blank">Muhammad Usman</a> 2012
-				- 2014
+				Â© <a href="http://usman.it" target="_blank">Muhammad Usman</a>
+				2012 - 2014
 			</p>
 
 			<p class="col-md-3 col-sm-3 col-xs-12 powered-by">
