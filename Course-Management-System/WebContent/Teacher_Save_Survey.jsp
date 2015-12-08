@@ -69,7 +69,7 @@ try{
 	
 	// check data same and sava
 	
-	String queryString = "SELECT * FROM course_survey WHERE courseCode ='"+cosCode+"' AND userID = '"+ strUserID+"' ";
+	String queryString = "SELECT * FROM course_survey WHERE courseCode ='"+cosCode+"' AND userID = '"+ strUserID+"' and year = '"+year+"' and semester = '"+semester+"' ";
 	ResultSet rs = stmt.executeQuery(queryString);
 	while (rs.next()) {
 
