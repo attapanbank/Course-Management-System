@@ -411,7 +411,7 @@
 								+ strcoursecode2[i] + "')";
 						stmt.executeUpdate(QueryInsertfake);
 						String QuerySelectfake = "SELECT * FROM currentcourse WHERE courseCode ='"
-								+ strcoursecode2[i] + "' AND year = '"+year+"' AND semester = '"+term+"'"; // bug wait for test
+								+ strcoursecode2[i] + "' AND year = '"+year+"' AND semester = '"+term+"'"; // bug wait for vm test
 						ResultSet rsfake = stmt
 								.executeQuery(QuerySelectfake);
 						String currentcourseid2 = "";
