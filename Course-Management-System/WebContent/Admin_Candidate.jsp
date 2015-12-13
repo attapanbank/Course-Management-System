@@ -439,7 +439,7 @@
 															int lect_of_hour = Integer.parseInt(lect);
 															int lab_of_hour = Integer.parseInt(lab);
 															
-															
+															// หาจำนวน section lect ที่ สอนในวิชานั้น
 															if(courseName.equalsIgnoreCase("Senior Project 2") 
 																	|| courseName.equalsIgnoreCase("Co-operative Education") 
 																	|| courseName.equalsIgnoreCase("Senior Project 1")){
@@ -454,25 +454,42 @@
 																
 																
 																stmt = con.createStatement();
-																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																		+ sUserID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																		+ courseCode + "'  ";
+																String qOfLec = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																		+ userID
+																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																		+ courseCode
+																		+ "'  group by section.sectionlect   ";
 																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
 																rsOfLec.last();
-																of_lec = rsOfLec.getInt("rowcount");
+																of_lec = rsOfLec.getRow();
+																System.out.print(of_lec);
+																//of_lec = rsOfLec.getInt("rowcount");
+																//out.print(of_lec);
 																
 
 															}
 															}
 															
+															// หาจำนวน อ. ท่ีสอนใน Lect นั้น
 															stmt = con.createStatement();
-															String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID ";
+															String qOfLectures = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																	+ Syear
+																	+ "' and currentcourse.semester = '"
+																	+ Sterm
+																	+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																	+ courseCode
+																	+ "' and candidate.userID = '"
+																	+ userID
+																	+ "' group by candidate.userID ";
 															ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
 
 															rsOfLectures.last();
-															of_lecturers = rsOfLectures.getInt("rowcount");
+															of_lecturers = rsOfLectures.getRow();
+															//out.print(of_lecturers);
 															
 															
 															if(courseName.equalsIgnoreCase("Senior Project 2") 
@@ -488,26 +505,75 @@
 
 																stmt = con.createStatement();
 																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-																		+ sUserID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																		+ userID
+																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
 																		+ courseCode + "'  ";
 																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
 
 																rsOfLec.next();
 																of_lab = rsOfLec.getInt("rowcount");
+																//out.print(of_lab);
+
 																
 
 															}
 															}
 															stmt = con.createStatement();
-															String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID;  ";
-															ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
-															rsOfLec2.last();
-															of_lablecturers = rsOfLec2.getRow();
-															while (rsOfLec2.next()) {
-																String a = rsOfLec2
-																		.getString("currentcourse.courseCode");
+															String qcheckType = "select * from user where userID = '"
+																	+ userID + "' ";
+															String userType = null;
+															ResultSet rsCheckType = stmt.executeQuery(qcheckType);
+															while (rsCheckType.next()) {
+																userType = rsCheckType.getString("usertype");
+															}
+
+															if (userType.equals("Teacher")) {
+																// หาจำนวน อ. ท่ีสอนใน Lab นั้น
+																stmt = con.createStatement();
+																String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																		+ courseCode
+																		+ "' and user.usertype = 'Teacher' and candidate.userID = '"
+																		+ userID + "' group by candidate.userID;  ";
+																ResultSet rsOfLec = stmt.executeQuery(qOfLecturesLab);
+																rsOfLec.last();
+																of_lablecturers = rsOfLec.getRow();
+																while (rsOfLec.next()) {
+																	String a = rsOfLec
+																			.getString("currentcourse.courseCode");
+
+																}
+
+																//out.print(of_lablecturers);
+
+															} else if (userType.equals("Teaching Assistance")) {
+																// หาจำนวน อ. ท่ีสอนใน Lab นั้น
+																stmt = con.createStatement();
+																String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																		+ courseCode
+																		+ "' and user.usertype = 'Teaching Assistance' and candidate.userID = '"
+																		+ userID + "'  group by candidate.userID;  ";
+																ResultSet rsOfLec = stmt.executeQuery(qOfLecturesLab);
+																rsOfLec.last();
+																of_lablecturers = rsOfLec.getRow();
+																while (rsOfLec.next()) {
+																	String a = rsOfLec
+																			.getString("currentcourse.courseCode");
+
+																}
+
+																//out.print(of_lablecturers);
 
 															}
 															
@@ -521,7 +587,12 @@
 															}else{
 															
 															
-															hourAll = lect_of_hour + lab_of_hour;
+																int of_lec_all_hour = 0;
+																int of_lab_all_hour = 0;
+																of_lec_all_hour = lect_of_hour * of_lec;
+																of_lab_all_hour = lab_of_hour * of_lab;
+
+																hourAll = of_lec_all_hour + of_lab_all_hour;
 																listHourAll.add(hourAll);
 																			
 																
@@ -551,26 +622,27 @@
 															+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' group by currentcourse.courseCode;";
 													ResultSet rsFinal2 = stmt.executeQuery(courseFinal);
 													
-													int of_lec = 0;
-													int of_lecturers = 0;
-													int of_lab = 0;
-													int of_lablecturers = 0;
-													double wlLect = 0;
-													double wlLab = 0;
 													
-													int hourAll = 0 ;
-													double result =0;
 													
 													
 													ArrayList<Double> listResult2 = new ArrayList<Double>();
 													
 													if (userID != null) {
 														while (rsFinal2.next()) {
-
-															String credit = null;
+															
+															int of_lec = 0;
+															int of_lecturers = 0;
+															int of_lab = 0;
+															int of_lablecturers = 0;
+															double wlLect = 0;
+															double wlLab = 0;
+															
+															int hourAll = 0 ;
+															double result =0;
+															
 															String courseCode = rsFinal2.getString("course.courseCode");
 															String courseName = rsFinal2.getString("course.courseName");
-															
+															String credit = null;
 															credit = rsFinal2.getString("course.Credit");
 															System.out.print(credit);
 															String[] parts = credit.split("[\\s()]", 4);
@@ -587,33 +659,63 @@
 															int lect_of_hour = Integer.parseInt(lect);
 															int lab_of_hour = Integer.parseInt(lab);
 															
+															// หาจำนวน section lect ที่ สอนในวิชานั้น
 															if(courseName.equalsIgnoreCase("Senior Project 2") 
 																	|| courseName.equalsIgnoreCase("Co-operative Education") 
 																	|| courseName.equalsIgnoreCase("Senior Project 1")){
 																
 															}else{
-															
 															if (lect_of_hour == 0) {
-																
+															
+																//out.print(lect_of_hour);
 															} else {
 
+																
+																
+																
 																stmt = con.createStatement();
-																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																String qOfLec = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
 																		+ userID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																		+ courseCode + "'  ";
+																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																		+ courseCode
+																		+ "'  group by section.sectionlect   ";
 																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
 																rsOfLec.last();
-																of_lec = rsOfLec.getInt("rowcount");
+																of_lec = rsOfLec.getRow();
+																System.out.print(of_lec);
+																//of_lec = rsOfLec.getInt("rowcount");
+																//out.print(of_lec);
 																
 
 															}
 															}
+															
+															// หาจำนวน อ. ท่ีสอนใน Lect นั้น
+															stmt = con.createStatement();
+															String qOfLectures = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																	+ Syear
+																	+ "' and currentcourse.semester = '"
+																	+ Sterm
+																	+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+																	+ courseCode
+																	+ "' and candidate.userID = '"
+																	+ userID
+																	+ "' group by candidate.userID ";
+															ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
+
+															rsOfLectures.last();
+															of_lecturers = rsOfLectures.getRow();
+															//out.print(of_lecturers);
 															
 															
 															if(courseName.equalsIgnoreCase("Senior Project 2") 
 																	|| courseName.equalsIgnoreCase("Co-operative Education") 
 																	|| courseName.equalsIgnoreCase("Senior Project 1")){
+																
 																
 															}else{
 															
@@ -624,94 +726,181 @@
 																stmt = con.createStatement();
 																String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
 																		+ userID
-																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																		+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
 																		+ courseCode + "'  ";
 																ResultSet rsOfLec = stmt.executeQuery(qOfLec);
 
 																rsOfLec.next();
 																of_lab = rsOfLec.getInt("rowcount");
+																//out.print(of_lab);
+
 																
 
 															}
 															}
-															
 															stmt = con.createStatement();
-															String qOfLectures = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID ";
-															ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
-
-															rsOfLectures.last();
-															of_lecturers = rsOfLectures.getInt("rowcount");
-															
-															
-															stmt = con.createStatement();
-															String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"+Syear+"' and currentcourse.semester = '"+Sterm+"' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-																	+ courseCode + "' group by candidate.userID;  ";
-															ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
-															rsOfLec2.last();
-															of_lablecturers = rsOfLec2.getRow();
-															while (rsOfLec2.next()) {
-																String a = rsOfLec2
-																		.getString("currentcourse.courseCode");
-
+															String qcheckType = "select * from user where userID = '"
+																	+ userID + "' ";
+															String userType = null;
+															ResultSet rsCheckType = stmt.executeQuery(qcheckType);
+															while (rsCheckType.next()) {
+																userType = rsCheckType.getString("usertype");
 															}
 
+															if (userType.equals("Teacher")) {
+																// หาจำนวน อ. ท่ีสอนใน Lab นั้น
+																stmt = con.createStatement();
+																String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																		+ courseCode
+																		+ "' and user.usertype = 'Teacher' and candidate.userID = '"
+																		+ userID + "' group by candidate.userID;  ";
+																ResultSet rsOfLec = stmt.executeQuery(qOfLecturesLab);
+																rsOfLec.last();
+																of_lablecturers = rsOfLec.getRow();
+																while (rsOfLec.next()) {
+																	String a = rsOfLec
+																			.getString("currentcourse.courseCode");
+
+																}
+
+																//out.print(of_lablecturers);
+
+															} else if (userType.equals("Teaching Assistance")) {
+																// หาจำนวน อ. ท่ีสอนใน Lab นั้น
+																stmt = con.createStatement();
+																String qOfLecturesLab = "SELECT * FROM section inner join candidate inner join currentcourse inner join course inner join user where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+																		+ courseCode
+																		+ "' and user.usertype = 'Teaching Assistance' and candidate.userID = '"
+																		+ userID + "'  group by candidate.userID;  ";
+																ResultSet rsOfLec = stmt.executeQuery(qOfLecturesLab);
+																rsOfLec.last();
+																of_lablecturers = rsOfLec.getRow();
+																while (rsOfLec.next()) {
+																	String a = rsOfLec
+																			.getString("currentcourse.courseCode");
+
+																}
+
+																//out.print(of_lablecturers);
+
+															}
 															
+															// Count the same course
+															String courseStack = null;
+															int count = 0;
+															stmt = con.createStatement();
+															String findthecourse = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+																	+ userID
+																	+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+																	+ Syear
+																	+ "' and currentcourse.semester = '"
+																	+ Sterm
+																	+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect'and currentcourse.courseCode = '"
+																	+ courseCode + "' group by section.sectionlect ;";
+															ResultSet rsfindCourse = stmt.executeQuery(findthecourse);
+															while (rsfindCourse.next()) {
+																courseStack = rsfindCourse.getString("course.courseName");
+																count++;
+															}
 															try {
+																int keepStack = count;
+																double workloadNormal = 0;
+																double workloadLectSum = 0;
+																double Sumworkload = 0;
+																double workloadLab = 0;
 
-																
-
-																if(courseName.equalsIgnoreCase("Senior Project 2") 
-																		|| courseName.equalsIgnoreCase("Co-operative Education") 
-																		|| courseName.equalsIgnoreCase("Senior Project 1")){
-																	
-																}else{
-																
+																// IF LECT AND LAB HAVE LECTURERS
 																if (of_lecturers != 0 && of_lablecturers != 0) {
+																	// For lecture
 
-																	if (of_lecturers >= 2) {
-																		// for lecture
-																		wlLect = (of_lec * lect_of_hour * 0.5)
+																	if (keepStack > 1) {
+																		workloadNormal = (of_lec * lect_of_hour)
 																				/ of_lecturers;
+
+																		int keepExtra = keepStack - 1;
+																		double workloadExtra = 0;
+																		for (int i = 0; i < keepExtra; i++) {
+																			double wle = (of_lec * lect_of_hour * 0.75)
+																					/ of_lecturers;
+
+																			workloadExtra = workloadExtra + wle;
+																		}
+																		workloadLectSum = workloadExtra + workloadNormal;
+
 																	} else {
-																		wlLect = (of_lec * lect_of_hour) / of_lecturers;
+																		workloadLectSum = (of_lec * lect_of_hour)
+																				/ of_lecturers;
 																	}
 
-																	// for lab
-
-																	wlLab = (of_lab * lab_of_hour * 0.5)
+																	// Cal Lab wl
+																	workloadLab = (of_lab * lab_of_hour * 0.5)
 																			/ of_lablecturers;
 
-																	 result = wlLab + wlLect;
-																	
+																	Sumworkload = workloadLab + workloadLectSum;
 
+																	String finalResult = String.format("%.2f", Sumworkload);
+																	//out.print(finalResult);
+
+																	// IF LECT NOT HAVE LECTURERS BUT LAB HAVE LECTURERS
 																} else if (of_lecturers == 0 && of_lablecturers != 0) {
-																	// for lab
-																	wlLab = (of_lab * lab_of_hour * 0.5)
+																	// Cal Lab wl
+																	workloadLab = (of_lab * lab_of_hour * 0.5)
 																			/ of_lablecturers;
 
-																	 result = wlLab + wlLect;
-																	
-																} else if (of_lecturers != 0 && of_lablecturers == 0) {
-																	if (of_lecturers >= 2) {
-																		// for lecture
-																		wlLect = (of_lec * lect_of_hour * 0.5)
+																	Sumworkload = workloadLab + workloadLectSum;
+
+																	String finalResult = String.format("%.2f", Sumworkload);
+																	//out.print(finalResult);
+
+																}// IF LECT HAVE LECTURERS BUT LAB NOT HAVE
+																else if (of_lecturers != 0 && of_lablecturers == 0) {
+																	// For lecture
+
+																	if (keepStack > 1) {
+																		workloadNormal = (of_lec * lect_of_hour)
 																				/ of_lecturers;
+
+																		int keepExtra = keepStack - 1;
+																		double workloadExtra = 0;
+																		for (int i = 0; i < keepExtra; i++) {
+																			double wle = (of_lec * lect_of_hour * 0.75)
+																					/ of_lecturers;
+
+																			workloadExtra = workloadExtra + wle;
+																		}
+																		workloadLectSum = workloadExtra + workloadNormal;
+
 																	} else {
-																		wlLect = (of_lec * lect_of_hour) / of_lecturers;
+																		workloadLectSum = (of_lec * lect_of_hour)
+																				/ of_lecturers;
 																	}
 
-																	 result = wlLab + wlLect;
-																	
-																} else if (of_lecturers == 0 && of_lablecturers == 0) {
-																	// no calculate
-																	 result = wlLab + wlLect;
-																	
+																	Sumworkload = workloadLab + workloadLectSum;
+
+																	String finalResult = String.format("%.2f", Sumworkload);
+																	//out.print(finalResult);
 																}
-																
-																listResult2.add(result);
-																
+																// IF LECT AND LAB NOT CALCULATE
+																else if (of_lecturers == 0 && of_lablecturers == 0) {
+																	Sumworkload = workloadLab + workloadLectSum;
+
+																	String finalResult = String.format("%.2f", Sumworkload);
+																	//out.print(finalResult);
+
 																}
+																			listResult2.add(Sumworkload);
 															} catch (ArithmeticException e) {
 																out.print(e);
 															} catch (NumberFormatException e) {
@@ -719,10 +908,6 @@
 															} catch (Exception e) {
 																out.print(e);
 															}
-															
-															
-															
-															
 														}}
 													
 													double totalResult2 = 0 ;

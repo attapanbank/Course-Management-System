@@ -155,7 +155,7 @@
 				<!-- content starts -->
 
 
-				
+
 
 
 				<%
@@ -631,7 +631,7 @@
 															Aacademicterm = "";
 															System.out.println("None");
 														}
-													}else{
+													} else {
 														Aacademicyear = "";
 														Aacademicterm = "";
 													}
@@ -808,11 +808,7 @@
 													Name</th>
 
 
-												<th style="width: 150px;" colspan="1" rowspan="2"
-													aria-controls="DataTables_Table_0" tabindex="0"
-													role="columnheader" class="sorting"
-													aria-label="Status: activate to sort column ascending">Teaching
-													assistance</th>
+
 
 
 												<th style="width: 150px;" colspan="2" rowspan="1"
@@ -820,6 +816,11 @@
 													role="columnheader" class="sorting"
 													aria-label="Status: activate to sort column ascending">Section
 												</th>
+												<th style="width: 150px;" colspan="1" rowspan="2"
+													aria-controls="DataTables_Table_0" tabindex="0"
+													role="columnheader" class="sorting"
+													aria-label="Status: activate to sort column ascending">Teach
+													Type</th>
 
 
 
@@ -907,7 +908,7 @@
 															academicterm = "";
 															System.out.println("None");
 														}
-													}else{
+													} else {
 														academicyear = "";
 														academicterm = "";
 													}
@@ -950,17 +951,18 @@
 										%>
 
 										<%
-											String courseFinal = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-														+ strUserID
-														+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+											String courseFinal = "SELECT * FROM candidate INNER JOIN section ON section.sectionID = candidate.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID and currentcourse.year = '"
 														+ Syear
 														+ "' and currentcourse.semester = '"
 														+ Sterm
-														+ "'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect';";
+														+ "' INNER JOIN course ON course.courseCode = currentcourse.courseCode WHERE userID = '"
+														+ sUserID
+														+ "' GROUP BY section.sectionID ORDER BY candidate.teachtype desc;";
 												ResultSet rsFinal = stmt.executeQuery(courseFinal);
 												stmt = con.createStatement();
 
 												String sCosCode = null;
+												
 										%>
 
 										<%
@@ -972,6 +974,7 @@
 													<%
 														sCosCode = rsFinal.getString("course.courseCode");
 																out.print(sCosCode);
+																
 													%>
 												</td>
 												<td>
@@ -980,29 +983,7 @@
 													%>
 												</td>
 
-												<td>
-													<%
-														// TO Get teacher assistance
-																stmt = con.createStatement();
-																String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
-																		+ Syear
-																		+ "' and currentcourse.semester ='"
-																		+ Sterm
-																		+ "' and currentcourse.courseCode = examsurvey.courseCode and currentcourse.currentcourseID = section.currentcourseID and section.sectionID = candidate.sectionID ;";
-																ResultSet rsta = stmt.executeQuery(sql);
-																// Check form db who is teacher assistance.
-																// Loop only teacher assisstance.
-																while (rsta.next()) {
-																	String courseTA = rsta
-																			.getString("currentcourse.courseCode");
-																	if (courseTA.equals(sCosCode)) {
-																		out.println(" - Ajarn "
-																				+ rsta.getString("user.firstname") + " "
-																				+ rsta.getString("user.lastname") + "<br>");
-																	}
-																}
-													%>
-												</td>
+
 
 												<td>
 													<%
@@ -1012,6 +993,28 @@
 												<td>
 													<%
 														out.print(rsFinal.getString("section.sectionlab"));
+													%>
+												</td>
+
+												<td>
+													<%
+														stmt = con.createStatement();
+																String QuerySelect = "SELECT * FROM candidate INNER JOIN section ON section.sectionID = candidate.sectionID INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID and currentcourse.year = '"
+																		+ Syear
+																		+ "' and currentcourse.semester = '"
+																		+ Sterm
+																		+ "' INNER JOIN course ON course.courseCode = currentcourse.courseCode WHERE userID = '"
+																		+ sUserID
+																		+ "' AND section.sectionID = '"
+																		+ rsFinal.getString("section.sectionID")
+																		+ "' ORDER BY candidate.teachtype desc";
+																ResultSet rsselect = stmt.executeQuery(QuerySelect);
+
+																while (rsselect.next()) {
+																	out.println("- "
+																			+ rsselect.getString("candidate.teachtype")
+																			+ "<br>");
+																}
 													%>
 												</td>
 											</tr>
