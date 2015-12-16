@@ -393,11 +393,12 @@
 									// For lecture
 
 									if (keepStack > 1) {
-										workloadNormal = (of_lec * lect_of_hour)
+										workloadNormal = (1 * lect_of_hour)
 												/ of_lecturers;
 
 										int keepExtra = keepStack - 1;
 										double workloadExtra = 0;
+										of_lec = of_lec - 1;
 										for (int i = 0; i < keepExtra; i++) {
 											double wle = (of_lec * lect_of_hour * 0.75)
 													/ of_lecturers;
@@ -436,11 +437,12 @@
 									// For lecture
 
 									if (keepStack > 1) {
-										workloadNormal = (of_lec * lect_of_hour)
+										workloadNormal = (1 * lect_of_hour)
 												/ of_lecturers;
 
 										int keepExtra = keepStack - 1;
 										double workloadExtra = 0;
+										of_lec = of_lec - 1;
 										for (int i = 0; i < keepExtra; i++) {
 											double wle = (of_lec * lect_of_hour * 0.75)
 													/ of_lecturers;
