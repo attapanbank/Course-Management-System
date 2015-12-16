@@ -236,7 +236,7 @@
 									+ courseCode2
 									+ "' and candidate.userID = '"
 									+ userID
-									+ "' group by candidate.userID ";
+									+ "' ";
 							ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
 
 							rsOfLectures.last();
