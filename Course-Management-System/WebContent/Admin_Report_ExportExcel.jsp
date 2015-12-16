@@ -1035,12 +1035,12 @@
 
 									int keepExtra = keepStack - 1;
 									double workloadExtra = 0;
-									for (int i = 0; i < keepExtra; i++) {
+									
 										double wle = (of_lec * lect_of_hour * 0.75)
 												/ of_lecturers;
 
 										workloadExtra = workloadExtra + wle;
-									}
+									
 									workloadLectSum = workloadExtra + workloadNormal;
 
 								} else {
@@ -1088,12 +1088,12 @@
 
 									int keepExtra = keepStack - 1;
 									double workloadExtra = 0;
-									for (int i = 0; i < keepExtra; i++) {
+									
 										double wle = (of_lec * lect_of_hour * 0.75)
 												/ of_lecturers;
 
 										workloadExtra = workloadExtra + wle;
-									}
+									
 									workloadLectSum = workloadExtra + workloadNormal;
 
 								} else {
