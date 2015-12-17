@@ -150,173 +150,7 @@
 					// if same
 					if (rscheck.next()) {
 						String QuerySelect = "SELECT * FROM currentcourse WHERE courseCode ='"
-								+ strcoursecode[i]
-								+ "' AND year = '"
-								+ year
-								+ "' AND semester = '"
-								+ term
-								+ "'";
-						ResultSet rs = stmt.executeQuery(QuerySelect);
-						String currentcourseid = "";
-						if (rs.next()) {
-							currentcourseid = rs
-									.getString("currentcourseID");
-						}
-
-						// Lect Only
-						if (selectlect != null
-								&& !strlect[i].equals("")) {
-							String QueryCheckSection = "SELECT * FROM section INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.currentcourseID = '"
-									+ currentcourseid
-									+ "' AND section.sectionlect = '"
-									+ strlect[i] + "'";
-							ResultSet rschecksection = stmt
-									.executeQuery(QueryCheckSection);
-
-							// section already have
-							if (rschecksection.next()) {
-								String sectionid = rschecksection
-										.getString("section.sectionID");
-								for (int lec = 0; lec < countlectuserid; lec++) {
-									String QueryCheckSameUser = "SELECT * FROM candidate WHERE sectionID ='"
-											+ sectionid
-											+ "' AND userID = '"
-											+ lectuserid[lec]
-											+ "' AND teachtype = 'Lect'";
-									ResultSet rschecksameuser = stmt
-											.executeQuery(QueryCheckSameUser);
-									if (rschecksameuser.next()) {
-										System.out
-												.println("Same so not save");
-									} else {
-										String QueryInsert1 = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-												+ sectionid
-												+ "','"
-												+ lectuserid[lec]
-												+ "', 'Lect')";
-										stmt.executeUpdate(QueryInsert1);
-									}
-								}
-							}
-							// no section
-							else {
-
-								String QueryInsert2 = "INSERT INTO section (currentcourseID, sectionlect, sectionlab, major, numberofstudent) values ('"
-										+ currentcourseid
-										+ "', '"
-										+ strlect[i]
-										+ "','"
-										+ strlab[i]
-										+ "','"
-										+ strmajor[i]
-										+ "' ,'"
-										+ strnumstudent[i] + "')";
-								stmt.executeUpdate(QueryInsert2);
-								String QuerySelect2 = "SELECT * FROM section WHERE currentcourseID ='"
-										+ currentcourseid
-										+ "' ORDER BY sectionID desc";
-								ResultSet rs2 = stmt
-										.executeQuery(QuerySelect2);
-								String sectionid = "";
-								if (rs2.next()) {
-									sectionid = rs2
-											.getString("section.sectionID");
-								}
-								for (int lec = 0; lec < countlectuserid; lec++) {
-									String QueryInsertlect = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-											+ sectionid
-											+ "','"
-											+ lectuserid[lec]
-											+ "', 'Lect')";
-									stmt.executeUpdate(QueryInsertlect);
-								}
-							}
-						}
-						// Lab Only
-						if (selectlab != null && !strlab[i].equals("")) {
-							String QueryCheckSection = "SELECT * FROM section INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.currentcourseID = '"
-									+ currentcourseid
-									+ "' AND section.sectionlab = '"
-									+ strlab[i] + "'";
-							ResultSet rschecksection = stmt
-									.executeQuery(QueryCheckSection);
-
-							// section already have
-							if (rschecksection.next()) {
-								String sectionid = rschecksection
-										.getString("section.sectionID");
-								for (int lab = 0; lab < countlabuserid; lab++) {
-									String QueryCheckSameUser = "SELECT * FROM candidate WHERE sectionID ='"
-											+ sectionid
-											+ "' AND userID = '"
-											+ labuserid[lab]
-											+ "' AND teachtype = 'Lab'";
-									ResultSet rschecksameuser = stmt
-											.executeQuery(QueryCheckSameUser);
-									if (rschecksameuser.next()) {
-										System.out
-												.println("Same so not save");
-									} else {
-										String QueryInsert1 = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-												+ sectionid
-												+ "','"
-												+ labuserid[lab]
-												+ "', 'Lab')";
-										stmt.executeUpdate(QueryInsert1);
-									}
-								}
-							}
-							// no section
-							else {
-
-								String QueryInsert2 = "INSERT INTO section (currentcourseID, sectionlect, sectionlab, major, numberofstudent) values ('"
-										+ currentcourseid
-										+ "', '"
-										+ strlect[i]
-										+ "','"
-										+ strlab[i]
-										+ "','"
-										+ strmajor[i]
-										+ "' ,'"
-										+ strnumstudent[i] + "')";
-								stmt.executeUpdate(QueryInsert2);
-								String QuerySelect2 = "SELECT * FROM section WHERE currentcourseID ='"
-										+ currentcourseid
-										+ "' ORDER BY sectionID desc";
-								ResultSet rs2 = stmt
-										.executeQuery(QuerySelect2);
-								String sectionid = "";
-								if (rs2.next()) {
-									sectionid = rs2
-											.getString("section.sectionID");
-								}
-								for (int lab = 0; lab < countlabuserid; lab++) {
-									String QueryInsertlab = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-											+ sectionid
-											+ "','"
-											+ labuserid[lab]
-											+ "', 'Lab')";
-									stmt.executeUpdate(QueryInsertlab);
-								}
-							}
-						}
-
-					} else {
-
-						String QueryInsert = "INSERT INTO currentcourse (year, semester, courseCode) values ('"
-								+ year
-								+ "','"
-								+ term
-								+ "','"
-								+ strcoursecode[i] + "')";
-						stmt.executeUpdate(QueryInsert);
-						String QuerySelect = "SELECT * FROM currentcourse WHERE courseCode ='"
-								+ strcoursecode[i]
-								+ "' AND year = '"
-								+ year
-								+ "' AND semester = '"
-								+ term
-								+ "'";
+								+ strcoursecode[i] + "' AND year = '"+year+"' AND semester = '"+term+"'";
 						ResultSet rs = stmt.executeQuery(QuerySelect);
 						String currentcourseid = "";
 						if (rs.next()) {
@@ -335,8 +169,57 @@
 								+ strnumstudent[i] + "')";
 						stmt.executeUpdate(QueryInsert2);
 						String QuerySelect2 = "SELECT * FROM section WHERE currentcourseID ='"
+								+ currentcourseid + "' ORDER BY sectionID desc";
+						ResultSet rs2 = stmt.executeQuery(QuerySelect2);
+						String sectionid = "";
+						if (rs2.next()) {
+							sectionid = rs2
+									.getString("section.sectionID");
+						}
+						for (int lec = 0; lec < countlectuserid; lec++) {
+							String QueryInsertlect = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
+									+ sectionid
+									+ "','"
+									+ lectuserid[lec] + "', 'Lect')";
+							stmt.executeUpdate(QueryInsertlect);
+						}
+						for (int lab = 0; lab < countlabuserid; lab++) {
+							String QueryInsertlab = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
+									+ sectionid
+									+ "','"
+									+ labuserid[lab] + "', 'Lab')";
+							stmt.executeUpdate(QueryInsertlab);
+						}
+					} else {
+
+						String QueryInsert = "INSERT INTO currentcourse (year, semester, courseCode) values ('"
+								+ year
+								+ "','"
+								+ term
+								+ "','"
+								+ strcoursecode[i] + "')";
+						stmt.executeUpdate(QueryInsert);
+						String QuerySelect = "SELECT * FROM currentcourse WHERE courseCode ='"
+								+ strcoursecode[i] + "' AND year = '"+year+"' AND semester = '"+term+"'"; //bug wait for vm testing
+						ResultSet rs = stmt.executeQuery(QuerySelect);
+						String currentcourseid = "";
+						if (rs.next()) {
+							currentcourseid = rs
+									.getString("currentcourseID");
+						}
+						String QueryInsert2 = "INSERT INTO section (currentcourseID, sectionlect, sectionlab, major, numberofstudent) values ('"
 								+ currentcourseid
-								+ "' ORDER BY sectionID desc";
+								+ "', '"
+								+ strlect[i]
+								+ "','"
+								+ strlab[i]
+								+ "','"
+								+ strmajor[i]
+								+ "' ,'"
+								+ strnumstudent[i] + "')";
+						stmt.executeUpdate(QueryInsert2);
+						String QuerySelect2 = "SELECT * FROM section WHERE currentcourseID ='"
+								+ currentcourseid + "' ORDER BY sectionID desc";
 						ResultSet rs2 = stmt.executeQuery(QuerySelect2);
 						String sectionid = "";
 						if (rs2.next()) {
@@ -388,7 +271,7 @@
 		if (null != strcoursecode2[i]) {
 
 			if (!(strlect2[i].equals("") && strlab2[i].equals(""))) {
-
+				
 				if (deletefake != null) {
 					int fake = 0;
 					for (String s : deletefake) {
@@ -398,8 +281,7 @@
 					int fake2 = 0;
 					for (String s : deletefake) {
 						strdelete[fake2] = s;
-						System.out
-								.println("delete " + strdelete[fake2]);
+						System.out.println("delete " + strdelete[fake2]);
 						stmt = con.createStatement();
 						String QueryDelete = "Delete from notcandidate where notcandidateID = '"
 								+ strdelete[fake2] + "'";
@@ -408,7 +290,7 @@
 					}
 
 				}
-
+				
 				int countlectuserid2 = 0;
 				int countlabuserid2 = 0;
 				String lectuserid2[] = new String[10];
@@ -477,175 +359,7 @@
 							.executeQuery(QueryCheckcoursefake);
 					if (rscheckfake.next()) {
 						String QuerySelectfake = "SELECT * FROM currentcourse WHERE courseCode ='"
-								+ strcoursecode2[i]
-								+ "' AND year = '"
-								+ year
-								+ "' AND semester = '"
-								+ term
-								+ "'";
-						ResultSet rsfake = stmt
-								.executeQuery(QuerySelectfake);
-						String currentcourseid2 = "";
-						if (rsfake.next()) {
-							currentcourseid2 = rsfake
-									.getString("currentcourseID");
-						}
-
-						// Lect Only
-						if (selectlect2 != null
-								&& !strlect2[i].equals("")) {
-							String QueryCheckSection2 = "SELECT * FROM section INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.currentcourseID = '"
-									+ currentcourseid2
-									+ "' AND section.sectionlect = '"
-									+ strlect2[i] + "'";
-							ResultSet rschecksection2 = stmt
-									.executeQuery(QueryCheckSection2);
-
-							// section already have
-							if (rschecksection2.next()) {
-								String sectionid2 = rschecksection2
-										.getString("section.sectionID");
-								for (int lec = 0; lec < countlectuserid2; lec++) {
-									String QueryCheckSameUser2 = "SELECT * FROM candidate WHERE sectionID ='"
-											+ sectionid2
-											+ "' AND userID = '"
-											+ lectuserid2[lec]
-											+ "' AND teachtype = 'Lect'";
-									ResultSet rschecksameuser2 = stmt
-											.executeQuery(QueryCheckSameUser2);
-									if (rschecksameuser2.next()) {
-										System.out
-												.println("Same so not save");
-									} else {
-										String QueryInsert1 = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-												+ sectionid2
-												+ "','"
-												+ lectuserid2[lec]
-												+ "', 'Lect')";
-										stmt.executeUpdate(QueryInsert1);
-									}
-								}
-							}
-							// no section
-							else {
-
-								String QueryInsertfake2 = "INSERT INTO section (currentcourseID, sectionlect, sectionlab, major, numberofstudent) values ('"
-										+ currentcourseid2
-										+ "', '"
-										+ strlect2[i]
-										+ "','"
-										+ strlab2[i]
-										+ "','"
-										+ strmajor2[i]
-										+ "' ,'"
-										+ strnumstudent2[i] + "')";
-								stmt.executeUpdate(QueryInsertfake2);
-								String QuerySelectfake2 = "SELECT * FROM section WHERE currentcourseID ='"
-										+ currentcourseid2
-										+ "' ORDER BY sectionID desc";
-								ResultSet rsfake2 = stmt
-										.executeQuery(QuerySelectfake2);
-								String sectionid2 = "";
-								if (rsfake2.next()) {
-									sectionid2 = rsfake2
-											.getString("section.sectionID");
-								}
-								for (int lec = 0; lec < countlectuserid2; lec++) {
-									String QueryInsertlectfake = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-											+ sectionid2
-											+ "','"
-											+ lectuserid2[lec]
-											+ "', 'Lect')";
-									stmt.executeUpdate(QueryInsertlectfake);
-								}
-							}
-						}
-
-						// Lab Only
-						if (selectlab2 != null
-								&& !strlab2[i].equals("")) {
-							String QueryCheckSection2 = "SELECT * FROM section INNER JOIN currentcourse ON currentcourse.currentcourseID = section.currentcourseID WHERE currentcourse.currentcourseID = '"
-									+ currentcourseid2
-									+ "' AND section.sectionlab = '"
-									+ strlab2[i] + "'";
-							ResultSet rschecksection2 = stmt
-									.executeQuery(QueryCheckSection2);
-
-							// section already have
-							if (rschecksection2.next()) {
-								String sectionid2 = rschecksection2
-										.getString("section.sectionID");
-								for (int lab = 0; lab < countlabuserid2; lab++) {
-									String QueryCheckSameUser2 = "SELECT * FROM candidate WHERE sectionID ='"
-											+ sectionid2
-											+ "' AND userID = '"
-											+ labuserid2[lab]
-											+ "' AND teachtype = 'Lab'";
-									ResultSet rschecksameuser2 = stmt
-											.executeQuery(QueryCheckSameUser2);
-									if (rschecksameuser2.next()) {
-										System.out
-												.println("Same so not save");
-									} else {
-										String QueryInsert1 = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-												+ sectionid2
-												+ "','"
-												+ labuserid2[lab]
-												+ "', 'Lab')";
-										stmt.executeUpdate(QueryInsert1);
-									}
-								}
-							}
-							// no section
-							else {
-
-								String QueryInsertfake2 = "INSERT INTO section (currentcourseID, sectionlect, sectionlab, major, numberofstudent) values ('"
-										+ currentcourseid2
-										+ "', '"
-										+ strlect2[i]
-										+ "','"
-										+ strlab2[i]
-										+ "','"
-										+ strmajor2[i]
-										+ "' ,'"
-										+ strnumstudent2[i] + "')";
-								stmt.executeUpdate(QueryInsertfake2);
-								String QuerySelectfake2 = "SELECT * FROM section WHERE currentcourseID ='"
-										+ currentcourseid2
-										+ "' ORDER BY sectionID desc";
-								ResultSet rsfake2 = stmt
-										.executeQuery(QuerySelectfake2);
-								String sectionid2 = "";
-								if (rsfake2.next()) {
-									sectionid2 = rsfake2
-											.getString("section.sectionID");
-								}
-								for (int lab = 0; lab < countlabuserid2; lab++) {
-									String QueryInsertlabfake = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
-											+ sectionid2
-											+ "','"
-											+ labuserid2[lab]
-											+ "', 'Lab')";
-									stmt.executeUpdate(QueryInsertlabfake);
-								}
-							}
-						}
-					} else {
-
-						String QueryInsertfake = "INSERT INTO currentcourse (year, semester, courseCode) values ('"
-								+ year
-								+ "','"
-								+ term
-								+ "','"
-								+ strcoursecode2[i] + "')";
-						stmt.executeUpdate(QueryInsertfake);
-						String QuerySelectfake = "SELECT * FROM currentcourse WHERE courseCode ='"
-								+ strcoursecode2[i]
-								+ "' AND year = '"
-								+ year
-								+ "' AND semester = '"
-								+ term
-								+ "'"; // bug wait for vm test
+								+ strcoursecode2[i] + "' AND year = '"+year+"' AND semester = '"+term+"'";
 						ResultSet rsfake = stmt
 								.executeQuery(QuerySelectfake);
 						String currentcourseid2 = "";
@@ -665,8 +379,59 @@
 								+ strnumstudent2[i] + "')";
 						stmt.executeUpdate(QueryInsertfake2);
 						String QuerySelectfake2 = "SELECT * FROM section WHERE currentcourseID ='"
+								+ currentcourseid2 + "' ORDER BY sectionID desc";
+						ResultSet rsfake2 = stmt
+								.executeQuery(QuerySelectfake2);
+						String sectionid2 = "";
+						if (rsfake2.next()) {
+							sectionid2 = rsfake2
+									.getString("section.sectionID");
+						}
+						for (int lec = 0; lec < countlectuserid2; lec++) {
+							String QueryInsertlectfake = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
+									+ sectionid2
+									+ "','"
+									+ lectuserid2[lec] + "', 'Lect')";
+							stmt.executeUpdate(QueryInsertlectfake);
+						}
+						for (int lab = 0; lab < countlabuserid2; lab++) {
+							String QueryInsertlabfake = "INSERT INTO candidate (sectionID, userID, teachtype) values ('"
+									+ sectionid2
+									+ "','"
+									+ labuserid2[lab] + "', 'Lab')";
+							stmt.executeUpdate(QueryInsertlabfake);
+						}
+					} else {
+
+						String QueryInsertfake = "INSERT INTO currentcourse (year, semester, courseCode) values ('"
+								+ year
+								+ "','"
+								+ term
+								+ "','"
+								+ strcoursecode2[i] + "')";
+						stmt.executeUpdate(QueryInsertfake);
+						String QuerySelectfake = "SELECT * FROM currentcourse WHERE courseCode ='"
+								+ strcoursecode2[i] + "' AND year = '"+year+"' AND semester = '"+term+"'"; // bug wait for vm test
+						ResultSet rsfake = stmt
+								.executeQuery(QuerySelectfake);
+						String currentcourseid2 = "";
+						if (rsfake.next()) {
+							currentcourseid2 = rsfake
+									.getString("currentcourseID");
+						}
+						String QueryInsertfake2 = "INSERT INTO section (currentcourseID, sectionlect, sectionlab, major, numberofstudent) values ('"
 								+ currentcourseid2
-								+ "' ORDER BY sectionID desc";
+								+ "', '"
+								+ strlect2[i]
+								+ "','"
+								+ strlab2[i]
+								+ "','"
+								+ strmajor2[i]
+								+ "' ,'"
+								+ strnumstudent2[i] + "')";
+						stmt.executeUpdate(QueryInsertfake2);
+						String QuerySelectfake2 = "SELECT * FROM section WHERE currentcourseID ='"
+								+ currentcourseid2 + "' ORDER BY sectionID desc";
 						ResultSet rsfake2 = stmt
 								.executeQuery(QuerySelectfake2);
 						String sectionid2 = "";
