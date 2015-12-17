@@ -493,6 +493,7 @@
 							// show lab + lect
 							out.println(finalResult);
 							
+							
 					}
 					%>
 				</td>

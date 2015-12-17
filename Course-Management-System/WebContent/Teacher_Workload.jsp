@@ -719,7 +719,6 @@ String strdateterm2_2 = "";
 																			listResult.add(workloadAll);
 																			
 																			
-																	
 																
 																}
 																		%>

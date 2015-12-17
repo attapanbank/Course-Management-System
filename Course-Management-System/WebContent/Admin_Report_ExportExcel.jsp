@@ -1120,7 +1120,6 @@
 									rsWorkloadLab.close();
 									System.out.println("WL LAb : " + workloadLab);
 
-									
 									//cal all WL
 									workloadAll = workloadLectAll + workloadLab;
 									String finalResult = String.format("%.2f", workloadAll);

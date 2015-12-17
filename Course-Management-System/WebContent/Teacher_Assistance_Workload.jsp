@@ -760,7 +760,6 @@
 																																																																																																		  
 																																			totalHour = totalHour + listHourAll.get(i);
 																																																																																																		
-																																																																																																		
 																																			 }
 																																		out.print(totalHour);
 																		%>
