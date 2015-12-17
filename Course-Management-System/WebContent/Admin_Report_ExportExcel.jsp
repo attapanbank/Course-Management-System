@@ -7,6 +7,7 @@
 <%@page import="org.apache.poi.hssf.util.HSSFColor"%>
 <%@page import="org.apache.poi.ss.usermodel.CellStyle"%>
 <%@page import="org.apache.poi.ss.util.CellRangeAddress"%>
+<%@page import="java.net.URLEncoder"%>
 
 <%
 	// Validate USER
@@ -57,7 +58,7 @@
 	if (reporttype.equals("surveysortbyteacher")) {
 		System.out.println(1);
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/candidate "
-				+ year + " " + term + ".xls"; */
+		+ year + " " + term + ".xls"; */
 
 		try {
 			Class.forName(readdriver);
@@ -189,15 +190,17 @@
 			fileOut.close(); */
 
 			// write it as an excel attachment
+			String filename = "candidate " + year + " " + term + ".xls";
 			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			wb.write(outByteStream);
 			byte[] outArray = outByteStream.toByteArray();
-			response.setContentType("application/ms-excel");
+			response.setContentType("application/ms-excel; charset=UTF-8");
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition",
-					"attachment; filename=candidate " + year + " "
-							+ term + ".xls");
+			response.setHeader(
+					"Content-Disposition",
+					"attachment; filename="
+							+ URLEncoder.encode(filename, "UTF-8"));
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -215,7 +218,7 @@
 		int intterm = Integer.parseInt(term);
 
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/course "
-				+ year + " " + term + ".xls"; */
+		+ year + " " + term + ".xls"; */
 
 		try {
 			Class.forName(readdriver);
@@ -490,15 +493,17 @@
 			fileOut.close(); */
 
 			// write it as an excel attachment
+			String filename = "course " + year + " " + term + ".xls";
 			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			wb.write(outByteStream);
 			byte[] outArray = outByteStream.toByteArray();
-			response.setContentType("application/ms-excel");
+			response.setContentType("application/ms-excel; charset=UTF-8");
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition",
-					"attachment; filename=course " + year + " " + term
-							+ ".xls");
+			response.setHeader(
+					"Content-Disposition",
+					"attachment; filename="
+							+ URLEncoder.encode(filename, "UTF-8"));
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -514,7 +519,7 @@
 		System.out.println(3);
 
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/workload " + year + " "
-				+ term + ".xls"; */
+		+ term + ".xls"; */
 
 		try {
 
@@ -783,18 +788,19 @@
 
 							// Count of lec
 							stmt = con.createStatement();
-									String qOfLec = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-											+ userID
-											+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-											+ year
-											+ "' and currentcourse.semester = '"
-											+ term
-											+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-											+ courseCode
-											+ "'  group by section.sectionlect   ";
-									ResultSet rsOfLec = stmt.executeQuery(qOfLec);
-									rsOfLec.last();
-									of_lec = rsOfLec.getRow();
+							String qOfLec = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+									+ userID
+									+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+									+ year
+									+ "' and currentcourse.semester = '"
+									+ term
+									+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+									+ courseCode
+									+ "'  group by section.sectionlect   ";
+							ResultSet rsOfLec = stmt
+									.executeQuery(qOfLec);
+							rsOfLec.last();
+							of_lec = rsOfLec.getRow();
 
 							HSSFCell cell5 = rowdata.createCell(5);
 							cell5.setCellValue(of_lec);
@@ -805,17 +811,18 @@
 
 					// Find number of lectuers in course
 					stmt = con.createStatement();
-							String qOfLectures = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-									+ year
-									+ "' and currentcourse.semester = '"
-									+ term
-									+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
-									+ courseCode
-									+ "'  group by candidate.userID ";
-							ResultSet rsOfLectures = stmt.executeQuery(qOfLectures);
+					String qOfLectures = "SELECT * FROM section inner join candidate inner join currentcourse inner join course where currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+							+ year
+							+ "' and currentcourse.semester = '"
+							+ term
+							+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect' and currentcourse.courseCode = '"
+							+ courseCode
+							+ "'  group by candidate.userID ";
+					ResultSet rsOfLectures = stmt
+							.executeQuery(qOfLectures);
 
-							rsOfLectures.last();
-							of_lecturers = rsOfLectures.getRow();
+					rsOfLectures.last();
+					of_lecturers = rsOfLectures.getRow();
 					HSSFCell cell6 = rowdata.createCell(6);
 					cell6.setCellValue(of_lecturers);
 					cell6.setCellStyle(style);
@@ -854,18 +861,19 @@
 
 							// find of the lab
 							stmt = con.createStatement();
-									String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
-											+ userID
-											+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
-											+ year
-											+ "' and currentcourse.semester = '"
-											+ term
-											+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
-											+ courseCode + "'  ";
-									ResultSet rsOfLec = stmt.executeQuery(qOfLec);
+							String qOfLec = "SELECT COUNT(*) AS rowcount FROM section inner join candidate inner join currentcourse inner join course where userID = '"
+									+ userID
+									+ "' and currentcourse.courseCode = course.courseCode and section.currentcourseID = currentcourse.currentcourseID and currentcourse.year = '"
+									+ year
+									+ "' and currentcourse.semester = '"
+									+ term
+									+ "' and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
+									+ courseCode + "'  ";
+							ResultSet rsOfLec = stmt
+									.executeQuery(qOfLec);
 
-									rsOfLec.next();
-									of_lab = rsOfLec.getInt("rowcount");
+							rsOfLec.next();
+							of_lab = rsOfLec.getInt("rowcount");
 							HSSFCell cell8 = rowdata.createCell(8);
 							cell8.setCellValue(of_lab);
 							cell8.setCellStyle(style);
@@ -879,7 +887,8 @@
 					String qcheckType = "select * from user where userID = '"
 							+ userID + "' ";
 					String userType = null;
-					ResultSet rsCheckType = stmt.executeQuery(qcheckType);
+					ResultSet rsCheckType = stmt
+							.executeQuery(qcheckType);
 					while (rsCheckType.next()) {
 						userType = rsCheckType.getString("usertype");
 					}
@@ -894,7 +903,8 @@
 								+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
 								+ courseCode
 								+ "' and user.usertype = 'Teacher' group by candidate.userID;  ";
-						ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
+						ResultSet rsOfLec2 = stmt
+								.executeQuery(qOfLecturesLab);
 						rsOfLec2.last();
 						of_lablecturers = rsOfLec2.getRow();
 						while (rsOfLec2.next()) {
@@ -915,7 +925,8 @@
 								+ "' and  section.sectionID = candidate.sectionID  and candidate.teachtype = 'Lab' and currentcourse.courseCode = '"
 								+ courseCode
 								+ "' and user.usertype = 'Teaching Assistance'  group by candidate.userID;  ";
-						ResultSet rsOfLec2 = stmt.executeQuery(qOfLecturesLab);
+						ResultSet rsOfLec2 = stmt
+								.executeQuery(qOfLecturesLab);
 						rsOfLec2.last();
 						of_lablecturers = rsOfLec2.getRow();
 						while (rsOfLec2.next()) {
@@ -924,7 +935,7 @@
 
 						}
 
-					//	out.print(of_lablecturers);
+						//	out.print(of_lablecturers);
 
 					}
 
@@ -962,7 +973,6 @@
 
 					} else {
 
-						
 						int of_lec_all_hour = 0;
 						int of_lab_all_hour = 0;
 						of_lec_all_hour = lect_of_hour * of_lec;
@@ -996,139 +1006,150 @@
 							countworkload++;
 
 						} else {
-							
-
 
 							// หา  lecturers ที่มีมากสุด ใน section นั้น lect
-							
 
-									// select max
-									String findAllSectionMax = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
-											+ courseCode
-											+ "'  and cur.year = '"
-											+ year
-											+ "'  and cur.semester = '"
-											+ term
-											+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teacher' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
-											+ year
-											+ "' and cur.semester = '"
-											+ term
-											+ "' and can.teachtype = 'Lect' and user.usertype = 'Teacher' and user.userID = '"
-											+ userID
-											+ "' group by sec.sectionLect order by wl.count desc limit 1";
+							// select max
+							String findAllSectionMax = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+									+ courseCode
+									+ "'  and cur.year = '"
+									+ year
+									+ "'  and cur.semester = '"
+									+ term
+									+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teacher' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+									+ year
+									+ "' and cur.semester = '"
+									+ term
+									+ "' and can.teachtype = 'Lect' and user.usertype = 'Teacher' and user.userID = '"
+									+ userID
+									+ "' group by sec.sectionLect order by wl.count desc limit 1";
 
-									ResultSet rsFindAllSectionMax = stmt
-											.executeQuery(findAllSectionMax);
+							ResultSet rsFindAllSectionMax = stmt
+									.executeQuery(findAllSectionMax);
 
-									double workloadLectRegular = 0;
-									double workloadLectExtra = 0;
-									double workloadLectAll = 0;
-									double workloadLab = 0;
-									double workloadAll = 0;
-									String secMaxId = null;
-									int seclect = 0;
+							double workloadLectRegular = 0;
+							double workloadLectExtra = 0;
+							double workloadLectAll = 0;
+							double workloadLab = 0;
+							double workloadAll = 0;
+							String secMaxId = null;
+							int seclect = 0;
 
-									if (rsFindAllSectionMax.next()) {
-										secMaxId = rsFindAllSectionMax.getString("sectionID");
-										seclect = rsFindAllSectionMax.getInt("sectionlect");
-										System.out.println("sectionMaxID : " + secMaxId);
-									}
-									rsFindAllSectionMax.close();
+							if (rsFindAllSectionMax.next()) {
+								secMaxId = rsFindAllSectionMax
+										.getString("sectionID");
+								seclect = rsFindAllSectionMax
+										.getInt("sectionlect");
+								System.out.println("sectionMaxID : "
+										+ secMaxId);
+							}
+							rsFindAllSectionMax.close();
 
-									//Calculate regular lect
-									String findWorkloadRegularLect = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
-											+ courseCode
-											+ "'  and cur.year = '"
-											+ year
-											+ "'  and cur.semester = '"
-											+ term
-											+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teacher' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
-											+ year
-											+ "' and cur.semester = '"
-											+ term
-											+ "' and can.teachtype = 'Lect' and user.usertype = 'Teacher' and user.userID = '"
-											+ userID
-											+ "'and sec.sectionID = '"
-											+ secMaxId
-											+ "'group by sec.sectionLect order by sec.sectionLect";
+							//Calculate regular lect
+							String findWorkloadRegularLect = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+									+ courseCode
+									+ "'  and cur.year = '"
+									+ year
+									+ "'  and cur.semester = '"
+									+ term
+									+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teacher' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+									+ year
+									+ "' and cur.semester = '"
+									+ term
+									+ "' and can.teachtype = 'Lect' and user.usertype = 'Teacher' and user.userID = '"
+									+ userID
+									+ "'and sec.sectionID = '"
+									+ secMaxId
+									+ "'group by sec.sectionLect order by sec.sectionLect";
 
-									ResultSet rsWorkloadRegularLect = stmt
-											.executeQuery(findWorkloadRegularLect);
+							ResultSet rsWorkloadRegularLect = stmt
+									.executeQuery(findWorkloadRegularLect);
 
-									if (rsWorkloadRegularLect.next()) {
-										workloadLectRegular = (lect_of_hour)
-												/ rsWorkloadRegularLect.getDouble("count");
-										System.out.println("WL regular : " + workloadLectRegular);
-									}
-									rsWorkloadRegularLect.close();
+							if (rsWorkloadRegularLect.next()) {
+								workloadLectRegular = (lect_of_hour)
+										/ rsWorkloadRegularLect
+												.getDouble("count");
+								System.out.println("WL regular : "
+										+ workloadLectRegular);
+							}
+							rsWorkloadRegularLect.close();
 
-									//Calculate extra lect
-									String findWorkloadExtraLect = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
-											+ courseCode
-											+ "'  and cur.year = '"
-											+ year
-											+ "'  and cur.semester = '"
-											+ term
-											+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teacher' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
-											+ year
-											+ "' and cur.semester = '"
-											+ term
-											+ "' and can.teachtype = 'Lect' and user.usertype = 'Teacher' and user.userID = '"
-											+ userID
-											+ "'and sec.sectionID <> '"
-											+ secMaxId
-											+ "'and sec.sectionlect <> '"
-											+ seclect
-											+ "'group by sec.sectionLect order by sec.sectionLect";
+							//Calculate extra lect
+							String findWorkloadExtraLect = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+									+ courseCode
+									+ "'  and cur.year = '"
+									+ year
+									+ "'  and cur.semester = '"
+									+ term
+									+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teacher' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+									+ year
+									+ "' and cur.semester = '"
+									+ term
+									+ "' and can.teachtype = 'Lect' and user.usertype = 'Teacher' and user.userID = '"
+									+ userID
+									+ "'and sec.sectionID <> '"
+									+ secMaxId
+									+ "'and sec.sectionlect <> '"
+									+ seclect
+									+ "'group by sec.sectionLect order by sec.sectionLect";
 
-									ResultSet rsWorkloadExtraLect = stmt
-											.executeQuery(findWorkloadExtraLect);
+							ResultSet rsWorkloadExtraLect = stmt
+									.executeQuery(findWorkloadExtraLect);
 
-									while (rsWorkloadExtraLect.next()) {
-										workloadLectExtra += (lect_of_hour) * 0.75
-												/ rsWorkloadExtraLect.getDouble("count");
-									}
-									rsWorkloadExtraLect.close();
-									System.out.println("WL Extra : " + workloadLectExtra);
+							while (rsWorkloadExtraLect.next()) {
+								workloadLectExtra += (lect_of_hour)
+										* 0.75
+										/ rsWorkloadExtraLect
+												.getDouble("count");
+							}
+							rsWorkloadExtraLect.close();
+							System.out.println("WL Extra : "
+									+ workloadLectExtra);
 
-									//Cal all lect
-									workloadLectAll = workloadLectRegular + workloadLectExtra;
-									System.out.println("All WL lect " + workloadLectAll);
+							//Cal all lect
+							workloadLectAll = workloadLectRegular
+									+ workloadLectExtra;
+							System.out.println("All WL lect "
+									+ workloadLectAll);
 
-									//Calculate Lab
-									String findWorkloadLab = "select sec.sectionID,sec.sectionLab, wl.count from (SELECT sec.sectionID , sec.sectionlab, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
-											+ courseCode
-											+ "'  and cur.year = '"
-											+ year
-											+ "'  and cur.semester = '"
-											+ term
-											+ "'  and can.teachtype = 'Lab'  and user.usertype = 'Teacher' group by sec.sectionlab order by sec.sectionlab) as wl inner join section as sec on wl.sectionlab = sec.sectionlab inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
-											+ year
-											+ "' and cur.semester = '"
-											+ term
-											+ "' and can.teachtype = 'Lab' and user.usertype = 'Teacher' and user.userID = '"
-											+ userID
-											+ "'group by sec.sectionlab order by sec.sectionlab";
+							//Calculate Lab
+							String findWorkloadLab = "select sec.sectionID,sec.sectionLab, wl.count from (SELECT sec.sectionID , sec.sectionlab, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+									+ courseCode
+									+ "'  and cur.year = '"
+									+ year
+									+ "'  and cur.semester = '"
+									+ term
+									+ "'  and can.teachtype = 'Lab'  and user.usertype = 'Teacher' group by sec.sectionlab order by sec.sectionlab) as wl inner join section as sec on wl.sectionlab = sec.sectionlab inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+									+ year
+									+ "' and cur.semester = '"
+									+ term
+									+ "' and can.teachtype = 'Lab' and user.usertype = 'Teacher' and user.userID = '"
+									+ userID
+									+ "'group by sec.sectionlab order by sec.sectionlab";
 
-									ResultSet rsWorkloadLab = stmt.executeQuery(findWorkloadLab);
+							ResultSet rsWorkloadLab = stmt
+									.executeQuery(findWorkloadLab);
 
-									while (rsWorkloadLab.next()) {
-										workloadLab += (lab_of_hour) * 0.5
-												/ rsWorkloadLab.getDouble("count");
+							while (rsWorkloadLab.next()) {
+								workloadLab += (lab_of_hour)
+										* 0.5
+										/ rsWorkloadLab
+												.getDouble("count");
 
-									}
-									rsWorkloadLab.close();
-									System.out.println("WL LAb : " + workloadLab);
+							}
+							rsWorkloadLab.close();
+							System.out.println("WL LAb : "
+									+ workloadLab);
 
-									//cal all WL
-									workloadAll = workloadLectAll + workloadLab;
-									String finalResult = String.format("%.2f", workloadAll);
-									HSSFCell cell12 = rowdata.createCell(12);
+							//cal all WL
+							workloadAll = workloadLectAll + workloadLab;
+							String finalResult = String.format("%.2f",
+									workloadAll);
+							HSSFCell cell12 = rowdata.createCell(12);
 
-									cell12.setCellValue(finalResult);
-									cell12.setCellStyle(style);
-								
-						
+							cell12.setCellValue(finalResult);
+							cell12.setCellStyle(style);
+
 							workload[countworkload] = workloadAll;
 							countworkload++;
 						}
@@ -1189,15 +1210,17 @@
 			fileOut.close(); */
 
 			// write it as an excel attachment
+			String filename = "workload " + year + " " + term + ".xls";
 			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			wb.write(outByteStream);
 			byte[] outArray = outByteStream.toByteArray();
-			response.setContentType("application/ms-excel");
+			response.setContentType("application/ms-excel; charset=UTF-8");
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition",
-					"attachment; filename=workload " + year + " "
-							+ term + ".xls");
+			response.setHeader(
+					"Content-Disposition",
+					"attachment; filename="
+							+ URLEncoder.encode(filename, "UTF-8"));
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -1213,7 +1236,7 @@
 	} else if (reporttype.equals("candidate+exam")) {
 		System.out.println(4);
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/ExamReport "
-				+ year + " " + term + ".xls"; */
+		+ year + " " + term + ".xls"; */
 
 		try {
 			Class.forName(readdriver);
@@ -1606,15 +1629,18 @@
 			fileOut.close(); */
 
 			// write it as an excel attachment
+			String filename = "ExamReport " + year + " " + term
+					+ ".xls";
 			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			wb.write(outByteStream);
 			byte[] outArray = outByteStream.toByteArray();
-			response.setContentType("application/ms-excel");
+			response.setContentType("application/ms-excel; charset=UTF-8");
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition",
-					"attachment; filename=ExamReport " + year + " "
-							+ term + ".xls");
+			response.setHeader(
+					"Content-Disposition",
+					"attachment; filename="
+							+ URLEncoder.encode(filename, "UTF-8"));
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
@@ -1629,7 +1655,7 @@
 	} else if (reporttype.equals("off/noexam")) {
 		System.out.println(5);
 		/* String filename = "C:/Users/MahaloBankupu/Desktop/offschedulenoexam "
-				+ year + " " + term + ".xls"; */
+		+ year + " " + term + ".xls"; */
 
 		try {
 
@@ -1867,15 +1893,18 @@
 			fileOut.close(); */
 
 			// write it as an excel attachment
+			String filename = "offschedulenoexam " + year + " " + term
+					+ ".xls";
 			ByteArrayOutputStream outByteStream = new ByteArrayOutputStream();
 			wb.write(outByteStream);
 			byte[] outArray = outByteStream.toByteArray();
-			response.setContentType("application/ms-excel");
+			response.setContentType("application/ms-excel; charset=UTF-8");
 			response.setContentLength(outArray.length);
 			response.setHeader("Expires:", "0"); // eliminates browser caching
-			response.setHeader("Content-Disposition",
-					"attachment; filename=offschedulenoexam " + year
-							+ " " + term + ".xls");
+			response.setHeader(
+					"Content-Disposition",
+					"attachment; filename="
+							+ URLEncoder.encode(filename, "UTF-8"));
 			OutputStream outStream = response.getOutputStream();
 			outStream.write(outArray);
 			outStream.flush();
