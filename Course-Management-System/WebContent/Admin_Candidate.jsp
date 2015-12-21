@@ -795,6 +795,7 @@
 															
 															// Cal workload
 															// Ignor course not to cal
+															if (userType.equals("Teacher")) {
 					if (courseName.equalsIgnoreCase("Senior Project 2")
 									|| courseName
 											.equalsIgnoreCase("Co-operative Education")
@@ -932,6 +933,148 @@
 								
 						
 					}
+															}else if (userType.equals("Teaching Assistance")) {
+																
+																if (courseName.equalsIgnoreCase("Senior Project 2")
+																		|| courseName
+																				.equalsIgnoreCase("Co-operative Education")
+																		|| courseName.equalsIgnoreCase("Senior Project 1")) {
+															out.println("0");
+														
+														}else{
+
+															// หา  lecturers ที่มีมากสุด ใน section นั้น lect
+															
+
+																	// select max
+																	String findAllSectionMax = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+																			+ courseCode
+																			+ "'  and cur.year = '"
+																			+ Syear
+																			+ "'  and cur.semester = '"
+																			+ Sterm
+																			+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teaching Assistance' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+																			+ Syear
+																			+ "' and cur.semester = '"
+																			+ Sterm
+																			+ "' and can.teachtype = 'Lect' and user.usertype = 'Teaching Assistance' and user.userID = '"
+																			+ userID
+																			+ "' group by sec.sectionLect order by wl.count desc limit 1";
+
+																	ResultSet rsFindAllSectionMax = stmt
+																			.executeQuery(findAllSectionMax);
+
+																	double workloadLectRegular = 0;
+																	double workloadLectExtra = 0;
+																	double workloadLectAll = 0;
+																	double workloadLab = 0;
+																	double workloadAll = 0;
+																	String secMaxId = null;
+																	int seclect = 0;
+
+																	if (rsFindAllSectionMax.next()) {
+																		secMaxId = rsFindAllSectionMax.getString("sectionID");
+																		seclect = rsFindAllSectionMax.getInt("sectionlect");
+																		System.out.println("sectionMaxID : " + secMaxId);
+																	}
+																	rsFindAllSectionMax.close();
+
+																	//Calculate regular lect
+																	String findWorkloadRegularLect = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+																			+ courseCode
+																			+ "'  and cur.year = '"
+																			+ Syear
+																			+ "'  and cur.semester = '"
+																			+ Sterm
+																			+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teaching Assistance' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+																			+ Syear
+																			+ "' and cur.semester = '"
+																			+ Sterm
+																			+ "' and can.teachtype = 'Lect' and user.usertype = 'Teaching Assistance' and user.userID = '"
+																			+ userID
+																			+ "'and sec.sectionID = '"
+																			+ secMaxId
+																			+ "'group by sec.sectionLect order by sec.sectionLect";
+
+																	ResultSet rsWorkloadRegularLect = stmt
+																			.executeQuery(findWorkloadRegularLect);
+
+																	if (rsWorkloadRegularLect.next()) {
+																		workloadLectRegular = (lect_of_hour)
+																				/ rsWorkloadRegularLect.getDouble("count");
+																		System.out.println("WL regular : " + workloadLectRegular);
+																	}
+																	rsWorkloadRegularLect.close();
+
+																	//Calculate extra lect
+																	String findWorkloadExtraLect = "select sec.sectionID,sec.sectionLect, wl.count from (SELECT sec.sectionID , sec.sectionlect, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+																			+ courseCode
+																			+ "'  and cur.year = '"
+																			+ Syear
+																			+ "'  and cur.semester = '"
+																			+ Sterm
+																			+ "'  and can.teachtype = 'Lect'  and user.usertype = 'Teaching Assistance' group by sec.sectionlect order by sec.sectionlect) as wl inner join section as sec on wl.sectionlect = sec.sectionlect inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+																			+ Syear
+																			+ "' and cur.semester = '"
+																			+ Sterm
+																			+ "' and can.teachtype = 'Lect' and user.usertype = 'Teaching Assistance' and user.userID = '"
+																			+ userID
+																			+ "'and sec.sectionID <> '"
+																			+ secMaxId
+																			+ "'and sec.sectionlect <> '"
+																			+ seclect
+																			+ "'group by sec.sectionLect order by sec.sectionLect";
+
+																	ResultSet rsWorkloadExtraLect = stmt
+																			.executeQuery(findWorkloadExtraLect);
+
+																	while (rsWorkloadExtraLect.next()) {
+																		workloadLectExtra += (lect_of_hour) * 0.75
+																				/ rsWorkloadExtraLect.getDouble("count");
+																	}
+																	rsWorkloadExtraLect.close();
+																	System.out.println("WL Extra : " + workloadLectExtra);
+
+																	//Cal all lect
+																	workloadLectAll = workloadLectRegular + workloadLectExtra;
+																	System.out.println("All WL lect " + workloadLectAll);
+
+																	//Calculate Lab
+																	String findWorkloadLab = "select sec.sectionID,sec.sectionLab, wl.count from (SELECT sec.sectionID , sec.sectionlab, count(DISTINCT user.userID) as count FROM section as sec  inner join candidate as can on sec.sectionID =  can.sectionID  inner join currentcourse as cur on cur.currentcourseID = sec.currentcourseID  inner join user on user.userID = can.userID  where cur.courseCode = '"
+																			+ courseCode
+																			+ "'  and cur.year = '"
+																			+ Syear
+																			+ "'  and cur.semester = '"
+																			+ Sterm
+																			+ "'  and can.teachtype = 'Lab'  and user.usertype = 'Teaching Assistance' group by sec.sectionlab order by sec.sectionlab) as wl inner join section as sec on wl.sectionlab = sec.sectionlab inner join candidate as can on sec.sectionID =  can.sectionID inner join currentcourse as cur on sec.currentcourseID = cur.currentcourseID  inner join user as user on can.userID = user.userID  where cur.year = '"
+																			+ Syear
+																			+ "' and cur.semester = '"
+																			+ Sterm
+																			+ "' and can.teachtype = 'Lab' and user.usertype = 'Teaching Assistance' and user.userID = '"
+																			+ userID
+																			+ "'group by sec.sectionlab order by sec.sectionlab";
+
+																	ResultSet rsWorkloadLab = stmt.executeQuery(findWorkloadLab);
+
+																	while (rsWorkloadLab.next()) {
+																		workloadLab += (lab_of_hour) * 0.5
+																				/ rsWorkloadLab.getDouble("count");
+
+																	}
+																	rsWorkloadLab.close();
+																	System.out.println("WL LAb : " + workloadLab);
+
+																	
+																	//cal all WL
+																	workloadAll = workloadLectAll + workloadLab;
+
+																	listResult2.add(workloadAll);
+																	
+															
+														}
+																
+																
+															}
 															
 															
 														}}
