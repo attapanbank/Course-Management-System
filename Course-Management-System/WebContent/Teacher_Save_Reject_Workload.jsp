@@ -57,16 +57,22 @@
 				+ sUserID + "'and year ='"+year+"'and semester = '"+term+"'";
 		ResultSet rs = stmt.executeQuery(qCheck);
 		String idCheck = null;
+		String yearCheck = null;
+		String termCheck = null;
+		String wlID = null;
 		while (rs.next()) {
 			idCheck = rs.getString("userID");
+			yearCheck = rs.getString("year");
+			termCheck = rs.getString("semester");
+			wlID = rs.getString("workloadID");
 
 		}
 
-		if (strUserID.equals(idCheck)) {
+		if (strUserID.equals(idCheck)&& year.equals(yearCheck)&& term.equals(termCheck)) {
 			int i = stmt.executeUpdate("UPDATE workload SET year ='"
 					+ year + "',semester ='" + term + "',status = '"
 					+ status + "',comment = '" + comment
-					+ "',userID = '" + userID + "' where userID = '"+userID+"'");
+					+ "',userID = '" + userID + "' where workloadID = '"+wlID+"'");
 
 		} else {
 

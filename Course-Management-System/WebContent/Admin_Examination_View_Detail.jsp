@@ -125,7 +125,7 @@
 				String qDetail = "SELECT * FROM examsurvey inner join candidate inner join section inner join currentcourse where examsurvey.courseCode = currentcourse.courseCode and candidate.teachtype = 'Lect' and examsurvey.courseCode = '"
 						+ courseCode
 						+ "' and section.sectionID = candidate.sectionID and currentcourse.currentcourseID = section.currentcourseID and examsurvey.year = '"
-						+ year + "' and examsurvey.semester = '" + term + "' ;";
+						+ year + "' and examsurvey.semester = '" + term + "'and currentcourse.year = examsurvey.year and currentcourse.semester = examsurvey.semester ;";
 				ResultSet rsDetail = stmt.executeQuery(qDetail);
 
 				while (rsDetail.next()) {
@@ -170,7 +170,7 @@
 					<%
 						// TO Get teacher assistance
 							stmt = con.createStatement();
-							String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
+							String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section inner join examsurvey on user.userID = candidate.userID and user.usertype ='Teaching Assistance' and currentcourse.year = '"
 									+ year
 									+ "' and currentcourse.semester ='"
 									+ term
@@ -221,9 +221,9 @@
 						String QueryStringCoCourse2 = "SELECT * FROM examsurvey inner join candidate inner join section inner join currentcourse where examsurvey.courseCode = currentcourse.courseCode and candidate.teachtype = 'Lect' and examsurvey.courseCode = '"
 								+ courseCode
 								+ "' and section.sectionID = candidate.sectionID and currentcourse.currentcourseID = section.currentcourseID and examsurvey.year = '"
-								+ year + "' and examsurvey.semester = '" + term + "' and candidate.userID = '"+teacherID+"'  ;";
+								+ year + "' and examsurvey.semester = '" + term + "' and candidate.userID = '"+teacherID+"'  and currentcourse.year = examsurvey.year and currentcourse.semester = examsurvey.semester group by currentcourse.courseCode ;";
 							ResultSet rsCoCourse2 = stmt.executeQuery(QueryStringCoCourse2);
-							while (rsCoCourse2.next()) {
+							if (rsCoCourse2.next()) {
 								couseCo = rsCoCourse2.getString("candidate.userID");
 								//out.print(couseCo);
 								rm = rsCoCourse2.getString("examsurvey.reasonMid");

@@ -276,7 +276,7 @@
 											<div class="controls">
 												<select name="courseSelect"
 													data-placeholder="Select course that your need to teach"
-													id="selectError2" data-rel="chosen">
+													id="selectError2" >
 													<optgroup label="Information Technology">
 														<%
 															ResultSet rs1301 = stmt.executeQuery(QueryString1301);

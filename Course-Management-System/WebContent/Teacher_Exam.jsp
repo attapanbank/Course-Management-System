@@ -243,7 +243,7 @@
 														+ "' and currentcourse.semester = '"
 														+ semester
 														+ "'  and  section.sectionID = candidate.sectionID and candidate.teachtype = 'Lect'and currentcourse.courseco_userID = '"
-														+ strUserID + "';";
+														+ strUserID + "'group by currentcourse.courseCode  ;";
 												ResultSet rsExam = stmt.executeQuery(QueryStringExam);
 												String sCosCode = null;
 												String sCosName = null;
@@ -264,8 +264,7 @@
 												<th colspan="1" rowspan="1">Course Code</th>
 												<th colspan="1" rowspan="1">Course Name</th>
 												<th colspan="1" rowspan="1">Teacher Assistance</th>
-												<th colspan="1" rowspan="1">Major</th>
-												<th colspan="1" rowspan="1">Number of Student</th>
+												
 												<th colspan="1" rowspan="1">Action</th>
 										</thead>
 
@@ -293,13 +292,14 @@
 																	out.print(sCosName);
 													%> <input type="hidden" name="courseName"
 													value="<%=sCosName%>">
-
+<input type="hidden" name="year" value="<%=year%>">
+<input type="hidden" name="semester"value="<%=semester%>">
 												</td>
 												<td>
 													<%
 														// TO Get teacher assistance
 																	stmt = con.createStatement();
-																	String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
+																	String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section on user.userID = candidate.userID and user.usertype ='Teaching Assistance' and currentcourse.year = '"
 																			+ year
 																			+ "' and currentcourse.semester ='"
 																			+ semester
@@ -320,17 +320,7 @@
 													%>
 												</td>
 
-												<td>
-													<%
-														out.print(rsExam.getString("section.major"));
-													%> <input type="hidden" name="year" value="<%=year%>">
-												</td>
-												<td>
-													<%
-														out.print(rsExam.getString("section.numberofstudent"));
-													%> <input type="hidden" name="semester"
-													value="<%=semester%>">
-												</td>
+												
 
 
 
@@ -610,7 +600,7 @@
 													<%
 														// TO Get teacher assistance
 															stmt = con.createStatement();
-															String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section  on user.userID = candidate.userID and user.usertype ='Teacher Assistance' and currentcourse.year = '"
+															String sql = "SELECT * FROM candidate  inner join user inner join currentcourse inner join section  on user.userID = candidate.userID and user.usertype ='Teaching Assistance' and currentcourse.year = '"
 																	+ Syear
 																	+ "' and currentcourse.semester ='"
 																	+ Sterm

@@ -84,6 +84,8 @@
 		
 		out.print("Save complete");
 
+		String yearCheck = null;
+		String termCheck = null;
 		String cosCodeHave = null;
 		String examSurveyID = "";
 		String queryString = "SELECT * FROM examsurvey WHERE courseCode ='"
@@ -97,11 +99,13 @@
 
 			examSurveyID = rsCheckUpdate.getString("examSurveyID");
 			cosCodeHave = rsCheckUpdate.getString("courseCode");
+			yearCheck = rsCheckUpdate.getString("year");
+			termCheck = rsCheckUpdate.getString("semester");
 
 		}
 
 		// Update or edit exammination
-		if (cosCode.equals(cosCodeHave)) {
+		if (cosCode.equals(cosCodeHave) && year.equals(yearCheck)&& semester.equals(termCheck)) {
 			if (chkBoxWrittingMid != null && chkBoxMultiMid != null
 					&& chkBoxWrittingFinal != null
 					&& chkBoxMultiFinal != null) {
@@ -629,7 +633,7 @@
 								+ examSurveyID + "' ");
 
 			}
-		} else {
+		} else if(cosCode.equalsIgnoreCase(cosCodeHave)) {
 
 			if (chkBoxWrittingMid != null && chkBoxMultiMid != null
 					&& chkBoxWrittingFinal != null
